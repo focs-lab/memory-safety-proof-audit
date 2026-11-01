@@ -59,16 +59,13 @@ it does not rebuild them from C.
 
 ## Current paper synchronization
 
-The following record describes the earlier paper preparation. This audit
-repository distributes the resulting PDF; it omits the TeX sources and
-build inputs. The PDF bytes are unchanged.
-
-The paper follows verification-gaps source commit `f2b5786b15cea95babf51729a196fccc7ae180f5`.
-All 19 active build inputs match the source. Both PDFs were rebuilt with
-one source timestamp and are byte-for-byte identical, with nine pages.
-The updated pages 3, 6, 7, and 9 were rendered and visually checked.
-The builds have no overfull boxes, undefined references, or font warnings.
-This editorial update did not repeat the proof or execution checks.
+The paper PDF is copied unchanged from verification-gaps source commit
+`c0b6cefc1ce16fb02cf1f2a6197a9016bfd5c0f9`. Its Git blob is
+`8bb448334f541b2b341e1f5852c887c68fbb3368`. Its SHA-256 digest and original
+build-input hashes are recorded in [release provenance](release-provenance.json).
+This repository includes the PDF and omits manuscript sources.
+This synchronization did not edit or rebuild the paper. It did not rerun
+proof or execution checks.
 
 ## Retained evidence
 

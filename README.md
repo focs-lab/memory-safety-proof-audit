@@ -20,7 +20,7 @@ National University of Singapore
   the complete `98e995d4` snapshot used for the allocator review, with release downloads,
   checksums, and offline verification instructions.
 
-The paper follows source commit `f2b5786b15cea95babf51729a196fccc7ae180f5`
+The paper follows source commit `c0b6cefc1ce16fb02cf1f2a6197a9016bfd5c0f9`
 and includes six technical appendices.
 
 The four-project allocator review concerns specifications and selected proof

@@ -1,7 +1,7 @@
 {
   "prepared_on": "2026-11-01",
-  "paper_source_revision": "f2b5786b15cea95babf51729a196fccc7ae180f5",
-  "paper_source_scope": "19 active build inputs synchronized byte-for-byte from the pinned source; existing evidence dossiers and proof archives retained",
+  "paper_source_revision": "c0b6cefc1ce16fb02cf1f2a6197a9016bfd5c0f9",
+  "paper_source_scope": "PDF copied unchanged from the pinned source; original build-input hashes identify that source. Manuscript sources are not included.",
   "authors": [
     "Umang Mathur",
     "Prateek Saxena",
@@ -30,7 +30,8 @@
     "described the checked coturn invariant result as admitting an out-of-bounds destination and rebuilt both PDFs",
     "applied eight approved minimal wording edits in Appendices A, B, D, E, and F and rebuilt the release PDF",
     "clarified that the OpenSSL gap was checked in Rocq, synchronized the approved appendix wording into verification-gaps, and rebuilt both PDFs",
-    "updated the companion-artifact citation to the public memory-safety-proof-audit repository and rebuilt the paper PDF"
+    "updated the companion-artifact citation to the public memory-safety-proof-audit repository and rebuilt the paper PDF",
+    "Copied the unchanged PDF from source commit c0b6cefc1ce16fb02cf1f2a6197a9016bfd5c0f9 after the approved abstract clarification; no manuscript sources included."
   ],
   "upstream_proof_revisions": {
     "allocator_review": "98e995d4daced70a0a4aa2c810854b88720735f1",
@@ -59,7 +60,7 @@
       "root_tree": "b5159cfa8466a731305873c56fda351a275db401",
       "tracked_files": 145602,
       "release_tag": "proof-archive-98e995d4",
-      "release_url": "https://github.com/focs-lab/memory-safety-audit/releases/tag/proof-archive-98e995d4",
+      "release_url": "https://github.com/focs-lab/memory-safety-proof-audit/releases/tag/proof-archive-98e995d4",
       "metadata_directory": "evidence/source-snapshots/oss-verify-proofs/98e995d4",
       "scope": "Complete tracked snapshot and self-contained shallow Git repository; no earlier history or external release assets.",
       "archives": [
@@ -79,11 +80,11 @@
   "initial_paper_source_revision": "4d40d9993261bc1da1014bf6c8c3d29ad51b3537",
   "paper_source_path": "blog/what-did-they-actually-prove/evidence/paper",
   "paper_synchronized_on": "2026-11-01",
-  "editorial_history_note": "The editorial changes record preparation steps. The active build inputs now match the pinned verification-gaps source, including the approved wording edits. The input hashes below identify the current release content.",
-  "archived_survey_path": "evidence/reports/working-notes/allocator-survey.tex",
+  "editorial_history_note": "The editorial changes record earlier preparation. The source revision and build-input hashes identify the committed source of the current PDF; these inputs are not distributed in this repository.",
+  "archived_survey_path": null,
   "paper_build_inputs_sha256": {
-    "main.tex": "9b8a71e07658a55339d655d85df37cf9b860983b1024271bdd468632d8fe2b17",
-    "abstract.tex": "3defeccb6e44e08e5b6ba3fc7adb8ea8a8dab5be1c7fae2f28449a1dcb4081af",
+    "main.tex": "20583c73e11b93161290adfb431c439bc1fecc1ad0e25747b6d7102ff511f7fd",
+    "abstract.tex": "02c582f728799e5dc0cad06f0fdde17615198ecb2e1864c8edc4f6136d7c265f",
     "font-style.tex": "c1492e470007d11d85494c6d92bacd9b1bfc199e59ea583b8b7b9423b2d45b92",
     "visual-style.tex": "509f0e66a7fa10fcdcef72d0aec446b67e2d972bbed13f2b130c29b54d0c3e75",
     "references.bib": "e2767c094a8e22b8cb61b037819c17d8d3e81bea5e23d5a3096a9627f7a7fb7d",
@@ -102,8 +103,8 @@
     "figures/bnctx-lifetime.tex": "954ef00df8bec9ab798bb8d2a080948f53d703e74497968b6f4d0e044264e343",
     "figures/pool-contract.tex": "c86d85d52edf2729f71c601dcb3354a0d5ee629b1b8dba86964d1d5ccd0a2688"
   },
-  "paper_pdf_sha256": "4744a63ae69cdc361c689ff8f000351968fa62f1c14e6e0ea7b3a35074f76d92",
-  "paper_build_source_date_epoch": 1793541682,
+  "paper_pdf_sha256": "da19294afaf234ba230b437c992821ef25981012e1807a7a7f577d2b842ee207",
+  "paper_build_source_date_epoch": 1793542469,
   "checked_example_execution_replay": {
     "recorded_on": "2026-11-01",
     "directory": "evidence/dossiers/checked-example/execution",
@@ -112,7 +113,8 @@
     "runner_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-runner@sha256:d197498c0e20de006e61fbe7c3d70ebdd81ad3928468ac45d643b72c716e7af2",
     "proof_replayed": false
   },
-  "paper_source_content_revision": "f2b5786b15cea95babf51729a196fccc7ae180f5",
+  "paper_source_content_revision": "c0b6cefc1ce16fb02cf1f2a6197a9016bfd5c0f9",
   "paper_source_included": false,
-  "paper_distribution": "PDF only; source revision and original build-input hashes are retained as provenance."
+  "paper_distribution": "PDF only; source revision and original build-input hashes are retained as provenance.",
+  "survey_notes_path": "evidence/reports/additional-projects.md"
 }

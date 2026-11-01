@@ -7,9 +7,9 @@ their assumptions. Source inspection is needed to interpret those statements.
 
 ## Get the release
 
-The release repository is private as of 1 November 2026. Reviewers need
-GitHub access to clone it and download its archived proof sources. The
-upstream `theorem-labs/oss-verify-proofs` repository is public.
+Clone this repository to obtain the audit files. While the repository is
+private, reviewers need GitHub access to clone it and download the archived
+proof sources. The upstream `theorem-labs/oss-verify-proofs` repository is public.
 
 Start with Git, Python 3.9 or later, `tar` with gzip support, and `shasum`.
 Git must support `sparse-checkout` for the upstream-source recipes.
