@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "proof_commit": "a6839bb9e433b34c0d0710df5280194528877139",
+  "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+  "rocq_version": "The Rocq Prover, version 9.2\ncompiled with OCaml 4.14.3",
+  "binary_sha256": {
+    "FuzzStunClient.asan": "99443988bd9bcd3087fe619757c7dff2a6b198583ad959307bc34edcd9b44ef8",
+    "FuzzStunClient.asan-ubsan": "4fd7bfa4d6ebf2583737cfa6cc09ce0f3344066b8f8c92d899ff91843d1d9f69"
+  },
+  "checked_sources": 88,
+  "elapsed_seconds": 166.78,
+  "finished_utc": "2026-11-01T04:11:52.345782+00:00",
+  "theorems": [
+    "CoturnFieldAudit.Complete.asan_decoded_case_admits_buf_minus_one",
+    "CoturnFieldAudit.Complete.both_decoded_case_admits_buf_minus_one"
+  ],
+  "audit_source_sha256": {
+    "WitnessData": "875b2a596d482d786a3480ccef2e06258dfbed3843afd787a79c500f656e348a",
+    "Certificate": "cd2a2a2b6cac42b05f6815e14ac5ffa382a835067c738e0a06d69b3e7cbf03fd",
+    "Rank": "28d367e3a44e045f2edfbdb0436db80a8b4a755df0b07a72ab5578e433c3e1b6",
+    "Support": "18a45396cb0242c1d8e11d5be717566f8d1bd4536c55cdd360e45b41ae41a952",
+    "Model": "2ac6ed2fb5cd43fa9f9036df0864e8c6a655680d29e01429397fe96d1c4cc7d9",
+    "Pure": "0c85949a3943b1938f6e3c4963015cff5e3adc17fbdfe06194d8782f498eee6b",
+    "Regions": "deb2943bd86b102c7de10611809d5764405c0fdfb561b69daef9f6fbcec0f884",
+    "Ambient": "d247fe245964689dc3b6ca08dcc7246b2824885e46092a9f93df716f8f3ba9af",
+    "Structural": "ff77ef2f67083f7c33194db2e1ebd173058648885bb80ab780a133f9507e7262",
+    "Flags": "9fe8a25f6a84a44099c9d0f69ab5d2938b6b2b64a607b2e132e95ea86b91137b",
+    "Complete": "254920bd9bd4e6d04587843b30e2d7e43c9b1085fd5bde962343a037746ed200"
+  },
+  "assumptions": [
+    "Corelib.Array.PrimArray.array",
+    "Corelib.Array.PrimArray.get",
+    "Corelib.Array.PrimArray.make",
+    "Corelib.Array.PrimArray.set",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.add",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.mul",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
+    "Corelib.Strings.PrimString.cat",
+    "Corelib.Strings.PrimString.get",
+    "Corelib.Strings.PrimString.length",
+    "Corelib.Strings.PrimString.make",
+    "Corelib.Strings.PrimString.string",
+    "Corelib.Strings.PrimString.sub"
+  ],
+  "all_assumptions_in_upstream_allowlist": true,
+  "scope": "Complete original gamma2 invariant witnesses; no input reachability or vulnerability claim."
+}

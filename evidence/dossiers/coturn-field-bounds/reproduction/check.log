@@ -1,0 +1,394 @@
+The Rocq Prover, version 9.2
+compiled with OCaml 4.14.3
+elf_snapshot: wrote 4 segments to images/Asan.v (prefix=Asan). init_pc=0x32730 phdr=0x10040/56/11
+elf_snapshot: wrote 4 segments to images/AsanUbsan.v (prefix=AsanUbsan). init_pc=0x32720 phdr=0x10040/56/11
+CHECK images/Asan.v
+Defined Asan_seg_bytes_000 : (NestedArray.NestedArray 0 string)
+Defined Asan_seg_bytes_001 : (NestedArray.NestedArray 0 string)
+Defined Asan_seg_bytes_002 : (NestedArray.NestedArray 0 string)
+Defined Asan_seg_bytes_003 : (NestedArray.NestedArray 0 string)
+PASS images/Asan.v 0.8s
+CHECK images/AsanUbsan.v
+Defined AsanUbsan_seg_bytes_000 : (NestedArray.NestedArray 0 string)
+Defined AsanUbsan_seg_bytes_001 : (NestedArray.NestedArray 0 string)
+Defined AsanUbsan_seg_bytes_002 : (NestedArray.NestedArray 0 string)
+Defined AsanUbsan_seg_bytes_003 : (NestedArray.NestedArray 0 string)
+PASS images/AsanUbsan.v 0.5s
+CHECK vendor/VMap.v
+PASS vendor/VMap.v 0.7s
+CHECK vendor/VLin.v
+PASS vendor/VLin.v 0.9s
+CHECK vendor/VItv.v
+PASS vendor/VItv.v 1.1s
+CHECK vendor/VStore.v
+PASS vendor/VStore.v 1.0s
+CHECK vendor/VFarkas.v
+PASS vendor/VFarkas.v 0.6s
+CHECK vendor/VCong.v
+PASS vendor/VCong.v 0.8s
+CHECK vendor/VWord.v
+PASS vendor/VWord.v 0.8s
+CHECK vendor/VSimplexI.v
+PASS vendor/VSimplexI.v 0.5s
+CHECK vendor/VLpKey.v
+PASS vendor/VLpKey.v 0.4s
+CHECK vendor/VLpTabS0.v
+File "./vendor/VLpTabS0.v", line 4, characters 0-16:
+Warning: There is no flag or option with this name: "Lia Cache".
+[unknown-option,default]
+File "./vendor/VLpTabS0.v", line 4, characters 17-33:
+Warning: There is no flag or option with this name: "Nia Cache".
+[unknown-option,default]
+File "./vendor/VLpTabS0.v", line 4, characters 34-50:
+Warning: There is no flag or option with this name: "Nra Cache".
+[unknown-option,default]
+PASS vendor/VLpTabS0.v 0.6s
+CHECK vendor/VLpTabSboth.v
+File "./vendor/VLpTabSboth.v", line 4, characters 0-16:
+Warning: There is no flag or option with this name: "Lia Cache".
+[unknown-option,default]
+File "./vendor/VLpTabSboth.v", line 4, characters 17-33:
+Warning: There is no flag or option with this name: "Nia Cache".
+[unknown-option,default]
+File "./vendor/VLpTabSboth.v", line 4, characters 34-50:
+Warning: There is no flag or option with this name: "Nra Cache".
+[unknown-option,default]
+PASS vendor/VLpTabSboth.v 0.5s
+CHECK vendor/VLpTabS.v
+File "./vendor/VLpTabS.v", line 7, characters 0-16:
+Warning: There is no flag or option with this name: "Lia Cache".
+[unknown-option,default]
+File "./vendor/VLpTabS.v", line 7, characters 17-33:
+Warning: There is no flag or option with this name: "Nia Cache".
+[unknown-option,default]
+File "./vendor/VLpTabS.v", line 7, characters 34-50:
+Warning: There is no flag or option with this name: "Nra Cache".
+[unknown-option,default]
+PASS vendor/VLpTabS.v 0.3s
+CHECK vendor/VLpTab.v
+PASS vendor/VLpTab.v 0.5s
+CHECK vendor/VSimplex.v
+PASS vendor/VSimplex.v 0.5s
+CHECK vendor/VBounds.v
+PASS vendor/VBounds.v 1.0s
+CHECK vendor/VIncl.v
+PASS vendor/VIncl.v 0.7s
+CHECK vendor/VLinalg.v
+PASS vendor/VLinalg.v 0.4s
+CHECK vendor/VState.v
+PASS vendor/VState.v 0.6s
+CHECK vendor/VAbs.v
+PASS vendor/VAbs.v 0.8s
+CHECK vendor/VCert.v
+PASS vendor/VCert.v 0.6s
+CHECK vendor/VState2.v
+PASS vendor/VState2.v 0.7s
+CHECK vendor/VCert2.v
+PASS vendor/VCert2.v 0.9s
+CHECK vendor/VCertDecode.v
+PASS vendor/VCertDecode.v 0.5s
+CHECK vendor/VCertDecode2.v
+PASS vendor/VCertDecode2.v 0.5s
+CHECK vendor/Common/LiaFast.v
+PASS vendor/Common/LiaFast.v 0.7s
+CHECK vendor/Common/PlacementSearch.v
+PASS vendor/Common/PlacementSearch.v 0.9s
+CHECK vendor/Common/PropExec.v
+File "./vendor/Common/PropExec.v", line 700, characters 18-41:
+Warning: Reference Znumtheory.Zmod_div_mod is deprecated since Stdlib 9.1.
+Use Z.mod_mod_divide instead.
+[deprecated-reference-since-Stdlib-9.1,deprecated-since-Stdlib-9.1,deprecated-reference,deprecated,default]
+File "./vendor/Common/PropExec.v", line 700, characters 18-41:
+Warning: Reference Znumtheory.Zmod_div_mod is deprecated since Stdlib 9.1.
+Use Z.mod_mod_divide instead.
+[deprecated-reference-since-Stdlib-9.1,deprecated-since-Stdlib-9.1,deprecated-reference,deprecated,default]
+PASS vendor/Common/PropExec.v 4.4s
+CHECK vendor/Common/SimInv.v
+PASS vendor/Common/SimInv.v 0.6s
+CHECK vendor/Common/ExitSim.v
+PASS vendor/Common/ExitSim.v 4.5s
+CHECK vendor/Common/CatSim.v
+PASS vendor/Common/CatSim.v 2.6s
+CHECK vendor/Common/CatExec.v
+File "./vendor/Common/CatExec.v", line 237, characters 0-49:
+Warning: To avoid stack overflow, large numbers in nat are interpreted as
+applications of Init.Nat.of_num_uint. [abstract-large-number,numbers,default]
+File "./vendor/Common/CatExec.v", line 239, characters 0-52:
+Warning: To avoid stack overflow, large numbers in nat are interpreted as
+applications of Init.Nat.of_num_uint. [abstract-large-number,numbers,default]
+PASS vendor/Common/CatExec.v 1.9s
+CHECK vendor/Common/SeqExec.v
+PASS vendor/Common/SeqExec.v 1.7s
+CHECK vendor/Common/StreamExec.v
+PASS vendor/Common/StreamExec.v 1.0s
+CHECK vendor/Common/WallSim.v
+PASS vendor/Common/WallSim.v 1.6s
+CHECK vendor/Common/StreamSim.v
+PASS vendor/Common/StreamSim.v 2.3s
+CHECK vendor/Common/AllocSim.v
+PASS vendor/Common/AllocSim.v 2.6s
+CHECK vendor/Common/MmapSim.v
+PASS vendor/Common/MmapSim.v 3.0s
+CHECK vendor/Common/DrainSim.v
+PASS vendor/Common/DrainSim.v 1.6s
+CHECK vendor/Common/StepTac.v
+PASS vendor/Common/StepTac.v 1.0s
+CHECK vendor/Common/Footprint.v
+PASS vendor/Common/Footprint.v 0.6s
+CHECK vendor/Common/StoreOk.v
+PASS vendor/Common/StoreOk.v 1.1s
+CHECK vendor/Frame.v
+PASS vendor/Frame.v 1.1s
+CHECK vendor/VLogic.v
+PASS vendor/VLogic.v 0.5s
+CHECK vendor/VGamma.v
+PASS vendor/VGamma.v 0.7s
+CHECK vendor/VWord2.v
+PASS vendor/VWord2.v 0.8s
+CHECK vendor/VAbsSound.v
+PASS vendor/VAbsSound.v 1.3s
+CHECK vendor/VAbsSound2.v
+PASS vendor/VAbsSound2.v 1.5s
+CHECK vendor/VAbsSound3.v
+PASS vendor/VAbsSound3.v 3.9s
+CHECK vendor/VStep.v
+PASS vendor/VStep.v 0.7s
+CHECK vendor/VStepMem.v
+PASS vendor/VStepMem.v 0.6s
+CHECK vendor/Common/LiaKeep.v
+PASS vendor/Common/LiaKeep.v 0.4s
+CHECK vendor/VStepSound.v
+File "./vendor/VStepSound.v", line 68, characters 2-10:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+PASS vendor/VStepSound.v 5.3s
+CHECK vendor/VStepMemSound.v
+File "./vendor/VStepMemSound.v", line 143, characters 2-10:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./vendor/VStepMemSound.v", line 144, characters 2-10:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+PASS vendor/VStepMemSound.v 8.1s
+CHECK vendor/VGamma2.v
+PASS vendor/VGamma2.v 1.2s
+CHECK vendor/StrLz.v
+PASS vendor/StrLz.v 0.4s
+CHECK vendor/VStepMem2.v
+PASS vendor/VStepMem2.v 0.8s
+CHECK vendor/Asan/FContractAsan.v
+PASS vendor/Asan/FContractAsan.v 0.7s
+CHECK vendor/FPA_asan.v
+PASS vendor/FPA_asan.v 0.6s
+CHECK vendor/FPA_both.v
+PASS vendor/FPA_both.v 0.6s
+CHECK vendor/VItab.v
+PASS vendor/VItab.v 0.7s
+CHECK vendor/VItab_asan.v
+PASS vendor/VItab_asan.v 0.7s
+CHECK vendor/VContract.v
+PASS vendor/VContract.v 0.8s
+CHECK vendor/VDriverMatch.v
+PASS vendor/VDriverMatch.v 1.0s
+CHECK vendor/VDriver.v
+PASS vendor/VDriver.v 0.8s
+CHECK vendor/VContractA.v
+PASS vendor/VContractA.v 2.4s
+CHECK vendor/VContract2.v
+PASS vendor/VContract2.v 0.7s
+CHECK vendor/VDriverMatch2.v
+PASS vendor/VDriverMatch2.v 1.0s
+CHECK vendor/VDriver2.v
+PASS vendor/VDriver2.v 1.0s
+CHECK vendor/VGenv_asan.v
+PASS vendor/VGenv_asan.v 0.8s
+CHECK vendor/VItab_both.v
+PASS vendor/VItab_both.v 0.6s
+CHECK vendor/VGenv_both.v
+PASS vendor/VGenv_both.v 0.8s
+CHECK vendor/VCertS_asan_p00.v
+PASS vendor/VCertS_asan_p00.v 0.7s
+CHECK vendor/VCertS_asan_p01.v
+PASS vendor/VCertS_asan_p01.v 0.5s
+CHECK vendor/VCertS_both_p00.v
+PASS vendor/VCertS_both_p00.v 0.5s
+CHECK vendor/VCertS_both_p01.v
+PASS vendor/VCertS_both_p01.v 0.4s
+CHECK proof/WitnessData.v
+PASS proof/WitnessData.v 0.5s
+CHECK proof/Certificate.v
+Axioms:
+PrimString.sub :
+  PrimString.string -> PrimInt63.int -> PrimInt63.int -> PrimString.string
+PrimInt63.sub : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimString.string : Set
+PrimArray.set :
+  forall A : Type,
+  PrimArray.array A -> PrimInt63.int -> A -> PrimArray.array A
+PrimInt63.mul : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimString.make : PrimInt63.int -> PrimString.char63 -> PrimString.string
+PrimArray.make : forall A : Type, PrimInt63.int -> A -> PrimArray.array A
+PrimInt63.ltb : PrimInt63.int -> PrimInt63.int -> bool
+PrimInt63.lsr : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimInt63.lsl : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimInt63.lor : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimString.length : PrimString.string -> PrimInt63.int
+PrimInt63.leb : PrimInt63.int -> PrimInt63.int -> bool
+PrimInt63.land : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimInt63.int : Set
+PrimString.get : PrimString.string -> PrimInt63.int -> PrimString.char63
+PrimArray.get : forall A : Type, PrimArray.array A -> PrimInt63.int -> A
+PrimInt63.eqb : PrimInt63.int -> PrimInt63.int -> bool
+PrimString.cat : PrimString.string -> PrimString.string -> PrimString.string
+PrimArray.array : Type -> Type
+PrimInt63.add : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+Axioms:
+PrimString.sub :
+  PrimString.string -> PrimInt63.int -> PrimInt63.int -> PrimString.string
+PrimInt63.sub : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimString.string : Set
+PrimArray.set :
+  forall A : Type,
+  PrimArray.array A -> PrimInt63.int -> A -> PrimArray.array A
+PrimInt63.mul : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimString.make : PrimInt63.int -> PrimString.char63 -> PrimString.string
+PrimArray.make : forall A : Type, PrimInt63.int -> A -> PrimArray.array A
+PrimInt63.ltb : PrimInt63.int -> PrimInt63.int -> bool
+PrimInt63.lsr : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimInt63.lsl : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimInt63.lor : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimString.length : PrimString.string -> PrimInt63.int
+PrimInt63.leb : PrimInt63.int -> PrimInt63.int -> bool
+PrimInt63.land : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PrimInt63.int : Set
+PrimString.get : PrimString.string -> PrimInt63.int -> PrimString.char63
+PrimArray.get : forall A : Type, PrimArray.array A -> PrimInt63.int -> A
+PrimInt63.eqb : PrimInt63.int -> PrimInt63.int -> bool
+PrimString.cat : PrimString.string -> PrimString.string -> PrimString.string
+PrimArray.array : Type -> Type
+PrimInt63.add : PrimInt63.int -> PrimInt63.int -> PrimInt63.int
+PASS proof/Certificate.v 16.4s
+CHECK proof/Rank.v
+PASS proof/Rank.v 15.3s
+CHECK proof/Support.v
+PASS proof/Support.v 1.1s
+CHECK proof/Model.v
+PASS proof/Model.v 16.5s
+CHECK proof/Pure.v
+PASS proof/Pure.v 1.8s
+CHECK proof/Regions.v
+PASS proof/Regions.v 2.5s
+CHECK proof/Ambient.v
+PASS proof/Ambient.v 10.7s
+CHECK proof/Structural.v
+PASS proof/Structural.v 5.0s
+CHECK proof/Flags.v
+PASS proof/Flags.v 0.9s
+CHECK proof/Complete.v
+Axioms:
+PrimString.sub :
+  PrimString.string → PrimInt63.int → PrimInt63.int → PrimString.string
+PrimInt63.sub : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimString.string : Set
+PrimArray.set :
+  ∀ A : Type, PrimArray.array A → PrimInt63.int → A → PrimArray.array A
+PrimInt63.mul : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimString.make : PrimInt63.int → PrimString.char63 → PrimString.string
+PrimArray.make : ∀ A : Type, PrimInt63.int → A → PrimArray.array A
+PrimInt63.ltb : PrimInt63.int → PrimInt63.int → bool
+PrimInt63.lsr : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimInt63.lsl : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimInt63.lor : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimString.length : PrimString.string → PrimInt63.int
+PrimInt63.leb : PrimInt63.int → PrimInt63.int → bool
+PrimInt63.land : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimInt63.int : Set
+PrimString.get : PrimString.string → PrimInt63.int → PrimString.char63
+PrimArray.get : ∀ A : Type, PrimArray.array A → PrimInt63.int → A
+PrimInt63.eqb : PrimInt63.int → PrimInt63.int → bool
+PrimString.cat : PrimString.string → PrimString.string → PrimString.string
+PrimArray.array : Type → Type
+PrimInt63.add : PrimInt63.int → PrimInt63.int → PrimInt63.int
+Axioms:
+PrimString.sub :
+  PrimString.string → PrimInt63.int → PrimInt63.int → PrimString.string
+PrimInt63.sub : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimString.string : Set
+PrimArray.set :
+  ∀ A : Type, PrimArray.array A → PrimInt63.int → A → PrimArray.array A
+PrimInt63.mul : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimString.make : PrimInt63.int → PrimString.char63 → PrimString.string
+PrimArray.make : ∀ A : Type, PrimInt63.int → A → PrimArray.array A
+PrimInt63.ltb : PrimInt63.int → PrimInt63.int → bool
+PrimInt63.lsr : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimInt63.lsl : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimInt63.lor : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimString.length : PrimString.string → PrimInt63.int
+PrimInt63.leb : PrimInt63.int → PrimInt63.int → bool
+PrimInt63.land : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PrimInt63.int : Set
+PrimString.get : PrimString.string → PrimInt63.int → PrimString.char63
+PrimArray.get : ∀ A : Type, PrimArray.array A → PrimInt63.int → A
+PrimInt63.eqb : PrimInt63.int → PrimInt63.int → bool
+PrimString.cat : PrimString.string → PrimString.string → PrimString.string
+PrimArray.array : Type → Type
+PrimInt63.add : PrimInt63.int → PrimInt63.int → PrimInt63.int
+PASS proof/Complete.v 3.0s
+{
+  "status": "PASS",
+  "proof_commit": "a6839bb9e433b34c0d0710df5280194528877139",
+  "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+  "rocq_version": "The Rocq Prover, version 9.2\ncompiled with OCaml 4.14.3",
+  "binary_sha256": {
+    "FuzzStunClient.asan": "99443988bd9bcd3087fe619757c7dff2a6b198583ad959307bc34edcd9b44ef8",
+    "FuzzStunClient.asan-ubsan": "4fd7bfa4d6ebf2583737cfa6cc09ce0f3344066b8f8c92d899ff91843d1d9f69"
+  },
+  "checked_sources": 88,
+  "elapsed_seconds": 165.97,
+  "finished_utc": "2026-11-01T05:22:57.699420+00:00",
+  "theorems": [
+    "CoturnFieldAudit.Complete.asan_decoded_case_admits_buf_minus_one",
+    "CoturnFieldAudit.Complete.both_decoded_case_admits_buf_minus_one"
+  ],
+  "audit_source_sha256": {
+    "WitnessData": "875b2a596d482d786a3480ccef2e06258dfbed3843afd787a79c500f656e348a",
+    "Certificate": "cd2a2a2b6cac42b05f6815e14ac5ffa382a835067c738e0a06d69b3e7cbf03fd",
+    "Rank": "28d367e3a44e045f2edfbdb0436db80a8b4a755df0b07a72ab5578e433c3e1b6",
+    "Support": "18a45396cb0242c1d8e11d5be717566f8d1bd4536c55cdd360e45b41ae41a952",
+    "Model": "2ac6ed2fb5cd43fa9f9036df0864e8c6a655680d29e01429397fe96d1c4cc7d9",
+    "Pure": "0c85949a3943b1938f6e3c4963015cff5e3adc17fbdfe06194d8782f498eee6b",
+    "Regions": "deb2943bd86b102c7de10611809d5764405c0fdfb561b69daef9f6fbcec0f884",
+    "Ambient": "d247fe245964689dc3b6ca08dcc7246b2824885e46092a9f93df716f8f3ba9af",
+    "Structural": "ff77ef2f67083f7c33194db2e1ebd173058648885bb80ab780a133f9507e7262",
+    "Flags": "9fe8a25f6a84a44099c9d0f69ab5d2938b6b2b64a607b2e132e95ea86b91137b",
+    "Complete": "254920bd9bd4e6d04587843b30e2d7e43c9b1085fd5bde962343a037746ed200"
+  },
+  "assumptions": [
+    "Corelib.Array.PrimArray.array",
+    "Corelib.Array.PrimArray.get",
+    "Corelib.Array.PrimArray.make",
+    "Corelib.Array.PrimArray.set",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.add",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.mul",
+    "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
+    "Corelib.Strings.PrimString.cat",
+    "Corelib.Strings.PrimString.get",
+    "Corelib.Strings.PrimString.length",
+    "Corelib.Strings.PrimString.make",
+    "Corelib.Strings.PrimString.string",
+    "Corelib.Strings.PrimString.sub"
+  ],
+  "all_assumptions_in_upstream_allowlist": true,
+  "scope": "Complete original gamma2 invariant witnesses; no input reachability or vulnerability claim."
+}

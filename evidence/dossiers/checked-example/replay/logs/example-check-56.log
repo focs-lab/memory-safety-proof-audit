@@ -1,0 +1,6 @@
+oft verify-sha: 2 binaries, 0 problem(s)
+projects/example/core: statements compiled, each of the 1 listed defined
+proofs/example/core/lib/dune: written as this oft generate renders it
+proofs/example/core/lib: 836 files compiled or taken from dune's cache (log /tmp/oft-check-sui2mqmq/example.core.lib.dune.log)
+proofs/example/core/asan_agrees: proves example/core/asan_agrees; assumptions: 15 axioms, all allowed
+oft check: 2 step(s) passed, 0 failed; work files in /tmp/oft-check-sui2mqmq

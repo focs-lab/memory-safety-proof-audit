@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/theorem-labs/oss-verify-proofs",
+  "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+  "root_tree": "b5159cfa8466a731305873c56fda351a275db401",
+  "commit_date_utc": "2026-10-23T03:53:06Z",
+  "archived_at_utc": "2026-11-01T12:26:45.678422+00:00",
+  "archive_date_singapore": "2026-11-01",
+  "retrieval": "git fetch --depth=1 --no-tags origin 98e995d4daced70a0a4aa2c810854b88720735f1:refs/heads/snapshot-98e995d4",
+  "git_version": "git version 2.41.0",
+  "scope": "All tracked files and Git objects for the exact commit; complete shallow snapshot, with no parent history.",
+  "not_included": [
+    "Parent commit history",
+    "GitHub issues, pull requests, and Actions logs",
+    "GitHub release assets and externally hosted dependencies not tracked in Git"
+  ],
+  "tracked_files": 145602,
+  "tracked_file_bytes": 8464291253,
+  "gitlinks": [],
+  "git_lfs_pointers": [],
+  "source_archive": "oss-verify-proofs-98e995d4daced70a0a4aa2c810854b88720735f1.tar.gz",
+  "git_archive": "oss-verify-proofs-98e995d4.git.tar.gz",
+  "table_2_evidence_paths": [
+    "proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Steps.v",
+    "proofs/simdjson/fuzz_dump/lib/Sj/SjTapeTile.v",
+    "proofs/openssl/bndiv/lib/Spec/BnInv.v",
+    "proofs/pupnp/FuzzHttp/lib/A0/AW/H_freelist.v"
+  ]
+}

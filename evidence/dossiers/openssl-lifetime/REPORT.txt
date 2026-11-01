@@ -1,0 +1,216 @@
+PASS — focused OpenSSL bndiv lifetime-gap replay
+Independent replay date: 1 November 2026 (Asia/Singapore)
+Pinned proof revision: 98e995d4daced70a0a4aa2c810854b88720735f1
+
+VERDICT AND EXACT SCOPE
+
+PASS: the internal bndiv lifetime predicate and operation contracts accept an
+expired BN_CTX temporary. This remains true with the complete upstream state,
+ownership and context conditions, not merely a weakened valid_ref surrogate.
+The successful construction uses unchanged upstream definitions.
+
+PASS: fresh compilation of the published abstract-client results
+BnCorrect.fuzz_one_wp and BnCorrect.fuzz_one_rc, and their dependencies.
+These are model-level results, not the final binary agreement certificate.
+
+INCOMPLETE / NOT REPLAYED: asan_agrees_holds, ubsan_agrees_holds, and their
+strong_universal_error_free_bndiv_* binary-level certificates. No claim about
+their assumptions or successful replay is made here. Their source entry points
+were inspected. The required LinuxProcessSemantics, stdpp, ReadFile, Flocq and
+project image/statement libraries are absent from this local Rocq load path;
+actual failing dependency probes are retained. The pinned bndiv tree has 1,591
+.v files (30,957,660 source bytes). The parent chat requested finalization of the
+focused result without waiting for the complete agreement-certificate replay.
+
+WHAT WAS CHECKED
+
+1. All 28 compiled upstream modules are byte-identical to the pinned Git blobs:
+   18 bndiv modules in Spec/ and 10 bignum modules in BgSpec/. Four audit modules
+   in exp/ were compiled from source. The final fresh build passed all 32 files.
+   The original audit directories and all paper files were left untouched.
+
+2. exp/LegacyStaleRef.v is an unchanged COPY of the previously supplied audit
+   source; none of its previous logs or compiled objects was reused. Its three
+   lemmas establish validity after end, acceptance of start/get/end/set-negative,
+   and positional reuse of the same reference on the next start/get. In
+   exp/Assumptions.v the stale-write theorem is explicitly instantiated at
+   upstream ls_init with empty ownership using BnCorrect.ls_inv_init.
+
+3. exp/IndependentWitness.v is a newly written, independent concrete witness.
+   It imports the actual upstream modules, rather than redefining their logic.
+   Starting at ls_init, its synthetic client executes:
+
+       BN_CTX_start;
+       t := BN_CTX_get;
+       BN_bin2bn [1] t;
+       BN_CTX_end;
+       BN_set_negative t true.
+
+   Upstream run_tree computes three distinct successful allocations:
+   (128 bytes, id 1), (400 bytes, id 2), (8 bytes, id 3), and no free events.
+   The temporary is RPool 0, with value +1 before frame end. The checked state
+   after end has cx_frames = [], cx_used = cx_pused = 0, and a retained pool of
+   16 entries. RPool 0 still satisfies valid_ref. st_ok, own, and ctx_rest all
+   hold. The owned blocks are [(3,8); (2,400); (1,128)].
+
+   all_end_preconditions proves every hypothesis of BN_CTX_end_spec.
+   all_setter_preconditions_after_end proves every hypothesis of
+   BN_set_negative_spec, plus ctx_rest and the empty-frame/zero-used facts.
+   stale_write_accepted_by_exact_setter_spec invokes the unmodified setter
+   lemma, establishing st_ok and own afterward. The sign actually changes
+   from false to true, while frames remain empty and used remains zero.
+   entire_synthetic_client_executes checks the complete concrete trace by
+   reflexivity. nonempty_pool_and_no_active_frame is an explicit existential
+   witness, avoiding contradictory or vacuous invariant assumptions.
+
+4. The relevant upstream definitions and conditions were inspected in full:
+   - BnInv.v: valid_ref (RPool i) requires i < 3 and nonempty cx_vals; st_ok
+     constrains the five fixed BIGNUMs and first three pool BIGNUMs; own is
+     a permutation of the retained allocated blocks.
+   - BnModel.v: BN_CTX_end pops the frame and resets usage, retaining cx_vals.
+     BN_set_negative reads and writes through getbn/setbn.
+   - BnSpecs.v: start/get/end require the stated context discipline. ctx_wf
+     allows a populated pool with no active frame and used = 0. The setter
+     requires st_ok, own and valid_ref, but no active-frame condition.
+   - BnMInv.v was also built and inspected: valid_refm uses the pool-list
+     length, and likewise is not a lifetime/generation test. The new witness
+     does not claim a machine-level certificate against this separate layer.
+
+5. Published-client scope was inspected in BnModel.v. bn_div_fixed_top obtains
+   tmp/snum/sdiv, uses them, and ends with BN_CTX_end (lines 417–455).
+   bn_mul_fixed_top similarly uses its temporary before its final end
+   (lines 471–515). fuzz_one uses fixed RB1–RB5 references. The fresh published
+   fuzz_one_wp proof succeeds. This audit provides no reachable expired access
+   by the actual published client and no falsification of its agreement theorem.
+
+6. Separate bignum scope: the retained, upstream-verified BgInv.v defines
+   live r s as r < NFIX + gx_used (st_ctx s). A fresh replay of exp/BgStale.v
+   checks that start/get/end makes the temporary non-live; a second start/get
+   reuses the same positional reference. Both results are axiom-free.
+   This supports the stated contrast: bignum has a stronger immediate liveness
+   guard. It is not a claim that every OpenSSL proof lacks liveness, nor a full
+   verification of bignum's callers or generational provenance.
+
+ASSUMPTIONS AND TRUST BOUNDARY
+
+All 23 Print Assumptions commands in the four audit files returned
+"Closed under the global context". This includes the new concrete witness,
+the older generic lemmas, the relevant BN_CTX/setter operation lemmas,
+ls_inv_init, fuzz_one_wp, fuzz_one_rc, and the two bignum comparison results.
+No admitted goals or newly introduced axioms are used. A source scan found no
+Admitted/admit/Axiom/Axioms tokens in Spec/, BgSpec/ or exp/.
+
+coqchk -silent independently rechecked Replay.IndependentWitness,
+Replay.LegacyStaleRef, Replay.BgStale and Replay.Assumptions with their dependency
+closures, exiting 0. Its empty log is normal for silent successful checking.
+
+These are statements about the supplied mathematical models. The connection
+between an expired temporary and an API-contract violation uses the pinned
+OpenSSL manual, which states that BN_CTX_get pointers become invalid when
+BN_CTX_end is called. The C implementation retains the backing pool. Neither
+the witness nor that API contract establishes a free-based dangling pointer,
+a sanitizer finding, an exploit, or a bug in the published client's execution.
+The full binary model, lifting, sanitizer equivalence and final certificate
+assumptions are outside this replay.
+
+Toolchain actually used: Rocq 9.0.0, compiled with OCaml 5.3.0, on arm64 macOS.
+The pinned repository README specifies Rocq 9.2.0 for its official checker.
+This is therefore a successful source replay under the local 9.0.0 kernel,
+not an official-checker/environment reproduction. No upstream source edits or
+compatibility patches were needed. logs/environment.txt records exact versions.
+
+PROVENANCE
+
+The proof sources were checked against freshly downloaded HTTPS GitHub Git
+metadata, not merely an old SOURCE_COMMIT marker. The saved chain is:
+
+  commit 98e995d4daced70a0a4aa2c810854b88720735f1
+  root tree b5159cfa8466a731305873c56fda351a275db401
+  proofs tree 6cc8cc431179e6473afaae24a9107d2d10bbc30c
+  openssl tree 3c0d2fed3bddf0889edfcb223522024790b37e4c
+
+verify_sources.py reconstructs the retained tree objects, checks their Git SHA-1
+identities and chain, and checks the Git blob SHA-1 and SHA-256 of every compiled
+upstream source. The complete OpenSSL subtree response is not truncated.
+provenance/verified-build-sources.json gives paths, sizes and hashes.
+
+The nine original bndiv and ten bignum dependency files came from copies of the
+provided local audit source trees. Nine further bndiv modules were downloaded
+fresh. Selected top-level proof entries, licenses and provenance files are in
+upstream/. Sources under openssl/ were freshly fetched at OpenSSL revision
+47aae188a6bdc65675ea9c2a9e770bef48a5d781. Original upstream notices are retained.
+The earlier GitHub connector failed. An oversized whole-repository archive
+attempt was cancelled and its incomplete bytes deleted; it is not used as
+provenance. A truncated initial recursive root listing is retained only as
+fetch history; the complete root/proofs/OpenSSL chain is what is verified.
+
+Primary source links:
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnInv.v
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnSpecs.v
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnCorrect.v
+https://github.com/openssl/openssl/blob/47aae188a6bdc65675ea9c2a9e770bef48a5d781/doc/man3/BN_CTX_start.pod
+
+REPRODUCTION
+
+With Rocq/coqc, coqdep and coqchk installed, run from this artifact directory:
+
+  python3 verify_sources.py
+  ROCQ_BIN=/Users/umang/.opam/default/bin python3 replay.py
+
+ROCQ_BIN may instead point at another installation's bin directory. replay.py
+removes only compiled products within its own Spec/, BgSpec/ and exp/ directories,
+computes dependency order with coqdep, builds every source with coqc, and runs
+coqchk. It overwrites its own logs; keep a copy of the supplied logs if needed.
+No network access is needed to replay the retained sources.
+
+The coqc load-path flags are:
+  -Q Spec OssFuzzTheorems.Proofs.openssl.bndiv.lib.Spec
+  -Q BgSpec OssFuzzTheorems.Proofs.openssl.bignum.lib.Spec
+  -Q exp Replay
+
+logs/build-results.json records exact commands and exit codes;
+logs/dependency-order.txt and logs/bignum-dependency-order.txt record ordering.
+Each compilation has its own fresh log. IndependentWitness-development.log is
+an earlier successful development check; the final fresh-build logs are
+IndependentWitness.log and Assumptions.log, both successful.
+fetch_selected.py and fetch_provenance.py preserve the exact raw-source URLs.
+The Git tree request URLs are included in their saved JSON responses.
+SHA256SUMS hashes the delivered source, report and log files. Compiled products
+are deliberately excluded from the distributable tar archive and must be rebuilt.
+
+MINIMAL PAPER WORDING
+
+The central local-predicate claim is supported. Suggested precise wording:
+
+  "At revision 98e995d4, bndiv's internal valid_ref predicate and
+  BN_set_negative_spec admit a pool reference after BN_CTX_end, even when the
+  upstream state, ownership and context invariants hold. We checked this in
+  Rocq against the unchanged definitions, including a concrete synthetic
+  start/get/initialize/end/write execution from ls_init. Thus these local
+  contracts alone do not enforce the documented BN_CTX temporary lifetime.
+  This does not demonstrate an invalid access in the published bndiv client,
+  whose modeled temporaries are used before their frame ends, or invalidate
+  its binary agreement theorem. The separate bignum proof has a stronger
+  liveness predicate."
+
+For the currently inspected sentence "valid_ref cannot support full memory
+safety", the minimal correction is "valid_ref and these local operation
+contracts alone do not establish the documented temporary-lifetime property".
+Additional caller-specific structure can enforce a property absent from a local
+predicate. Avoid presenting an internal proof lemma as a promised reusable API,
+and avoid equating the synthetic model witness with a counterexample to the
+full published binary certificate. Update the methodology, if desired, to say
+that this independent fresh Rocq replay now supplements the earlier source
+inspection. No paper edits were made by this chat.
+
+KEY SHA-256 VALUES
+4273f5912f280fdeee02e1a40955d8ca5928ca5f882ecc8444fdc1ac67bb440b  Spec/BnInv.v
+576f42f2a1d49927d28753904697fc07e92fbc131d41a9c3f2cc7c36adbdf7be  Spec/BnModel.v
+c6d181ea9e843b2e40ec1088cb6c5d8c105c876dfdb7cada8d1daf292bb8ef2b  Spec/BnSpecs.v
+53d12acd9d63f6de48a2e501e258801da6b457a24318a3ac6f37384797d5d2e9  Spec/BnCorrect.v
+76b9e36ff667b17197ac54564c7b6ac1f0c4bb78ce17600977b37f32c94ecf2a  exp/IndependentWitness.v
+7e0f2f14b9b7adf18ba977b6362885353db6749f479f45495e7fa65b06ba8831  exp/LegacyStaleRef.v
+71dbbfc579e5c19e6fe49665455a98d97fff06ebac6acbbb13fd9932e3f9a00d  exp/Assumptions.v
+3cf1233cc194e90a8426d14393bbea1fe680eaf29671685b1fd4faba4ff9cf7b  exp/BgStale.v
+698f8f432ab80d5b469fdb857c67805df652c6cb0eb320cf413425f7da255662  replay.py
+ab3d3c845c8f80b91ecc84e876205cfc9a29e4cf1af86530d4b6677ee5ed7e2b  verify_sources.py

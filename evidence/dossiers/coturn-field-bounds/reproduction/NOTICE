@@ -1,0 +1,35 @@
+OSS Verify proofs
+
+The statements, tools, documentation and the proofs that we wrote are under the
+MIT licence (LICENSE).
+
+Proofs that we made from proofs that Anthropic licensed under the Apache License
+2.0 or the MIT licence, at the recipient's option, keep those licences and their
+file headers. The licence texts are LICENSES/anthropic-proofs-LICENSE (Apache
+License 2.0) and LICENSES/anthropic-proofs-LICENSE-MIT (MIT), and the notices
+that came with the proofs are LICENSES/anthropic-proofs-NOTICE; the build record
+of each such proof names these three files.
+
+Files under projects/*/*/source/ are copies of fuzz targets exactly as they were
+built. Each copy keeps its upstream licence, which its harness.yaml names, or
+gives as NOASSERTION where it is not recorded yet. Where a harness has no
+source/ directory, the files it was built from are in the project's recipe
+archive (one of those that release.yaml lists under recipes) or in the
+project's source archive.
+
+The source archives attached to a release (<project>-src.tar.zst,
+toolchain-src.tar.zst, sysroot-src.tar.zst) hold upstream source trees, each
+under its own licence.
+
+The binaries attached to a release are combined works under the licences of
+everything linked into them: the library, the harness, the C library (musl, MIT),
+the compiler's runtime libraries (Apache-2.0 WITH LLVM-exception), the
+static-asan patches to the sanitizer runtime and to musl (MIT), this
+repository's driver (MIT), and any other library they link. Each project's
+binary archive carries the licence files of every component compiled into its
+binaries, verbatim, under LICENSES/<component>/. No harness.yaml records the
+combined licence of its binaries yet; the build record of each proof lists the
+components and their licences. A binary under a GPL or LGPL licence is attached
+only together with its complete corresponding source.
+
+This project is not affiliated with or endorsed by Google or the OSS-Fuzz project.

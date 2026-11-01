@@ -1,0 +1,116 @@
+{
+  "capture_date": "2026-10-29",
+  "method": "Already-fetched GitHub connector UTF-8 source; no fresh research fetch for handoff",
+  "files": [
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bndiv/lib/Spec/BnModel.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnModel.v",
+      "sha256": "576f42f2a1d49927d28753904697fc07e92fbc131d41a9c3f2cc7c36adbdf7be",
+      "bytes": 25825,
+      "snapshot_path": "proof/bndiv/Spec/BnModel.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bndiv/lib/Spec/BnInv.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnInv.v",
+      "sha256": "4273f5912f280fdeee02e1a40955d8ca5928ca5f882ecc8444fdc1ac67bb440b",
+      "bytes": 15349,
+      "snapshot_path": "proof/bndiv/Spec/BnInv.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bndiv/lib/Spec/BnSpecs.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnSpecs.v",
+      "sha256": "c6d181ea9e843b2e40ec1088cb6c5d8c105c876dfdb7cada8d1daf292bb8ef2b",
+      "bytes": 25776,
+      "snapshot_path": "proof/bndiv/Spec/BnSpecs.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bndiv/lib/Spec/BnSpecs2.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bndiv/lib/Spec/BnSpecs2.v",
+      "sha256": "db6cfa02d2cd4a25eeee5b46e7f221fb52f5b3afa24a017d0a7584464af329d7",
+      "bytes": 16976,
+      "snapshot_path": "proof/bndiv/Spec/BnSpecs2.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bignum/lib/Spec/BgInv.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bignum/lib/Spec/BgInv.v",
+      "sha256": "7779ebbcff71371ee8356cb22751fae16f142fea586b54d682baf8d84ab7c4a9",
+      "bytes": 20223,
+      "snapshot_path": "proof/bignum/Spec/BgInv.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bignum/lib/Spec/BgState.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bignum/lib/Spec/BgState.v",
+      "sha256": "916127a14f90fd12bde2e616a113ae94ea866feae2d31ff433bcbb5b417dab48",
+      "bytes": 4469,
+      "snapshot_path": "proof/bignum/Spec/BgState.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bignum/lib/Spec/BgCtxSpec.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bignum/lib/Spec/BgCtxSpec.v",
+      "sha256": "033018176f7dec11ecf827fec51167f2706f87285ee49ab9b76fd7ac9ac9ef4b",
+      "bytes": 10944,
+      "snapshot_path": "proof/bignum/Spec/BgCtxSpec.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/openssl/bignum/lib/Spec/BgFrame.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/openssl/bignum/lib/Spec/BgFrame.v",
+      "sha256": "51b7c9ee5e6d67ab0323550a322de1a03340e8626706b3c36e3ce4ca0423a14f",
+      "bytes": 3041,
+      "snapshot_path": "proof/bignum/Spec/BgFrame.v"
+    },
+    {
+      "project": "openssl",
+      "repository": "openssl/openssl",
+      "commit": "47aae188a6bdc65675ea9c2a9e770bef48a5d781",
+      "repository_path": "crypto/bn/bn_ctx.c",
+      "url": "https://github.com/openssl/openssl/blob/47aae188a6bdc65675ea9c2a9e770bef48a5d781/crypto/bn/bn_ctx.c",
+      "sha256": "ff0d60db29f29a4a6ca032600ba9a58274e3bac1fc60a96d7715a68393cb3484",
+      "bytes": 9527,
+      "snapshot_path": "upstream/crypto/bn/bn_ctx.c"
+    },
+    {
+      "project": "openssl",
+      "repository": "openssl/openssl",
+      "commit": "47aae188a6bdc65675ea9c2a9e770bef48a5d781",
+      "repository_path": "doc/man3/BN_CTX_start.pod",
+      "url": "https://github.com/openssl/openssl/blob/47aae188a6bdc65675ea9c2a9e770bef48a5d781/doc/man3/BN_CTX_start.pod",
+      "sha256": "5f9cfeaa748ac3186180958bee3ba70f9ea09d323633d7969431509bcec5b797",
+      "bytes": 1711,
+      "snapshot_path": "upstream/doc/man3/BN_CTX_start.pod"
+    },
+    {
+      "project": "openssl",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/openssl/project.yaml",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/openssl/project.yaml",
+      "sha256": "bacce84f32d3ec00406ae748a930f65b8164533b1dd5940c1f52be16c07c3c51",
+      "bytes": 12851,
+      "snapshot_path": "project.yaml"
+    }
+  ]
+}

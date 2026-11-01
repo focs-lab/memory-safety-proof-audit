@@ -1,0 +1,9 @@
+*.vo
+*.vos
+*.vok
+*.glob
+.*.aux
+*.cache
+__pycache__/
+images/*.hex
+images/*.v

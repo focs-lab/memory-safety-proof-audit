@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "Please cite the accompanying paper when using this analysis."
+type: report
+title: "AI Proved the Code Memory Safe. Or Did It?"
+authors:
+  - family-names: Mathur
+    given-names: Umang
+  - family-names: Saxena
+    given-names: Prateek
+  - family-names: Li
+    given-names: Tianyu
+  - family-names: Wang
+    given-names: Bo
+  - family-names: Meyer
+    given-names: Diego
+  - family-names: Li
+    given-names: Ruishi
+repository-code: "https://github.com/focs-lab/memory-safety-proof-audit"

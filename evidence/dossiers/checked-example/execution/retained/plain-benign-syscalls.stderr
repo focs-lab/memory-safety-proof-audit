@@ -1,0 +1,15 @@
+9 set_tid_address(0x4d9b8) = 9
+9 openat(AT_FDCWD,"/artifact/replay/example/inputs/core-benign.bin",O_RDONLY|O_LARGEFILE) = 6
+9 brk(NULL) = 0x000000000004f000
+9 brk(0x0000000000051000) = 0x0000000000051000
+9 mmap(0x000000000004f000,4096,PROT_NONE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED,-1,0) = 0x000000000004f000
+9 mmap(NULL,69632,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0) = 0x00007ffffd934000
+9 read(6,0x1d8a9,65536) = 11
+9 read(6,0x1d8a9,65525) = 0
+9 close(6) = 0
+9 mmap(NULL,4096,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0) = 0x00007ffffd933000
+9 ioctl(1,TIOCGWINSZ,0x00007ffffe146900) = -1 errno=25 (Inappropriate ioctl for device)
+9 writev(1,0x7ffffe146898,0x2) = 2
+9 munmap(0x00007ffffd933000,4096) = 0
+9 munmap(0x00007ffffd934000,69632) = 0
+9 exit_group(0)

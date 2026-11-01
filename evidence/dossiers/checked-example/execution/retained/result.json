@@ -1,0 +1,496 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "build": "plain",
+      "case": "benign",
+      "status": "PASS",
+      "allocation_bytes": 21,
+      "allocation_base": "0x7ffffd933230",
+      "payload_bytes": 5,
+      "copy_instruction": "sb                      a2,0(a1)",
+      "copy_pc": "0x12ad4",
+      "stores": [
+        {
+          "index": 0,
+          "address": "0x7ffffd933230",
+          "value": "0x61",
+          "trace_line": 286
+        },
+        {
+          "index": 1,
+          "address": "0x7ffffd933231",
+          "value": "0x6c",
+          "trace_line": 348
+        },
+        {
+          "index": 2,
+          "address": "0x7ffffd933232",
+          "value": "0x69",
+          "trace_line": 398
+        },
+        {
+          "index": 3,
+          "address": "0x7ffffd933233",
+          "value": "0x63",
+          "trace_line": 448
+        },
+        {
+          "index": 4,
+          "address": "0x7ffffd933234",
+          "value": "0x65",
+          "trace_line": 498
+        }
+      ],
+      "op_address": "0x7ffffd933244",
+      "op_after_copy": "0x0",
+      "op_load_pc": "0x12ae4",
+      "op_load_trace_line": 542,
+      "handler": "h_nop",
+      "handler_pc": "0x12b30",
+      "call_pc": "0x12b04",
+      "call_trace_line": 640,
+      "handler_trace_line": 654,
+      "debug_symbol_bytes_match_proved_binary": {
+        "LLVMFuzzerTestOneInput": {
+          "address": "0x12a80",
+          "compared_bytes": 176,
+          "sha256": "da654ee6b63b12a7686d0d618d3d1c01a11b2d412f9f4a1c198f3befa62f6260"
+        },
+        "h_nop": {
+          "address": "0x12b30",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "h_admin": {
+          "address": "0x12b34",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "handlers": {
+          "address": "0x1bda8",
+          "compared_bytes": 2048,
+          "sha256": "95361ca5a079635970d99bcbac0941b66a6a54e30651151224774f021127b0c3"
+        }
+      }
+    },
+    {
+      "build": "plain",
+      "case": "exploit",
+      "status": "PASS",
+      "allocation_bytes": 21,
+      "allocation_base": "0x7ffffd933060",
+      "payload_bytes": 21,
+      "copy_instruction": "sb                      a2,0(a1)",
+      "copy_pc": "0x12ad4",
+      "stores": [
+        {
+          "index": 0,
+          "address": "0x7ffffd933060",
+          "value": "0x41",
+          "trace_line": 300
+        },
+        {
+          "index": 1,
+          "address": "0x7ffffd933061",
+          "value": "0x41",
+          "trace_line": 362
+        },
+        {
+          "index": 2,
+          "address": "0x7ffffd933062",
+          "value": "0x41",
+          "trace_line": 412
+        },
+        {
+          "index": 3,
+          "address": "0x7ffffd933063",
+          "value": "0x41",
+          "trace_line": 462
+        },
+        {
+          "index": 4,
+          "address": "0x7ffffd933064",
+          "value": "0x41",
+          "trace_line": 512
+        },
+        {
+          "index": 5,
+          "address": "0x7ffffd933065",
+          "value": "0x41",
+          "trace_line": 562
+        },
+        {
+          "index": 6,
+          "address": "0x7ffffd933066",
+          "value": "0x41",
+          "trace_line": 612
+        },
+        {
+          "index": 7,
+          "address": "0x7ffffd933067",
+          "value": "0x41",
+          "trace_line": 662
+        },
+        {
+          "index": 8,
+          "address": "0x7ffffd933068",
+          "value": "0x41",
+          "trace_line": 712
+        },
+        {
+          "index": 9,
+          "address": "0x7ffffd933069",
+          "value": "0x41",
+          "trace_line": 762
+        },
+        {
+          "index": 10,
+          "address": "0x7ffffd93306a",
+          "value": "0x41",
+          "trace_line": 812
+        },
+        {
+          "index": 11,
+          "address": "0x7ffffd93306b",
+          "value": "0x41",
+          "trace_line": 862
+        },
+        {
+          "index": 12,
+          "address": "0x7ffffd93306c",
+          "value": "0x41",
+          "trace_line": 912
+        },
+        {
+          "index": 13,
+          "address": "0x7ffffd93306d",
+          "value": "0x41",
+          "trace_line": 962
+        },
+        {
+          "index": 14,
+          "address": "0x7ffffd93306e",
+          "value": "0x41",
+          "trace_line": 1012
+        },
+        {
+          "index": 15,
+          "address": "0x7ffffd93306f",
+          "value": "0x41",
+          "trace_line": 1062
+        },
+        {
+          "index": 16,
+          "address": "0x7ffffd933070",
+          "value": "0x41",
+          "trace_line": 1112
+        },
+        {
+          "index": 17,
+          "address": "0x7ffffd933071",
+          "value": "0x41",
+          "trace_line": 1162
+        },
+        {
+          "index": 18,
+          "address": "0x7ffffd933072",
+          "value": "0x41",
+          "trace_line": 1212
+        },
+        {
+          "index": 19,
+          "address": "0x7ffffd933073",
+          "value": "0x41",
+          "trace_line": 1262
+        },
+        {
+          "index": 20,
+          "address": "0x7ffffd933074",
+          "value": "0xff",
+          "trace_line": 1312
+        }
+      ],
+      "op_address": "0x7ffffd933074",
+      "op_after_copy": "0xff",
+      "op_load_pc": "0x12ae4",
+      "op_load_trace_line": 1356,
+      "handler": "h_admin",
+      "handler_pc": "0x12b34",
+      "call_pc": "0x12b04",
+      "call_trace_line": 1454,
+      "handler_trace_line": 1468,
+      "debug_symbol_bytes_match_proved_binary": {
+        "LLVMFuzzerTestOneInput": {
+          "address": "0x12a80",
+          "compared_bytes": 176,
+          "sha256": "da654ee6b63b12a7686d0d618d3d1c01a11b2d412f9f4a1c198f3befa62f6260"
+        },
+        "h_nop": {
+          "address": "0x12b30",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "h_admin": {
+          "address": "0x12b34",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "handlers": {
+          "address": "0x1bda8",
+          "compared_bytes": 2048,
+          "sha256": "95361ca5a079635970d99bcbac0941b66a6a54e30651151224774f021127b0c3"
+        }
+      }
+    },
+    {
+      "build": "asan",
+      "case": "benign",
+      "status": "PASS",
+      "allocation_bytes": 21,
+      "allocation_base": "0x7fe1efff0010",
+      "payload_bytes": 5,
+      "copy_instruction": "sb                      a6,0(a5)",
+      "copy_pc": "0x7e6c4",
+      "stores": [
+        {
+          "index": 0,
+          "address": "0x7fe1efff0010",
+          "value": "0x61",
+          "trace_line": 594
+        },
+        {
+          "index": 1,
+          "address": "0x7fe1efff0011",
+          "value": "0x6c",
+          "trace_line": 808
+        },
+        {
+          "index": 2,
+          "address": "0x7fe1efff0012",
+          "value": "0x69",
+          "trace_line": 998
+        },
+        {
+          "index": 3,
+          "address": "0x7fe1efff0013",
+          "value": "0x63",
+          "trace_line": 1188
+        },
+        {
+          "index": 4,
+          "address": "0x7fe1efff0014",
+          "value": "0x65",
+          "trace_line": 1378
+        }
+      ],
+      "op_address": "0x7fe1efff0024",
+      "op_after_copy": "0x0",
+      "op_load_pc": "0x7e708",
+      "op_load_trace_line": 1522,
+      "handler": "h_nop",
+      "handler_pc": "0x7e780",
+      "call_pc": "0x7e730",
+      "call_trace_line": 1662,
+      "handler_trace_line": 1676,
+      "debug_symbol_bytes_match_proved_binary": {
+        "LLVMFuzzerTestOneInput": {
+          "address": "0x7e62c",
+          "compared_bytes": 340,
+          "sha256": "6556d93073af64cffc1f3920b4e8e9f7abe28d30dc94de0a75a1b7d11fe4c0a9"
+        },
+        "h_nop": {
+          "address": "0x7e780",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "h_admin": {
+          "address": "0x7e784",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "handlers": {
+          "address": "0x955a0",
+          "compared_bytes": 2048,
+          "sha256": "3b11727aa5f0fe6f57f33c22fc6a4985301ab19ed0f71d69d04e72e29248a6b8"
+        }
+      }
+    },
+    {
+      "build": "asan",
+      "case": "exploit",
+      "status": "PASS",
+      "allocation_bytes": 21,
+      "allocation_base": "0x7fe1efff0050",
+      "payload_bytes": 21,
+      "copy_instruction": "sb                      a6,0(a5)",
+      "copy_pc": "0x7e6c4",
+      "stores": [
+        {
+          "index": 0,
+          "address": "0x7fe1efff0050",
+          "value": "0x41",
+          "trace_line": 566
+        },
+        {
+          "index": 1,
+          "address": "0x7fe1efff0051",
+          "value": "0x41",
+          "trace_line": 750
+        },
+        {
+          "index": 2,
+          "address": "0x7fe1efff0052",
+          "value": "0x41",
+          "trace_line": 910
+        },
+        {
+          "index": 3,
+          "address": "0x7fe1efff0053",
+          "value": "0x41",
+          "trace_line": 1070
+        },
+        {
+          "index": 4,
+          "address": "0x7fe1efff0054",
+          "value": "0x41",
+          "trace_line": 1230
+        },
+        {
+          "index": 5,
+          "address": "0x7fe1efff0055",
+          "value": "0x41",
+          "trace_line": 1390
+        },
+        {
+          "index": 6,
+          "address": "0x7fe1efff0056",
+          "value": "0x41",
+          "trace_line": 1550
+        },
+        {
+          "index": 7,
+          "address": "0x7fe1efff0057",
+          "value": "0x41",
+          "trace_line": 1710
+        },
+        {
+          "index": 8,
+          "address": "0x7fe1efff0058",
+          "value": "0x41",
+          "trace_line": 1870
+        },
+        {
+          "index": 9,
+          "address": "0x7fe1efff0059",
+          "value": "0x41",
+          "trace_line": 2030
+        },
+        {
+          "index": 10,
+          "address": "0x7fe1efff005a",
+          "value": "0x41",
+          "trace_line": 2190
+        },
+        {
+          "index": 11,
+          "address": "0x7fe1efff005b",
+          "value": "0x41",
+          "trace_line": 2350
+        },
+        {
+          "index": 12,
+          "address": "0x7fe1efff005c",
+          "value": "0x41",
+          "trace_line": 2510
+        },
+        {
+          "index": 13,
+          "address": "0x7fe1efff005d",
+          "value": "0x41",
+          "trace_line": 2670
+        },
+        {
+          "index": 14,
+          "address": "0x7fe1efff005e",
+          "value": "0x41",
+          "trace_line": 2830
+        },
+        {
+          "index": 15,
+          "address": "0x7fe1efff005f",
+          "value": "0x41",
+          "trace_line": 2990
+        },
+        {
+          "index": 16,
+          "address": "0x7fe1efff0060",
+          "value": "0x41",
+          "trace_line": 3220
+        },
+        {
+          "index": 17,
+          "address": "0x7fe1efff0061",
+          "value": "0x41",
+          "trace_line": 3430
+        },
+        {
+          "index": 18,
+          "address": "0x7fe1efff0062",
+          "value": "0x41",
+          "trace_line": 3640
+        },
+        {
+          "index": 19,
+          "address": "0x7fe1efff0063",
+          "value": "0x41",
+          "trace_line": 3850
+        },
+        {
+          "index": 20,
+          "address": "0x7fe1efff0064",
+          "value": "0xff",
+          "trace_line": 4060
+        }
+      ],
+      "op_address": "0x7fe1efff0064",
+      "op_after_copy": "0xff",
+      "op_load_pc": "0x7e708",
+      "op_load_trace_line": 4204,
+      "handler": "h_admin",
+      "handler_pc": "0x7e784",
+      "call_pc": "0x7e730",
+      "call_trace_line": 4344,
+      "handler_trace_line": 4358,
+      "debug_symbol_bytes_match_proved_binary": {
+        "LLVMFuzzerTestOneInput": {
+          "address": "0x7e62c",
+          "compared_bytes": 340,
+          "sha256": "6556d93073af64cffc1f3920b4e8e9f7abe28d30dc94de0a75a1b7d11fe4c0a9"
+        },
+        "h_nop": {
+          "address": "0x7e780",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "h_admin": {
+          "address": "0x7e784",
+          "compared_bytes": 4,
+          "sha256": "4e8fbb4715c05fadf82f24986b5df1fcb855235807f130c0981c52a5c49e0ab0"
+        },
+        "handlers": {
+          "address": "0x955a0",
+          "compared_bytes": 2048,
+          "sha256": "3b11727aa5f0fe6f57f33c22fc6a4985301ab19ed0f71d69d04e72e29248a6b8"
+        }
+      },
+      "asan_final_store_check": {
+        "pc": "0x7e6f4",
+        "trace_line": 4050,
+        "shadow_byte": 5,
+        "address_low_3_bits": 4,
+        "branch_to_store_taken": true
+      }
+    }
+  ]
+}

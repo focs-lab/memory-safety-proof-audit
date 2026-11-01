@@ -1,0 +1,71 @@
+{
+  "repository": "focs-lab/memory-safety-proof-audit",
+  "release_tag": "proof-archive-98e995d4",
+  "release_url": "https://github.com/focs-lab/memory-safety-proof-audit/releases/tag/proof-archive-98e995d4",
+  "upstream_commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+  "archives": [
+    {
+      "filename": "oss-verify-proofs-98e995d4daced70a0a4aa2c810854b88720735f1.tar.gz",
+      "size": 2868399164,
+      "sha256": "1ff83dedd14bdf092b49d427bf5117afc530de960381486e816595f5668fde0b",
+      "parts": [
+        "source-98e995d4.tar.gz.part01",
+        "source-98e995d4.tar.gz.part02",
+        "source-98e995d4.tar.gz.part03"
+      ]
+    },
+    {
+      "filename": "oss-verify-proofs-98e995d4.git.tar.gz",
+      "size": 2188248432,
+      "sha256": "9cbaf50e0347961790b3c514c4a327e8491f580651c5ccd513d3d7ef33f002c6",
+      "parts": [
+        "git-98e995d4.tar.gz.part01",
+        "git-98e995d4.tar.gz.part02",
+        "git-98e995d4.tar.gz.part03"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "name": "source-98e995d4.tar.gz.part01",
+      "size": 1073741824,
+      "sha256": "53682453343d29ae7b551c63566084aa611aaf89a6b090440fc36a7cb22a029a"
+    },
+    {
+      "name": "source-98e995d4.tar.gz.part02",
+      "size": 1073741824,
+      "sha256": "5d580d0c0972ef5372897c0c5b9e0ec0528429dbd069822de4f6ba82afda5a65"
+    },
+    {
+      "name": "source-98e995d4.tar.gz.part03",
+      "size": 720915516,
+      "sha256": "d27a752f43e25e444b833332b420e06547afce5eaf852d43932c856949662691"
+    },
+    {
+      "name": "git-98e995d4.tar.gz.part01",
+      "size": 1073741824,
+      "sha256": "8d2a3c7cc73c6028dc07d39abd2e093828ac664edccf6624b1af68ff6d063ceb"
+    },
+    {
+      "name": "git-98e995d4.tar.gz.part02",
+      "size": 1073741824,
+      "sha256": "f844f1a2b21b4e3ecf651d7a7004a9abfdfd86fac8cbe69d53543bd8064135e2"
+    },
+    {
+      "name": "git-98e995d4.tar.gz.part03",
+      "size": 40764784,
+      "sha256": "acf0b35c3ae0d003608666183e843ad454d1084b4120cec1d555be91ea25b134"
+    },
+    {
+      "name": "proof-archive-98e995d4-metadata.tar.gz",
+      "size": 10987840,
+      "sha256": "aab03770096a07c56176a31c05b44c83db330677f53d963b509284ae264b4105"
+    }
+  ],
+  "asset_checksums": {
+    "name": "ASSET-CHECKSUMS.sha256",
+    "size": 672,
+    "sha256": "4a2641eb759d1cff455f970f6aeb0abe18f56fa9f1ea13ef07d887da4c0425fb"
+  },
+  "source_release_url": "https://github.com/focs-lab/memory-safety-audit-prelim/releases/tag/proof-archive-98e995d4"
+}

@@ -1,0 +1,36 @@
+        rocq proofs/example/core/lib/.OssFuzzTheorems.Proofs.example.core.theory.d
+        rocq proofs/example/core/lib/A0/T7G/GlueInst.{glob,vo}
+        rocq proofs/example/core/lib/A0/AW/H_fuzz.{glob,vo}
+note: dropping hypothesis (not provably disjoint from store): G4
+note: dropping hypothesis (not provably disjoint from store): G3
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 32, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 287, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 288, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 289, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 363, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 364, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+File "./proofs/example/core/lib/A0/AW/H_fuzz.v", line 365, characters 6-14:
+Warning: Use of "Notation" keyword for abbreviations is deprecated, use
+"Abbreviation" instead.
+[notation-for-abbreviation,deprecated-since-9.2,deprecated,default]
+        rocq proofs/example/core/lib/A0/T7G/ClosedA0.{glob,vo}
+        rocq proofs/example/core/lib/Theorems.{glob,vo}
+        rocq proofs/example/core/asan_agrees/Proof.{glob,vo}

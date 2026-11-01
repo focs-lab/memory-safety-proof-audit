@@ -1,0 +1,89 @@
+{
+  "archive_note": "A selected text archive of already-read sources, not a complete proof corpus. File hashes below identify local snapshot bytes only, not executable or Rocq replay results.",
+  "files": [
+    {
+      "project": "msgpack-c",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Steps.v",
+      "path": "oss-verify-proofs/98e995d4/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Steps.v",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Steps.v",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "e009ec9da7b8e37bb1afbf3e7edda1e35fab58ab84b9317ca1ec748428a91fce",
+      "size_bytes": 79267
+    },
+    {
+      "project": "msgpack-c",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/msgpack-c/unpack_pack_fuzzer/source/unpack_pack_fuzzer.cpp",
+      "path": "oss-verify-proofs/98e995d4/projects/msgpack-c/unpack_pack_fuzzer/source/unpack_pack_fuzzer.cpp",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/msgpack-c/unpack_pack_fuzzer/source/unpack_pack_fuzzer.cpp",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "ae1f7ab5307dc91780ca429d293a86e427b2550c5a6c075f13c2b4ee1597fa38",
+      "size_bytes": 1358
+    },
+    {
+      "project": "msgpack-c",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G4.v",
+      "path": "oss-verify-proofs/98e995d4/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G4.v",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G4.v",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "40598cb2f4d6a83fb3dc2f17db97fee5ed93bf5b16c73422d42c068a99567b38",
+      "size_bytes": 63223
+    },
+    {
+      "project": "msgpack-c",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Inv.v",
+      "path": "oss-verify-proofs/98e995d4/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Inv.v",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Inv.v",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "da1e37f4f00fc1fbb1246f58ac0cbdc810964b7c21103ab955c382059aae06f6",
+      "size_bytes": 30663
+    },
+    {
+      "project": "msgpack-c",
+      "repository": "msgpack-c",
+      "commit": "a5250ecbcae1d34346c7445345774b0abbd651bc",
+      "repository_path": "include/msgpack/v1/detail/cpp11_zone.hpp",
+      "path": "msgpack-c/a5250ecb/include/msgpack/v1/detail/cpp11_zone.hpp",
+      "canonical_url": "https://github.com/msgpack/msgpack-c/blob/a5250ecbcae1d34346c7445345774b0abbd651bc/include/msgpack/v1/detail/cpp11_zone.hpp",
+      "reported_modified_date": "2023-11-23T09:24:47Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "f3e4aa55b4f453d37251ecb6b4e0f9e0730ff39270bea00fb8b36d9d86f06756",
+      "size_bytes": 9385
+    },
+    {
+      "project": "msgpack-c",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/msgpack-c/README.md",
+      "path": "oss-verify-proofs/98e995d4/projects/msgpack-c/README.md",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/msgpack-c/README.md",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "599119b6c001b6b1b4622e465a1e69d8a189514f69a8e6268e4e5aae2f6af9a1",
+      "size_bytes": 4835
+    }
+  ]
+}

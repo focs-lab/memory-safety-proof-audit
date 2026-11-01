@@ -1,0 +1,89 @@
+{
+  "archive_note": "A selected text archive of already-read sources, not a complete proof corpus. File hashes below identify local snapshot bytes only, not executable or Rocq replay results.",
+  "files": [
+    {
+      "project": "simdjson",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/simdjson/fuzz_dump/lib/Sj/SjTape.v",
+      "path": "oss-verify-proofs/98e995d4/proofs/simdjson/fuzz_dump/lib/Sj/SjTape.v",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/simdjson/fuzz_dump/lib/Sj/SjTape.v",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "23e513c872b74a444dbf2a0da1fb3aa83b662c49859801a3fecc8a2929163377",
+      "size_bytes": 15016
+    },
+    {
+      "project": "simdjson",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/simdjson/README.md",
+      "path": "oss-verify-proofs/98e995d4/projects/simdjson/README.md",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/simdjson/README.md",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "f3972ec831b3bafb295c4510757e583a4f54426e245c6ae2b2dcb16ad5a3caa1",
+      "size_bytes": 9888
+    },
+    {
+      "project": "simdjson",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/simdjson/fuzz_dump/lib/Sj/SjTapeTile.v",
+      "path": "oss-verify-proofs/98e995d4/proofs/simdjson/fuzz_dump/lib/Sj/SjTapeTile.v",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/simdjson/fuzz_dump/lib/Sj/SjTapeTile.v",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "972cedc30b1863f04d78ebc134d06ebf4a445cd09eac183d2c40da6c44410b51",
+      "size_bytes": 30181
+    },
+    {
+      "project": "simdjson",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/simdjson/fuzz_ondemand/lib/P/Od_pstr_kit.v",
+      "path": "oss-verify-proofs/98e995d4/proofs/simdjson/fuzz_ondemand/lib/P/Od_pstr_kit.v",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/simdjson/fuzz_ondemand/lib/P/Od_pstr_kit.v",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "a3d056ce415325288e04606fec872c2e79cdae7e06f5951c41bce33a68011669",
+      "size_bytes": 13210
+    },
+    {
+      "project": "simdjson",
+      "repository": "simdjson",
+      "commit": "f807de973580fb22cc0db6b3b896716684b0266c",
+      "repository_path": "include/simdjson/dom/element.h",
+      "path": "simdjson/f807de97/include/simdjson/dom/element.h",
+      "canonical_url": "https://github.com/simdjson/simdjson/blob/f807de973580fb22cc0db6b3b896716684b0266c/include/simdjson/dom/element.h",
+      "reported_modified_date": "2026-04-12T21:06:27Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "46f26c2c15977888da1e89b93ed3858c98730be5bb7a0e43d8d337507c5cdcdb",
+      "size_bytes": 22418
+    },
+    {
+      "project": "simdjson",
+      "repository": "oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/simdjson/fuzz_parser/source/fuzz_parser.cpp",
+      "path": "oss-verify-proofs/98e995d4/projects/simdjson/fuzz_parser/source/fuzz_parser.cpp",
+      "canonical_url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/simdjson/fuzz_parser/source/fuzz_parser.cpp",
+      "reported_modified_date": "2026-10-22T20:28:58Z",
+      "capture_date": "2026-10-29",
+      "source": "Cached GitHub connector UTF-8 text response from the completed source review; not a fresh audit or repository checkout.",
+      "final_newline_in_connector_content": true,
+      "sha256": "82ae59e7acd6ac165437d52daeca7cd379872a13a973e2ff77f0c08277cec282",
+      "size_bytes": 312
+    }
+  ]
+}

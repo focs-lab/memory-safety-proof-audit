@@ -1,0 +1,69 @@
+diff --git a/dune-project b/dune-project
+index afbad4198..2ce4cd503 100644
+--- a/dune-project
++++ b/dune-project
+@@ -2677,6 +2677,12 @@
+  (license MIT)
+  (depends rocq-oss-fuzz-theorems-core))
+ 
++(package
++ (name rocq-oss-fuzz-theorems-example-proofs)
++ (synopsis "Proofs of statements about example's harness (local replay study)")
++ (license MIT)
++ (depends rocq-oss-fuzz-theorems-core))
++
+ (package
+  (name rocq-oss-fuzz-theorems-pupnp-proofs)
+  (synopsis "Proofs of statements about pupnp's OSS-Fuzz harnesses")
+diff --git a/projects/example/project.yaml b/projects/example/project.yaml
+index 929b67192..ce5af0c86 100644
+--- a/projects/example/project.yaml
++++ b/projects/example/project.yaml
+@@ -5,5 +5,28 @@ language: c++
+ oss_fuzz:
+   path: projects/example
+   commit: bd2ce21991a94a362b92fb1bf25f86d5a1a60842
+-status: no-harness
+-reason: none-at-commit
++status: available
++library:
++  name: example
++  repository: https://example.invalid/none
++  commit: 0000000000000000000000000000000000000000
++  licence: NOASSERTION
++harnesses:
++- name: core
++  status: included
++  origin: upstream
++build:
++  system: custom
++  clang: 20.1.8
++  builder: ghcr.io/theorem-labs/oss-fuzz-theorems-toolchain@sha256:6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b
++assets:
++  bin:
++    release: v2026.10.0
++    file: example-bin.tar.zst
++    bytes: 263301
++    sha256: fb67c4da30afd12cdec308f4f21b21549a4bc0ee3d4764712e2afde23937754b
++    recipe:
++      release: v2026.10.0-src
++      file: recipe.tar.zst
++      bytes: 938459
++      sha256: 0339bf3221b15cd39513d46abe99062bac9cce874ed7ba5947753f75b6219ae5
+diff --git a/release.yaml b/release.yaml
+index 72833dfc5..92678a14a 100644
+--- a/release.yaml
++++ b/release.yaml
+@@ -24,9 +24,9 @@ binaries:
+   store: github-release-assets
+ counts:
+   projects: 1381
+-  available: 427
+-  harnesses: 2148
+-  binaries: 8578
++  available: 428
++  harnesses: 2149
++  binaries: 8580
+ recipes:
+ - release: v2026.10.0-src
+   file: recipe.tar.zst

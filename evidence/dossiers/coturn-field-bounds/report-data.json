@@ -1,0 +1,1200 @@
+{
+  "title": "Coturn: struct-field bounds in the internal proofs",
+  "date": "2026-11-01",
+  "blocks": [
+    {
+      "kind": "title",
+      "text": "Coturn: struct-field bounds in the internal proofs",
+      "subtitle": "Findings dossier, source excerpts and paper reuse package",
+      "date": "1 November 2026"
+    },
+    {
+      "kind": "p",
+      "text": "Coturn is a TURN and STUN server implementation. The reviewed target is FuzzStunClient. The ASan and ASan+UBSan coturn proof cases have machine-checked models satisfying the complete original internal invariant while a buffer-derived write address is one byte before the `buf` field. The address is the storage of the preceding `channel[3]` field, within the same `stun_buffer`. See the pinned project README under upstream/coturn/README.md."
+    },
+    {
+      "kind": "callout",
+      "text": "Established: non-entailment of the field lower bound by the selected internal invariants. Input reachability, attacker control and downstream corruption are unestablished."
+    },
+    {
+      "kind": "table",
+      "head": [
+        "Finding",
+        "Evidence level",
+        "Conclusion"
+      ],
+      "rows": [
+        [
+          "Coturn ASan",
+          "Full original gamma2 witness checked in Rocq 9.2",
+          "The selected case admits buf - 1."
+        ],
+        [
+          "Coturn ASan+UBSan",
+          "Full original gamma2 witness checked in Rocq 9.2",
+          "The selected case admits buf - 1."
+        ],
+        [
+          "Coturn plain",
+          "Source, binary and decoded-certificate analysis; Python consistency checks",
+          "Matching local case found; no new full-gamma Rocq replay for this variant."
+        ],
+        [
+          "bzip2 candidate",
+          "Manual source/proof audit and RV64 layout checks",
+          "No omitted field-bound example identified among 24 core inline arrays."
+        ]
+      ],
+      "widths": [
+        0.2,
+        0.39,
+        0.41
+      ]
+    },
+    {
+      "kind": "p",
+      "text": "The report freezes proof repository commit `a6839bb9e433b34c0d0710df5280194528877139`, coturn source `70ca74e0bd8300e22a179e9a7beead862763ca5c`, and the paper at `1c1b1e742b1b80fa975a976f6e94ff7844ea07dd`. These were the checked repository HEADs or pinned source revision during the investigation. Paper citations identify the committed revision in the provenance record. This audit package omits manuscript sources."
+    },
+    {
+      "kind": "figure",
+      "caption": "The address relation in the audited RV64 layout. The drawing is schematic; the two arrays are not drawn to scale."
+    },
+    {
+      "kind": "page",
+      "title": "1. The C objects and the static call context"
+    },
+    {
+      "kind": "p",
+      "text": "The declaration has two distinct array fields. `STUN_CHANNEL_HEADER_LENGTH` is 4 and `STUN_BUFFER_SIZE` is 65507. [C1] [C2] [C3]"
+    },
+    {
+      "kind": "code",
+      "text": "typedef struct _stun_buffer {\n  uint8_t channel[STUN_CHANNEL_HEADER_LENGTH];\n  uint8_t buf[STUN_BUFFER_SIZE];\n  size_t len;\n  uint16_t offset;\n  uint8_t coffset;\n} stun_buffer;\n",
+      "first_line": 45,
+      "caption": "stun_buffer declaration",
+      "source": "C1"
+    },
+    {
+      "kind": "p",
+      "text": "In the audited RV64 layout, `channel` starts at offset 0 and `buf` at offset 4. The remaining offsets are `len` at 65512, `offset` at 65520 and `coffset` at 65522; the whole struct has size 65528 and alignment 8. `checks/layout-rv64.txt` records an independent layout-only Clang check using matching scalar types and declarations."
+    },
+    {
+      "kind": "code",
+      "text": "uint16_t stun_set_channel_bind_request(stun_buffer *buf, const ioa_addr *peer_addr, uint16_t channel_number) {\n\n  return stun_set_channel_bind_request_str(buf->buf, &(buf->len), peer_addr, channel_number);\n}\n",
+      "first_line": 181,
+      "caption": "Struct wrapper passes its buf field",
+      "source": "C4"
+    },
+    {
+      "kind": "p",
+      "text": "For the reviewed certificate context, the wrapper passes its array field `buf->buf` and the address of its length field into the `_str` API. The static source call chain continues through `stun_set_channel_bind_request_str`, `stun_attr_add_addr_str`, and `stun_attr_add_str`. The address builder makes the final call at line 1729. This identifies the source field and call context; it is not an input-reachability argument. [C5] [C6]"
+    },
+    {
+      "kind": "code",
+      "text": "int stun_get_command_message_len_str(const uint8_t *buf, size_t len) {\n  if (len < STUN_HEADER_LENGTH) {\n    return -1;\n  }\n\n  /* Validate the size the buffer claims to be */\n  const size_t bufLen = (size_t)(turn_read_u16(buf + 2) + STUN_HEADER_LENGTH);\n  if (bufLen > len) {\n    return -1;\n  }\n\n  return bufLen;\n}\n",
+      "first_line": 523,
+      "caption": "Signed message-length result and -1 failure",
+      "source": "C7"
+    },
+    {
+      "kind": "p",
+      "text": "The signed result is either a validated message length or the failure value -1. Identifying that error value does not establish that this caller can produce it. In particular, the abstract witness is not a proof that this helper returns -1 on the witness memory."
+    },
+    {
+      "kind": "page",
+      "title": "2. The access and its missing field-bound obligation"
+    },
+    {
+      "kind": "p",
+      "text": "The following is the complete body of `stun_attr_add_str`, so the argument normalization, length check, padding and writes remain visible. [C8]"
+    },
+    {
+      "kind": "code",
+      "text": "bool stun_attr_add_str(uint8_t *buf, size_t *len, uint16_t attr, const uint8_t *avalue, int alen) {\n  if (alen < 0) {\n    alen = 0;\n  }\n  uint8_t tmp[1];\n  if (!avalue) {\n    alen = 0;\n    avalue = tmp;\n  }\n  const int clen = stun_get_command_message_len_str(buf, *len);\n  int newlen = clen + 4 + alen;\n  const int newlenrem4 = newlen & 0x00000003;\n  int paddinglen = 0;\n  if (newlenrem4) {\n    paddinglen = 4 - newlenrem4;\n    newlen = newlen + paddinglen;\n  }\n\n  if (newlen >= MAX_STUN_MESSAGE_SIZE) {\n    return false;\n  }\n\n  uint8_t *attr_start = buf + clen;\n\n  stun_set_command_message_len_str(buf, newlen);\n  *len = newlen;\n\n  turn_write_u16(attr_start, attr);\n  turn_write_u16(attr_start + 2, (uint16_t)alen);\n  if (alen > 0) {\n    memcpy(attr_start + 4, avalue, alen);\n  }\n\n  // Write 0 padding to not leak data\n  memset(attr_start + 4 + alen, 0, paddinglen);\n\n  return true;\n}\n",
+      "first_line": 1666,
+      "caption": "Complete stun_attr_add_str body",
+      "source": "C8"
+    },
+    {
+      "kind": "code",
+      "text": "static inline void turn_write_u16(void *field, uint16_t v) {\n  const uint16_t raw = nswap16(v);\n  memcpy(field, &raw, sizeof(raw));\n}\n",
+      "first_line": 145,
+      "caption": "Two-byte write helper",
+      "source": "C9"
+    },
+    {
+      "kind": "p",
+      "text": "The helper writes two bytes. Let B be the struct base, b = B + 4 the start of `buf`, and p the write destination. In the admitted case, p = b - 1 = B + 3, the storage of `channel[3]`; the second byte is at `buf[0]`. The capacity check on `newlen` is an upper-bound check and does not by itself prove `clen >= 0`."
+    },
+    {
+      "kind": "formula",
+      "text": "Required for the two-byte write:  b <= p  and  p + 2 <= b + 65507.\nAdmitted first-byte address:      p = b - 1.\nEnclosing-object address:         p = B + 3, inside the same struct."
+    },
+    {
+      "kind": "page",
+      "title": "3. Exact instrumented certificate cases"
+    },
+    {
+      "kind": "p",
+      "text": "Both selectors use zero-based disjunct index 1 and empty inline context. `sp0` is the proof environment stack anchor; the three builds have different frame layouts. `both` is the repository name for ASan+UBSan. [P2] [P3]"
+    },
+    {
+      "kind": "table",
+      "head": [
+        "Item",
+        "ASan",
+        "ASan+UBSan"
+      ],
+      "rows": [
+        [
+          "Unit / entry",
+          "752 / 0x8d0f0",
+          "845 / 0x8c638"
+        ],
+        [
+          "Cut / disjunct",
+          "0x8d348 / 1",
+          "0x8c93c / 1"
+        ],
+        [
+          "Field start b",
+          "sp0 - 1326956",
+          "sp0 - 1327020"
+        ],
+        [
+          "First-byte destination p",
+          "sp0 - 1326957",
+          "sp0 - 1327021"
+        ],
+        [
+          "Register facts",
+          "x14 = b; x18 = -1; x14 + x18 = p",
+          "x22 = b; x25 = p"
+        ],
+        [
+          "First byte-store PC",
+          "0x8d38c: sb x10, 0(x21)",
+          "0x8c97c: sb x10, 0(x25)"
+        ],
+        [
+          "Instruction word",
+          "0x00aa8023",
+          "0x00ac8023"
+        ],
+        [
+          "Containing write interval (relative to sp0)",
+          "[-1326957, -1326932)",
+          "[-1327021, -1327008)"
+        ],
+        [
+          "Shadow offset relative to sp0/8 + 0x7fff8000",
+          "-165870, byte value 0",
+          "-165878, byte value 0"
+        ],
+        [
+          "Later cut / recorded slot",
+          "0x8d3e8 / offset -1326957, width 1",
+          "0x8c9e8 / offset -1327021, width 1"
+        ]
+      ],
+      "widths": [
+        0.3,
+        0.35,
+        0.35
+      ]
+    },
+    {
+      "kind": "p",
+      "text": "In ASan, the selected cut is before the addition that forms x21. The theorem computes the destination as machine-word addition x14+x18. In ASan+UBSan, x25 already holds the destination. The combined build's extra recorded constraints therefore do not restore the field lower bound."
+    },
+    {
+      "kind": "p",
+      "text": "Static instruction inspection places the combined build's pointer checks at 0x8c8b4-0x8c8d4, before its selected cut. The later ASan shadow tests examine zero in the supplied model. These instruction associations are source/binary audit evidence; the new Rocq statements are state-existence theorems, not complete small-step traces through the C operation."
+    },
+    {
+      "kind": "p",
+      "text": "Certificate reference chains are ASan 914 -> 754 at call PC 0x86ae8, then 754 -> 752 at 0x8e380; and ASan+UBSan 1034 -> 847 at 0x86610, then 847 -> 845 at 0x8d6d0. These references identify the reviewed call contexts, without establishing that an input reaches the selected disjunct."
+    },
+    {
+      "kind": "h2",
+      "text": "The formal claim"
+    },
+    {
+      "kind": "formula",
+      "text": "There exist valuation nu, registers R and memory M such that:\n  original Gamma_2(case, nu, R, M)\n  and rank(case, nu) >= 0\n  and destination(R) = b - 1 < b\n  and store_ok(M, destination(R), 1) = true\n  and ASan shadow(destination(R)) = 0.\nTherefore Gamma_2(case) does not entail b <= destination."
+    },
+    {
+      "kind": "p",
+      "text": "The two final statements are `asan_decoded_case_admits_buf_minus_one` at `reproduction/proof/Complete.v:56` and `both_decoded_case_admits_buf_minus_one` at line 127. Each selects the unit, full state and rank from the original compressed certificate and uses the original `unit_params2`/`genv` parameters and the SHA-pinned binary images."
+    },
+    {
+      "kind": "page",
+      "title": "4. The exact machine-checked statements"
+    },
+    {
+      "kind": "p",
+      "text": "These are literal excerpts from the successful audit sources, not schematic pseudocode. `asan_buffer` and `both_buffer` are the field starts; `asan_destination` is the machine addition x14+x18, and `both_destination` is register x25. The definitions and all witnesses are carried in `reproduction/proof/`."
+    },
+    {
+      "kind": "code",
+      "text": "Theorem asan_decoded_case_admits_buf_minus_one :\n exists U nu regs mem,\n  find (fun u => Z.eqb (u_vid (u1 u)) 752) asan_decoded = Some U /\\\n  select_case asan_decoded 752 0x8d348 = Some asan_case /\\\n  select_rank asan_decoded 752 0x8d348 = Some asan_rank /\\\n  gamma2 SEGSA (unit_params2 (genv_asan true) U) asan_E mem\n    (load_cstate2 (unit_params2 (genv_asan true) U) asan_case 0x8d348 []) nu regs mem /\\\n  0 <= eval nu asan_rank /\\\n  bv_unsigned (asan_destination regs) = asan_buffer-1 /\\\n  bv_unsigned (asan_destination regs) < asan_buffer /\\\n  store_ok SEGSA mem (asan_destination regs) 1 = true /\\\n  rdn SEGSA mem (wordZ (0x7fff8000 + bv_unsigned (asan_destination regs)/8)) 1\n    = Some [Z_to_bv 8 0].\n",
+      "first_line": 56,
+      "caption": "ASan: reproduction/proof/Complete.v:56-68",
+      "source": null
+    },
+    {
+      "kind": "code",
+      "text": "Theorem both_decoded_case_admits_buf_minus_one :\n exists U nu regs mem,\n  find (fun u => Z.eqb (u_vid (u1 u)) 845) both_decoded = Some U /\\\n  select_case both_decoded 845 0x8c93c = Some both_case /\\\n  select_rank both_decoded 845 0x8c93c = Some both_rank /\\\n  gamma2 SEGSB (unit_params2 (genv_both true) U) both_E mem\n    (load_cstate2 (unit_params2 (genv_both true) U) both_case 0x8c93c []) nu regs mem /\\\n  0 <= eval nu both_rank /\\\n  bv_unsigned (both_destination regs) = both_buffer-1 /\\\n  bv_unsigned (both_destination regs) < both_buffer /\\\n  store_ok SEGSB mem (both_destination regs) 1 = true /\\\n  rdn SEGSB mem (wordZ (0x7fff8000 + bv_unsigned (both_destination regs)/8)) 1\n    = Some [Z_to_bv 8 0].\n",
+      "first_line": 127,
+      "caption": "ASan+UBSan: reproduction/proof/Complete.v:127-139",
+      "source": null
+    },
+    {
+      "kind": "p",
+      "text": "`SEGSA` and `SEGSB` are the static images regenerated from the SHA-pinned instrumented ELF files. `store_ok` here checks permission for the first byte; this is enough to exhibit the missing lower bound. These existence statements do not assert a small-step execution to, or through, the write."
+    },
+    {
+      "kind": "page",
+      "title": "5. Why the internal proof permits the neighboring byte"
+    },
+    {
+      "kind": "p",
+      "text": "The complete extended interpretation `gamma2` includes the base invariant, environment, runtime memory, fixed symbols, division definitions, all regions, liveness, symbol bounds, globals, flags and memoized facts. The new witnesses satisfy this entire predicate. [P4] [P5]"
+    },
+    {
+      "kind": "code",
+      "text": "  Definition gamma2 (mem0 : word -> option byte) (A : vstate2) (nu : val) (regs : bvmap 5 word) (mem : word -> option byte) : Prop :=\n    gamma SEGS P1 E1 (zpatch mem0 mem) (v1 A) nu regs mem\n    /\\ env_ok2 /\\ MC2 mem0 mem /\\ gamma_fix2 E nu\n    /\\ gamma_divdef nu A\n    /\\ (forall r, In r (vs_rgn A) -> region_ok nu A mem r)\n    /\\ live_ok nu A\n    /\\ state_below2 A\n    /\\ globs_ok2 A\n    /\\ flags_inv A nu mem\n    /\\ memo_ok nu mem A.\n",
+      "first_line": 414,
+      "caption": "Complete extended concretization predicate gamma2",
+      "source": "P4"
+    },
+    {
+      "kind": "p",
+      "text": "For these ordinary SP0-relative accesses, the extended store machinery falls back to the ordinary stack store checker. [P7]"
+    },
+    {
+      "kind": "code",
+      "text": "Definition x_store2 (P : vparams2) (A : vstate2) (sz : msize) (rs1 rs2 : Z) (imm : Z) : vresult2 :=\n  let n := msize_z sz in\n  match addr_of (v1 A) rs1 imm with\n  | None => VR2_fail \"store via Top address\"\n  | Some addr =>\n      match classify2 A addr n true with\n      | None => lift1c A (x_store (p1 P) (v1 A) sz rs1 rs2 imm)\n      | Some (C2Fail m) => VR2_fail m\n      | Some C2Dead => VR2_next []\n      | Some (C2Rgn r off lo hi) => store_rgn A r off lo hi n (get_reg (v1 A) rs2)\n      end\n",
+      "first_line": 494,
+      "caption": "Extended store falls back to ordinary store checker",
+      "source": "P7"
+    },
+    {
+      "kind": "p",
+      "text": "The ordinary classifier requires the access to be inside the stack window and the unit write set. It does not attach the `buf` field's start address to this pointer. The decoded write intervals in the preceding table explicitly include the byte before `buf`. [P6] [P8]"
+    },
+    {
+      "kind": "code",
+      "text": "Definition classify (P : vparams) (A : vstate) (addr : lin) (n : Z) (is_store : bool) : cres :=\n  let cs := lcoef addr SP0 in let cd := lcoef addr DATA in\n  if Z.eqb cs 1 && Z.eqb cd 0 then\n    let off := lsub addr (lsym SP0) in\n    (* [comment removed for export] *)\n    if negb (qge A off (- vp_frame P)) then\n      (if bnd_dead A off then CDead else CFail \"stack access below window\")\n    else if negb (qle A off (- n)) then\n      (if bnd_dead A off then CDead else CFail \"stack access above sp0\")\n    else\n      let b := bnd A off in\n      match b with\n      | (Some lo, Some hi) =>\n          if itv_empty b then CDead\n          else if is_store && negb (in_ranges (vp_wstack P) lo (hi - lo + n)) then CFail \"store outside unit write set\"\n          else COk (RStack off lo hi)\n      | _ => CFail \"stack offset unbounded\"   (* [comment removed for export] *)\n",
+      "first_line": 52,
+      "caption": "Ordinary stack-window and write-set checks",
+      "source": "P6"
+    },
+    {
+      "kind": "p",
+      "text": "The extra fake-frame, borrowed-argument, flag and shadow regions are all accounted for in the witnesses. Their existence does not supply the missing bound b <= p at this access. The result follows from the complete predicate, rather than from inspecting only the exported agreement statement."
+    },
+    {
+      "kind": "page",
+      "title": "6. How this matches Section 4 of the paper"
+    },
+    {
+      "kind": "p",
+      "text": "The current Section 4, \"An Example\", uses `struct S { char buf[20]; unsigned char op; }` and a fill operation that may cross from `buf` into `op`. The modified opcode still selects an in-bounds element of a 256-entry handler table. [M1] The section distinguishes mapped/permitted enclosing storage from the bounds of its finer-grained objects. [M2]"
+    },
+    {
+      "kind": "table",
+      "head": [
+        "Feature",
+        "Section 4",
+        "Coturn finding"
+      ],
+      "rows": [
+        [
+          "Field whose bounds matter",
+          "20-byte buf",
+          "65507-byte buf"
+        ],
+        [
+          "Neighbor in the same aggregate",
+          "op, following buf",
+          "channel[3], preceding buf"
+        ],
+        [
+          "Crossed boundary",
+          "Upper boundary: forward overflow",
+          "Lower boundary: underflow"
+        ],
+        [
+          "Containing storage",
+          "Same allocated struct",
+          "Same stack-resident struct; allowed stack/write-set extent"
+        ],
+        [
+          "Sanitizer distinction",
+          "No effective field boundary in the example",
+          "Checked model has zero ASan shadow at p; combined-build invariant also admits p"
+        ],
+        [
+          "What is established here",
+          "The paper discusses a constructed reachable overwrite and dispatch consequence",
+          "A countermodel to field-bound entailment by the selected internal invariants"
+        ]
+      ],
+      "widths": [
+        0.24,
+        0.37,
+        0.39
+      ]
+    },
+    {
+      "kind": "p",
+      "text": "The shared point is a subobject boundary that is absent from the effective proof obligation. An address can remain within permitted enclosing storage while violating the bounds of the particular array field from which the pointer was formed. A two-byte write starting one byte before `buf` already violates the field lower bound, even if only its first byte targets the neighboring field."
+    },
+    {
+      "kind": "p",
+      "text": "For UBSan, the paper can use a narrow, checked claim: in this particular ASan+UBSan build and certificate case, the complete retained constraints admit the already formed out-of-field pointer. This does not require a universal claim about every UBSan configuration or every pointer-decay optimization."
+    },
+    {
+      "kind": "callout",
+      "text": "The coturn evidence establishes the field-boundary distinction. It does not establish a reachable coturn attack, a changed channel byte, a dispatch effect, or a false published agreement theorem."
+    },
+    {
+      "kind": "page",
+      "title": "7. Material ready to reuse in the paper"
+    },
+    {
+      "kind": "h2",
+      "text": "Compact paragraph"
+    },
+    {
+      "kind": "p",
+      "text": "Coturn's client-message proofs provide a concrete instance of this field-boundary gap. Its `stun_buffer` places a four-byte `channel` array immediately before a `buf` array. The routine `stun_attr_add_str` forms `attr_start = buf + clen` and writes two bytes there. We machine-checked abstract states admitted by both the ASan and ASan+UBSan internal cut-invariants in which that address is `buf - 1`, the storage of `channel[3]`. These states satisfy the complete original invariant, including its memory permissions and shadow facts. Thus the existing invariants do not establish that this access stays inside the array field. This is a result about the strength of the internal invariants; it does not establish that a covered input reaches the state or changes the program's behavior."
+    },
+    {
+      "kind": "h2",
+      "text": "Compact listing (explicitly abridged)"
+    },
+    {
+      "kind": "code",
+      "text": "typedef struct _stun_buffer {\n  uint8_t channel[4];\n  uint8_t buf[65507];\n  /* len, offset, coffset omitted */\n} stun_buffer;\n\n/* Inside stun_attr_add_str(uint8_t *buf, ...): */\nconst int clen =\n    stun_get_command_message_len_str(buf, *len);\n/* newlen calculation and padding omitted */\nif (newlen >= MAX_STUN_MESSAGE_SIZE)\n  return false;\nuint8_t *attr_start = buf + clen;\n/* update message length */\nturn_write_u16(attr_start, attr);\n",
+      "first_line": null,
+      "caption": "Paper illustration: macros expanded, omitted code marked; not a standalone program.",
+      "source": null
+    },
+    {
+      "kind": "p",
+      "text": "Original source files and licence headers are preserved under `upstream/coturn/`. Numbered excerpt files under `code/` retain the original copyright/licence header. The Rocq statements are in `reproduction/proof/Complete.v` and are quoted in this report data."
+    },
+    {
+      "kind": "h2",
+      "text": "Technical formulation"
+    },
+    {
+      "kind": "p",
+      "text": "Let b be the start of `stun_buffer.buf` and p the destination of the first lowered byte store for `turn_write_u16(attr_start, attr)`. Field-level safety requires at least `b <= p`. For ASan unit 752 at cut `0x8d348`, disjunct 1, and ASan+UBSan unit 845 at cut `0x8c93c`, disjunct 1, the new Rocq lemmas construct valuations, registers and memory satisfying the complete original `gamma2` predicate while `p = b - 1`, `store_ok(p, 1) = true` and the corresponding ASan shadow byte is zero. The cases, ranks and relevant unit parameters are checked against the original compressed certificates with the repository's decoder. Consequently, these cut-invariants do not entail the field lower bound. This countermodel does not establish a concrete execution from the harness input, or refute the published agreement theorem."
+    },
+    {
+      "kind": "p",
+      "text": "The paper's current `\\repo` macro points to older proof commit 98e995d4. The supplied snippets use their own `\\coturnproofrepo` macro pinned to a6839bb9. Do not silently cite the new finding through the older link macro. The supplied bibliography file provides entries for the pinned proof repository and coturn source."
+    },
+    {
+      "kind": "page",
+      "title": "8. Plain-build evidence and the bzip2 result"
+    },
+    {
+      "kind": "h2",
+      "text": "Plain coturn case: a distinct evidence level"
+    },
+    {
+      "kind": "p",
+      "text": "The plain-build investigation found unit 166, entry 0x18898, cut 0x18994, context [], disjunct 0. Its field start is sp0-65628 and x24 is sp0-65629. The instruction at 0x18998 is `sb x10, 0(x24)` (word 0x00ac0023); the next stored cut at 0x189ac records a one-byte slot at that offset. [P1]"
+    },
+    {
+      "kind": "p",
+      "text": "The unit write set contains [-65629,-65585) and [-120,-112), relative to sp0. The selected pure constraints admit s21=12, s23=4, s27=20, s28=8, sp0=0x7fff80000000, DATA=0x400000 and SIZE=1. The corrected congruence for s27 is 4 modulo 8. Slot consistency, pure constraints, instruction bytes and range inclusion were checked by Python."
+    },
+    {
+      "kind": "p",
+      "text": "A certificate reference chain connects root 249 to unit 170 at call PC 0x14c90, then to unit 166 at 0x192f0. These are proof/call references, not a reachability proof for the selected abstract disjunct. This investigation did not add a full original-gamma Rocq existence theorem for the plain variant. The complete decoded data and earlier report are in `evidence/plain-witness.json` and `evidence/plain-audit.txt`."
+    },
+    {
+      "kind": "h2",
+      "text": "bzip2: the initially proposed example did not survive internal review"
+    },
+    {
+      "kind": "p",
+      "text": "The bzip2 review used the same proof commit and source pin f5dfc96063fef2d9c5446d0733867d899ef9b942. It inventoried 115 fields in the core structs and 24 inline arrays, checked their offsets, lengths and element widths against the RV64 layout, and inspected the associated bounded-access proof families. No concrete omitted field-bound obligation was identified in that source review."
+    },
+    {
+      "kind": "p",
+      "text": "This is a manual-review result, not a newly machine-checked universal C-subobject safety theorem. The completed harness compresses and then decompresses its own output; standalone arbitrary-input decompression and file-I/O API histories have different coverage. Coarsened saved fields concern persistent value/session contracts, not an identified field-overflow counterexample. The full inventory is preserved as `evidence/bzip2-field-bounds-audit.json`."
+    },
+    {
+      "kind": "p",
+      "text": "The bzip2 result is useful methodological context: omission of a property from an exported theorem does not by itself establish that the internal proof omits it. Coturn supplies the stronger evidence because its selected complete internal predicates have explicit checked countermodels."
+    },
+    {
+      "kind": "page",
+      "title": "9. bzip2: core inline-array inventory"
+    },
+    {
+      "kind": "p",
+      "text": "All 24 core inline arrays in the manual audit are listed below. Sizes and offsets are bytes in the audited RV64 layout. The JSON inventory also records the other 91 scalar/pointer fields and the exact bounded-access proof-family locations for every field. No row is a newly replayed universal field-safety theorem."
+    },
+    {
+      "kind": "table",
+      "head": [
+        "Array field",
+        "Offset",
+        "Size"
+      ],
+      "rows": [
+        [
+          "EState.inUse",
+          "128",
+          "256"
+        ],
+        [
+          "EState.unseqToSeq",
+          "384",
+          "256"
+        ],
+        [
+          "EState.mtfFreq",
+          "672",
+          "1032"
+        ],
+        [
+          "EState.selector",
+          "1704",
+          "18002"
+        ],
+        [
+          "EState.selectorMtf",
+          "19706",
+          "18002"
+        ],
+        [
+          "EState.len",
+          "37708",
+          "1548"
+        ],
+        [
+          "EState.code",
+          "39256",
+          "6192"
+        ],
+        [
+          "EState.rfreq",
+          "45448",
+          "6192"
+        ],
+        [
+          "EState.len_pack",
+          "51640",
+          "4128"
+        ],
+        [
+          "DState.unzftab",
+          "68",
+          "1024"
+        ],
+        [
+          "DState.cftab",
+          "1096",
+          "1028"
+        ],
+        [
+          "DState.cftabCopy",
+          "2124",
+          "1028"
+        ],
+        [
+          "DState.inUse",
+          "3196",
+          "256"
+        ],
+        [
+          "DState.inUse16",
+          "3452",
+          "16"
+        ],
+        [
+          "DState.seqToUnseq",
+          "3468",
+          "256"
+        ],
+        [
+          "DState.mtfa",
+          "3724",
+          "4096"
+        ],
+        [
+          "DState.mtfbase",
+          "7820",
+          "64"
+        ],
+        [
+          "DState.selector",
+          "7884",
+          "18002"
+        ],
+        [
+          "DState.selectorMtf",
+          "25886",
+          "18002"
+        ],
+        [
+          "DState.len",
+          "43888",
+          "1548"
+        ],
+        [
+          "DState.limit",
+          "45436",
+          "6192"
+        ],
+        [
+          "DState.base",
+          "51628",
+          "6192"
+        ],
+        [
+          "DState.perm",
+          "57820",
+          "6192"
+        ],
+        [
+          "DState.minLens",
+          "64012",
+          "24"
+        ]
+      ],
+      "widths": [
+        0.58,
+        0.21,
+        0.21
+      ]
+    },
+    {
+      "kind": "p",
+      "text": "The per-field evidence is in `evidence/bzip2-field-bounds-audit.json`. It links to the same current proof commit a6839bb9. The completed bzip2 proof is a source-review contrast to the checked coturn countermodels, rather than a positive missing-field-bound finding."
+    },
+    {
+      "kind": "page",
+      "title": "10. Decoder correction, verification and reproduction"
+    },
+    {
+      "kind": "h2",
+      "text": "Correction to the earlier extraction"
+    },
+    {
+      "kind": "p",
+      "text": "The first Python decoder parsed a congruence residue as unsigned. The upstream decoder uses the signed parser for the residue: the format is symbol, unsigned modulus, signed residue. [P9] Rocq's equality check against the original certificate exposed the error."
+    },
+    {
+      "kind": "table",
+      "head": [
+        "Item",
+        "Earlier extraction",
+        "Corrected evidence"
+      ],
+      "rows": [
+        [
+          "Instrumented SP0 congruence",
+          "Residue 32 modulo 32",
+          "Residue 16 modulo 32"
+        ],
+        [
+          "Instrumented SP0 witness",
+          "0x7fff80000000",
+          "0x7fff80000010"
+        ],
+        [
+          "Plain s27 congruence",
+          "Residue 8 modulo 8",
+          "Residue 4 modulo 8"
+        ],
+        [
+          "Plain s27 witness",
+          "24",
+          "20"
+        ]
+      ],
+      "widths": [
+        0.34,
+        0.33,
+        0.33
+      ]
+    },
+    {
+      "kind": "p",
+      "text": "The decoder, decoded data and published witnesses were corrected. The field addresses remain one byte before `buf`, so the final finding is unchanged. The final instrumented source literals and ranks are checked by the original Rocq decoder; the Python translation is not part of the trusted formal check."
+    },
+    {
+      "kind": "h2",
+      "text": "Recorded machine check"
+    },
+    {
+      "kind": "p",
+      "text": "The original fresh build passed all 88 sources in 166.78 seconds on 1 November 2026 (finished 04:11:52 UTC), using the release-pinned Rocq 9.2 checker with OCaml 4.14.3. The 75 copied coturn dependencies, 11 audit sources and two generated image modules were recompiled. Rocq and LPS libraries are supplied by the pinned checker image. `Print Assumptions` for the final theorems lists 21 allowed Rocq array, integer and string primitives; no new axioms, admitted lemmas or unchecked casts were introduced. The source SHA-256 values match the carried build record."
+    },
+    {
+      "kind": "p",
+      "text": "Rocq checks exact equality of the selected state and rank with the original compressed data. It also checks relevant unit-parameter fields against the decoded unit. The witnesses construct an environment, valuation, registers and concrete memory for every clause of the complete original gamma2 interpretation. `gamma_params_exact` proves that discarding unused static-table fields during computation preserves the entire predicate, and the final theorem statements restore the original parameters."
+    },
+    {
+      "kind": "h2",
+      "text": "Reproduce the instrumented results"
+    },
+    {
+      "kind": "code",
+      "text": "cd reproduction\n./run.sh > check.log 2>&1\n# Inspect result.json and assumptions.txt.\n",
+      "first_line": null,
+      "caption": "Requires Docker and the pinned checker image already available locally.",
+      "source": null
+    },
+    {
+      "kind": "p",
+      "text": "The container has networking disabled. The driver checks the binary and upstream-library hashes, regenerates both static images, recompiles all 88 sources and checks the final assumptions against the copied upstream allowlist. Neither RISC-V coturn binary is executed. On an ARM Mac, Docker runs the release's amd64 checker image through emulation. The complete proof sources, pinned ELF inputs and build records are included."
+    },
+    {
+      "kind": "p",
+      "text": "The checker image is `ghcr.io/theorem-labs/oss-fuzz-theorems-checker` at digest `sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902`. The release pins LPS commit `f1006fe8178338a499b5e5c41be83006c4edd058`."
+    },
+    {
+      "kind": "page",
+      "title": "11. Evidence register and claim boundaries"
+    },
+    {
+      "kind": "table",
+      "head": [
+        "Artifact",
+        "What it supplies"
+      ],
+      "rows": [
+        [
+          "reproduction/proof/Certificate.v and Rank.v",
+          "Exact equality with original selected state and rank."
+        ],
+        [
+          "reproduction/proof/Model.v",
+          "Environment, memory, registers and exact gamma-parameter reduction."
+        ],
+        [
+          "reproduction/proof/Pure.v",
+          "Intervals, congruences, fixed symbols, division definitions and ranks."
+        ],
+        [
+          "reproduction/proof/Regions.v",
+          "Every loaded region: cells, permission, kind and ownership."
+        ],
+        [
+          "reproduction/proof/Ambient.v",
+          "Environment, pristine memory, runtime context and shadow data."
+        ],
+        [
+          "reproduction/proof/Structural.v and Flags.v",
+          "Registers, slots, NUL, liveness, well-formedness and flag invariants."
+        ],
+        [
+          "reproduction/proof/Complete.v:56, :127",
+          "Final existence statements over original decoded units and image segments."
+        ],
+        [
+          "evidence/original-rocq-result.json / check.log",
+          "Original fresh build, source and binary hashes, assumptions result."
+        ],
+        [
+          "evidence/instrumented-witnesses.json",
+          "Full selected decoded states, valuations and audit metadata."
+        ],
+        [
+          "PROVENANCE.json / MANIFEST.sha256",
+          "Source pins, extracted-code records and package integrity."
+        ]
+      ],
+      "widths": [
+        0.45,
+        0.55
+      ]
+    },
+    {
+      "kind": "h2",
+      "text": "Claims suitable for the paper"
+    },
+    {
+      "kind": "bullets",
+      "items": [
+        "The selected complete coturn cut-invariants do not entail the lower bound of the buf array field.",
+        "Both instrumented variants have checked invariant models with destination = buf - 1, writable memory there and a zero ASan shadow byte.",
+        "This is an internal proof-strength result, stronger evidence than absence of field bounds in an exported theorem statement alone.",
+        "The field-boundary distinction matches the within-aggregate point illustrated in Section 4."
+      ]
+    },
+    {
+      "kind": "h2",
+      "text": "Claims not established by this investigation"
+    },
+    {
+      "kind": "bullets",
+      "items": [
+        "A harness input reaches either abstract state, or makes this helper return -1 in the reviewed caller context.",
+        "The channel byte changes, is attacker-controlled, or affects later behavior.",
+        "A complete execution through the two-byte C write, a vulnerability, or an exploit.",
+        "A counterexample to the published agreement theorem, or a universal result about every coturn access, UBSan configuration, or source-level C object."
+      ]
+    },
+    {
+      "kind": "p",
+      "text": "The formal result is a non-entailment statement about particular accepted internal predicates. The C correspondence and source layout explain which source-field obligation is absent. These two evidence layers are recorded separately so the paper can state the conclusion at its demonstrated strength."
+    },
+    {
+      "kind": "page",
+      "title": "12. Pinned source references"
+    },
+    {
+      "kind": "p",
+      "text": "Source identifiers below link to immutable repository revisions. The original files and source excerpt hashes are included in PROVENANCE.json. New audit lemmas are local artifacts in the reproduction directory; they are not presented as upstream-merged changes."
+    },
+    {
+      "kind": "reference",
+      "id": "C1",
+      "title": "stun_buffer declaration",
+      "path": "src/apps/common/stun_buffer.h",
+      "first_line": 45,
+      "last_line": 51,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.h#L45-L51",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C2",
+      "title": "Message/array capacity constants",
+      "path": "src/ns_turn_defs.h",
+      "first_line": 221,
+      "last_line": 222,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h#L221-L222",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C3",
+      "title": "STUN header and channel-header constants",
+      "path": "src/client/ns_turn_msg_defs.h",
+      "first_line": 46,
+      "last_line": 47,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg_defs.h#L46-L47",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C4",
+      "title": "Struct wrapper passes its buf field",
+      "path": "src/apps/common/stun_buffer.c",
+      "first_line": 181,
+      "last_line": 184,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.c#L181-L184",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C5",
+      "title": "Channel-bind request builder",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1300,
+      "last_line": 1327,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1300-L1327",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C6",
+      "title": "Address attribute builder calls stun_attr_add_str",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1705,
+      "last_line": 1733,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1705-L1733",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C7",
+      "title": "Signed message-length result and -1 failure",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 523,
+      "last_line": 535,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L523-L535",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C8",
+      "title": "Complete stun_attr_add_str body",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1666,
+      "last_line": 1703,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1666-L1703",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "C9",
+      "title": "Two-byte write helper",
+      "path": "src/ns_turn_defs.h",
+      "first_line": 145,
+      "last_line": 148,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h#L145-L148",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+    },
+    {
+      "kind": "reference",
+      "id": "P1",
+      "title": "Plain compressed certificate",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v#L5-L5",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P2",
+      "title": "ASan compressed certificate (dictionary: p00)",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_asan_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_asan_p01.v#L5-L5",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P3",
+      "title": "ASan+UBSan compressed certificate (dictionary: p00)",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_both_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_both_p01.v#L5-L5",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P4",
+      "title": "Complete extended concretization predicate gamma2",
+      "path": "proofs/coturn/FuzzStunClient/lib/VGamma2.v",
+      "first_line": 414,
+      "last_line": 423,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma2.v#L414-L423",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P5",
+      "title": "Base concretization predicate gamma",
+      "path": "proofs/coturn/FuzzStunClient/lib/VGamma.v",
+      "first_line": 89,
+      "last_line": 93,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma.v#L89-L93",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P6",
+      "title": "Ordinary stack-window and write-set checks",
+      "path": "proofs/coturn/FuzzStunClient/lib/VStepMem.v",
+      "first_line": 52,
+      "last_line": 68,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem.v#L52-L68",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P7",
+      "title": "Extended store falls back to ordinary store checker",
+      "path": "proofs/coturn/FuzzStunClient/lib/VStepMem2.v",
+      "first_line": 494,
+      "last_line": 504,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem2.v#L494-L504",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P8",
+      "title": "Construction of per-unit parameters",
+      "path": "proofs/coturn/FuzzStunClient/lib/VDriver2.v",
+      "first_line": 43,
+      "last_line": 48,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VDriver2.v#L43-L48",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P9",
+      "title": "Congruence residue uses signed parser",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertDecode.v",
+      "first_line": 125,
+      "last_line": 126,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode.v#L125-L126",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "P10",
+      "title": "Dictionary-backed extended state decoder",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertDecode2.v",
+      "first_line": 132,
+      "last_line": 150,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode2.v#L132-L150",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+    },
+    {
+      "kind": "reference",
+      "id": "M1",
+      "title": "Section 4 interpreter example",
+      "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+      "first_line": 193,
+      "last_line": 222,
+      "url": "https://github.com/focs-lab/verification-gaps/blob/1c1b1e742b1b80fa975a976f6e94ff7844ea07dd/blog/what-did-they-actually-prove/evidence/paper/main.tex#L193-L222",
+      "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd"
+    },
+    {
+      "kind": "reference",
+      "id": "M2",
+      "title": "Section 4: mapped storage, ASan, UBSan and agreement",
+      "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+      "first_line": 277,
+      "last_line": 306,
+      "url": "https://github.com/focs-lab/verification-gaps/blob/1c1b1e742b1b80fa975a976f6e94ff7844ea07dd/blog/what-did-they-actually-prove/evidence/paper/main.tex#L277-L306",
+      "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd"
+    },
+    {
+      "kind": "h2",
+      "text": "Binary identity"
+    },
+    {
+      "kind": "p",
+      "text": "`FuzzStunClient.asan`: `99443988bd9bcd3087fe619757c7dff2a6b198583ad959307bc34edcd9b44ef8`"
+    },
+    {
+      "kind": "p",
+      "text": "`FuzzStunClient.asan-ubsan`: `4fd7bfa4d6ebf2583737cfa6cc09ce0f3344066b8f8c92d899ff91843d1d9f69`"
+    },
+    {
+      "kind": "p",
+      "text": "The plain binary SHA-256 is `087641c6fcee7a7c11340e42b08651160429ec9d1ec42724a9560455214ff81b`. The instrumented binary archive SHA-256 recorded during acquisition is `35b053abc428e398e6dc25d27c7eb1ad8f3845dabef4a881ba57c09e4e4910ca`. Upstream build records and licences are carried in `reproduction/upstream-provenance/`."
+    }
+  ],
+  "references": {
+    "C1": {
+      "id": "C1",
+      "title": "stun_buffer declaration",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/apps/common/stun_buffer.h",
+      "first_line": 45,
+      "last_line": 51,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.h#L45-L51"
+    },
+    "C2": {
+      "id": "C2",
+      "title": "Message/array capacity constants",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/ns_turn_defs.h",
+      "first_line": 221,
+      "last_line": 222,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h#L221-L222"
+    },
+    "C3": {
+      "id": "C3",
+      "title": "STUN header and channel-header constants",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg_defs.h",
+      "first_line": 46,
+      "last_line": 47,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg_defs.h#L46-L47"
+    },
+    "C4": {
+      "id": "C4",
+      "title": "Struct wrapper passes its buf field",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/apps/common/stun_buffer.c",
+      "first_line": 181,
+      "last_line": 184,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.c#L181-L184"
+    },
+    "C5": {
+      "id": "C5",
+      "title": "Channel-bind request builder",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1300,
+      "last_line": 1327,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1300-L1327"
+    },
+    "C6": {
+      "id": "C6",
+      "title": "Address attribute builder calls stun_attr_add_str",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1705,
+      "last_line": 1733,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1705-L1733"
+    },
+    "C7": {
+      "id": "C7",
+      "title": "Signed message-length result and -1 failure",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 523,
+      "last_line": 535,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L523-L535"
+    },
+    "C8": {
+      "id": "C8",
+      "title": "Complete stun_attr_add_str body",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1666,
+      "last_line": 1703,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1666-L1703"
+    },
+    "C9": {
+      "id": "C9",
+      "title": "Two-byte write helper",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/ns_turn_defs.h",
+      "first_line": 145,
+      "last_line": 148,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h#L145-L148"
+    },
+    "P1": {
+      "id": "P1",
+      "title": "Plain compressed certificate",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v#L5-L5"
+    },
+    "P2": {
+      "id": "P2",
+      "title": "ASan compressed certificate (dictionary: p00)",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_asan_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_asan_p01.v#L5-L5"
+    },
+    "P3": {
+      "id": "P3",
+      "title": "ASan+UBSan compressed certificate (dictionary: p00)",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_both_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_both_p01.v#L5-L5"
+    },
+    "P4": {
+      "id": "P4",
+      "title": "Complete extended concretization predicate gamma2",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VGamma2.v",
+      "first_line": 414,
+      "last_line": 423,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma2.v#L414-L423"
+    },
+    "P5": {
+      "id": "P5",
+      "title": "Base concretization predicate gamma",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VGamma.v",
+      "first_line": 89,
+      "last_line": 93,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma.v#L89-L93"
+    },
+    "P6": {
+      "id": "P6",
+      "title": "Ordinary stack-window and write-set checks",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VStepMem.v",
+      "first_line": 52,
+      "last_line": 68,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem.v#L52-L68"
+    },
+    "P7": {
+      "id": "P7",
+      "title": "Extended store falls back to ordinary store checker",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VStepMem2.v",
+      "first_line": 494,
+      "last_line": 504,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem2.v#L494-L504"
+    },
+    "P8": {
+      "id": "P8",
+      "title": "Construction of per-unit parameters",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VDriver2.v",
+      "first_line": 43,
+      "last_line": 48,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VDriver2.v#L43-L48"
+    },
+    "P9": {
+      "id": "P9",
+      "title": "Congruence residue uses signed parser",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertDecode.v",
+      "first_line": 125,
+      "last_line": 126,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode.v#L125-L126"
+    },
+    "P10": {
+      "id": "P10",
+      "title": "Dictionary-backed extended state decoder",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertDecode2.v",
+      "first_line": 132,
+      "last_line": 150,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode2.v#L132-L150"
+    },
+    "M1": {
+      "id": "M1",
+      "title": "Section 4 interpreter example",
+      "repository": "focs-lab/verification-gaps",
+      "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd",
+      "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+      "first_line": 193,
+      "last_line": 222,
+      "url": "https://github.com/focs-lab/verification-gaps/blob/1c1b1e742b1b80fa975a976f6e94ff7844ea07dd/blog/what-did-they-actually-prove/evidence/paper/main.tex#L193-L222"
+    },
+    "M2": {
+      "id": "M2",
+      "title": "Section 4: mapped storage, ASan, UBSan and agreement",
+      "repository": "focs-lab/verification-gaps",
+      "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd",
+      "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+      "first_line": 277,
+      "last_line": 306,
+      "url": "https://github.com/focs-lab/verification-gaps/blob/1c1b1e742b1b80fa975a976f6e94ff7844ea07dd/blog/what-did-they-actually-prove/evidence/paper/main.tex#L277-L306"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "capture_date": "2026-10-29",
+  "method": "Already-fetched GitHub connector UTF-8 source; no fresh research fetch for handoff",
+  "files": [
+    {
+      "project": "boost-json",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/boost-json/project.yaml",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/boost-json/project.yaml",
+      "sha256": "ffbbfaf4b947404fbbc2a8eb2995331e31bb0a87954481f0e74178ad4255a439",
+      "bytes": 1280,
+      "snapshot_path": "project.yaml"
+    },
+    {
+      "project": "boost-json",
+      "repository": "boostorg/json",
+      "commit": "e93cf9c254619142b9f3cfa9022b93fb1d4e5edb",
+      "repository_path": "fuzzing/fuzz_parse.cpp",
+      "url": "https://github.com/boostorg/json/blob/e93cf9c254619142b9f3cfa9022b93fb1d4e5edb/fuzzing/fuzz_parse.cpp",
+      "sha256": "cec7c32a1ece89c800b6e33242dd062af055da6da9785824fd4b6ac68c6607d6",
+      "bytes": 808,
+      "snapshot_path": "upstream/fuzzing/fuzz_parse.cpp"
+    },
+    {
+      "project": "boost-json",
+      "repository": "boostorg/json",
+      "commit": "e93cf9c254619142b9f3cfa9022b93fb1d4e5edb",
+      "repository_path": "include/boost/json/impl/monotonic_resource.ipp",
+      "url": "https://github.com/boostorg/json/blob/e93cf9c254619142b9f3cfa9022b93fb1d4e5edb/include/boost/json/impl/monotonic_resource.ipp",
+      "sha256": "5468bf4de3f298b2cb8e6f1fd473c951acc8355093ddef72c5c125a8499be21b",
+      "bytes": 3385,
+      "snapshot_path": "upstream/include/boost/json/impl/monotonic_resource.ipp"
+    },
+    {
+      "project": "boost-json",
+      "repository": "boostorg/json",
+      "commit": "e93cf9c254619142b9f3cfa9022b93fb1d4e5edb",
+      "repository_path": "include/boost/json/impl/value_stack.ipp",
+      "url": "https://github.com/boostorg/json/blob/e93cf9c254619142b9f3cfa9022b93fb1d4e5edb/include/boost/json/impl/value_stack.ipp",
+      "sha256": "83fc3a736341572cfe1c18434537e3e1f2ea2596d64bacaf7fed4a3bf4628896",
+      "bytes": 8959,
+      "snapshot_path": "upstream/include/boost/json/impl/value_stack.ipp"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "prepared_on": "2026-11-01",
+  "paper_source_revision": "f2b5786b15cea95babf51729a196fccc7ae180f5",
+  "paper_source_scope": "19 active build inputs synchronized byte-for-byte from the pinned source; existing evidence dossiers and proof archives retained",
+  "authors": [
+    "Umang Mathur",
+    "Prateek Saxena",
+    "Tianyu Li",
+    "Bo Wang",
+    "Diego Meyer",
+    "Ruishi Li"
+  ],
+  "editorial_changes": [
+    "six-author byline and PDF metadata",
+    "removed manuscript comment-only lines and unused editorial macros",
+    "removed conversation-recovery material and duplicated drafts",
+    "approved concise Appendix A rewrite with paragraph headers and checked-example citation",
+    "approved concise Appendix B rewrite with explicit pool contract, paragraph headers, and shorter figure caption",
+    "approved Section 2.1 revision showing the off-by-one copy and checked proof scope; Appendix A now qualifies the recorded execution evidence and missing raw traces",
+    "approved concise Appendix C revision with object and subobject identities, explicit reference tracking, one bounds-and-lifetime condition, and removal of the undecidability argument",
+    "approved pedagogical Appendix D rewrite with paragraph headers and retained lifetime figure; consistent monospace project names throughout the paper; packaged the focused OpenSSL replay with a dated evidence update",
+    "use Theorem as the company name in the paper subtitle, PDF metadata, and bibliography; retain the regular text font for company names",
+    "synchronized the active paper inputs with source revision 53e10df; preserved the removed exploratory survey under evidence/reports/working-notes and retained existing evidence",
+    "emphasized the phrase treating ASan checks as a complete specification of memory safety, retaining the original sentence",
+    "retained fresh execution traces for both proved interpreter binaries and the benign controls; updated Appendix A and rebuilt both PDFs",
+    "combined the repeated OpenSSL lifetime conclusion in Section 3.1 and rebuilt both PDFs",
+    "applied approved minimal wording edits in Sections 1\u20133, split the transition to the proof review into two sentences, and retained the newer concise OpenSSL conclusion",
+    "clarified that the Section 1 guarantee concerns each verified harness, synchronized the concurrent approved wording edits into the source, and rebuilt both PDFs",
+    "introduced the Section 2.1 example as a simplified interpreter fragment and rebuilt both PDFs",
+    "described the checked coturn invariant result as admitting an out-of-bounds destination and rebuilt both PDFs",
+    "applied eight approved minimal wording edits in Appendices A, B, D, E, and F and rebuilt the release PDF",
+    "clarified that the OpenSSL gap was checked in Rocq, synchronized the approved appendix wording into verification-gaps, and rebuilt both PDFs",
+    "updated the companion-artifact citation to the public memory-safety-proof-audit repository and rebuilt the paper PDF"
+  ],
+  "upstream_proof_revisions": {
+    "allocator_review": "98e995d4daced70a0a4aa2c810854b88720735f1",
+    "coturn_countermodels": "a6839bb9e433b34c0d0710df5280194528877139",
+    "checked_example": "a6839bb9e433b34c0d0710df5280194528877139"
+  },
+  "checked_example_source_revision": "6c0b38af5c42556d8836a8360042f05943bb03d9",
+  "release_contents": [
+    "paper",
+    "evidence"
+  ],
+  "blog_source_included": false,
+  "history_cleanup": {
+    "date": "2026-11-01",
+    "removed_paths": [
+      "blog/",
+      "site/",
+      "scripts/build_site.py",
+      "scripts/preview_site.py"
+    ]
+  },
+  "preserved_proof_archives": [
+    {
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "root_tree": "b5159cfa8466a731305873c56fda351a275db401",
+      "tracked_files": 145602,
+      "release_tag": "proof-archive-98e995d4",
+      "release_url": "https://github.com/focs-lab/memory-safety-audit/releases/tag/proof-archive-98e995d4",
+      "metadata_directory": "evidence/source-snapshots/oss-verify-proofs/98e995d4",
+      "scope": "Complete tracked snapshot and self-contained shallow Git repository; no earlier history or external release assets.",
+      "archives": [
+        {
+          "filename": "oss-verify-proofs-98e995d4daced70a0a4aa2c810854b88720735f1.tar.gz",
+          "size": 2868399164,
+          "sha256": "1ff83dedd14bdf092b49d427bf5117afc530de960381486e816595f5668fde0b"
+        },
+        {
+          "filename": "oss-verify-proofs-98e995d4.git.tar.gz",
+          "size": 2188248432,
+          "sha256": "9cbaf50e0347961790b3c514c4a327e8491f580651c5ccd513d3d7ef33f002c6"
+        }
+      ]
+    }
+  ],
+  "initial_paper_source_revision": "4d40d9993261bc1da1014bf6c8c3d29ad51b3537",
+  "paper_source_path": "blog/what-did-they-actually-prove/evidence/paper",
+  "paper_synchronized_on": "2026-11-01",
+  "editorial_history_note": "The editorial changes record preparation steps. The active build inputs now match the pinned verification-gaps source, including the approved wording edits. The input hashes below identify the current release content.",
+  "archived_survey_path": "evidence/reports/working-notes/allocator-survey.tex",
+  "paper_build_inputs_sha256": {
+    "main.tex": "9b8a71e07658a55339d655d85df37cf9b860983b1024271bdd468632d8fe2b17",
+    "abstract.tex": "3defeccb6e44e08e5b6ba3fc7adb8ea8a8dab5be1c7fae2f28449a1dcb4081af",
+    "font-style.tex": "c1492e470007d11d85494c6d92bacd9b1bfc199e59ea583b8b7b9423b2d45b92",
+    "visual-style.tex": "509f0e66a7fa10fcdcef72d0aec446b67e2d972bbed13f2b130c29b54d0c3e75",
+    "references.bib": "e2767c094a8e22b8cb61b037819c17d8d3e81bea5e23d5a3096a9627f7a7fb7d",
+    "Makefile": "290b03d1b627bb382dccb2a61ce99490bb5ab5299a3016d9167f0bd4ba5aeae5",
+    "sections/01-claim.tex": "c02a4e89c234abaf741d38aa927fa13ea697d0b9e350ad6221b152ec7e85759e",
+    "sections/02-memory-safety.tex": "0384483ab5d9ce3cd327de532c751b5c0f592603b10dd8e9f79d256f01f78667",
+    "sections/03-evidence.tex": "e993d1c0374dc106dfd28a988122806ae708d6b8dd5fd1f32a709563e35c2a2b",
+    "sections/04-specification.tex": "7a003dff1b3a45fc502bfe708650b482e3a15b2bd1e5c761bf7d8799b1848329",
+    "sections/audience-and-purpose.tex": "cd631f138b0c4397ea0b44cdf07a9d79feaace031f487ae4d741d2de20fb8a81",
+    "appendices/allocator-review.tex": "820512a09f8c6a6bb4b027b01e24333841725072e5ac3bc6aced1f946468e8bc",
+    "appendices/bzip2.tex": "a407b209bf9ff710692dce9eb28ef108ce76c164aeac3e01f1f5ed7f57b012d7",
+    "appendices/coturn.tex": "b3a109596ff2b4e0651ba493945425cbffca9c81f855e4ad569bf6dcb2aeed9c",
+    "appendices/logical-memory-safety.tex": "1de6bf4b2095113f33c223cf091dfe80371a75e3b85b81713c47ea9f0003780d",
+    "appendices/pool-example.tex": "481379417d54e582a6e0ec874f0d9de0114553df7a5e5e41e687601f18a5cc0e",
+    "appendices/technical-background.tex": "e1969a41393feb68580b0fd222774d22b0909a413a8d04d561cc101340b45681",
+    "figures/bnctx-lifetime.tex": "954ef00df8bec9ab798bb8d2a080948f53d703e74497968b6f4d0e044264e343",
+    "figures/pool-contract.tex": "c86d85d52edf2729f71c601dcb3354a0d5ee629b1b8dba86964d1d5ccd0a2688"
+  },
+  "paper_pdf_sha256": "4744a63ae69cdc361c689ff8f000351968fa62f1c14e6e0ea7b3a35074f76d92",
+  "paper_build_source_date_epoch": 1793541682,
+  "checked_example_execution_replay": {
+    "recorded_on": "2026-11-01",
+    "directory": "evidence/dossiers/checked-example/execution",
+    "result": "PASS",
+    "cases": 4,
+    "runner_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-runner@sha256:d197498c0e20de006e61fbe7c3d70ebdd81ad3928468ac45d643b72c716e7af2",
+    "proof_replayed": false
+  },
+  "paper_source_content_revision": "f2b5786b15cea95babf51729a196fccc7ae180f5",
+  "paper_source_included": false,
+  "paper_distribution": "PDF only; source revision and original build-input hashes are retained as provenance."
+}

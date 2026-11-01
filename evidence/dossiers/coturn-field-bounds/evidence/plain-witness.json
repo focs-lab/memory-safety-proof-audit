@@ -1,0 +1,963 @@
+{
+  "proof_commit": "a6839bb9e433b34c0d0710df5280194528877139",
+  "source_commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+  "binary_sha256": "087641c6fcee7a7c11340e42b08651160429ec9d1ec42724a9560455214ff81b",
+  "finding": "A checked internal certificate disjunct permits a one-byte store at buf[-1], which is channel[3] in the enclosing stun_buffer.",
+  "unit_vid": 166,
+  "unit_entry": "0x18898",
+  "cut_pc": "0x18994",
+  "disjunct_index": 0,
+  "instruction_pc": "0x18998",
+  "instruction_word": "0x00ac0023",
+  "instruction": "sb x10, 0(x24)",
+  "struct_base_relative_to_sp0": -65632,
+  "buf_base_relative_to_sp0": -65628,
+  "buf_length": 65507,
+  "store_relative_to_sp0": -65629,
+  "store_field_index": -1,
+  "destination_neighbor": "channel[3]",
+  "unit_write_set": [
+    [
+      -65629,
+      -65585
+    ],
+    [
+      -120,
+      -112
+    ]
+  ],
+  "full_decoded_cut_disjunct": {
+    "regs": [
+      [
+        1,
+        {
+          "const": 100756,
+          "terms": []
+        }
+      ],
+      [
+        2,
+        {
+          "const": -131936,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        3,
+        {
+          "const": 0,
+          "terms": [
+            [
+              18,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        4,
+        {
+          "const": 223152,
+          "terms": []
+        }
+      ],
+      [
+        8,
+        {
+          "const": -131788,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        9,
+        {
+          "const": 0,
+          "terms": [
+            [
+              23,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        10,
+        {
+          "const": 0,
+          "terms": [
+            [
+              21,
+              256
+            ]
+          ]
+        }
+      ],
+      [
+        11,
+        {
+          "const": 0,
+          "terms": []
+        }
+      ],
+      [
+        12,
+        {
+          "const": 1,
+          "terms": []
+        }
+      ],
+      [
+        13,
+        {
+          "const": -1,
+          "terms": []
+        }
+      ],
+      [
+        14,
+        {
+          "const": 0,
+          "terms": [
+            [
+              23,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        18,
+        {
+          "const": 0,
+          "terms": [
+            [
+              21,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        19,
+        {
+          "const": -120,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        20,
+        {
+          "const": -65628,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        21,
+        {
+          "const": 1,
+          "terms": []
+        }
+      ],
+      [
+        22,
+        {
+          "const": 65536,
+          "terms": []
+        }
+      ],
+      [
+        23,
+        {
+          "const": 4,
+          "terms": [
+            [
+              23,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        24,
+        {
+          "const": -65629,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        25,
+        {
+          "const": 0,
+          "terms": [
+            [
+              14,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        26,
+        {
+          "const": 0,
+          "terms": [
+            [
+              15,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        27,
+        {
+          "const": 0,
+          "terms": [
+            [
+              16,
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "slots": [
+      [
+        -131920,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              13,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131912,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              12,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131904,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              11,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131896,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              10,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131888,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              9,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131880,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              8,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131872,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              7,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131864,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              6,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131856,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              5,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -131848,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              4,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -65626,
+        1,
+        {
+          "const": 0,
+          "terms": []
+        }
+      ],
+      [
+        -65625,
+        1,
+        {
+          "const": 0,
+          "terms": [
+            [
+              28,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -120,
+        8,
+        {
+          "const": 4,
+          "terms": [
+            [
+              23,
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "globs": [],
+    "box": [
+      [
+        21,
+        12,
+        18
+      ],
+      [
+        23,
+        4,
+        8
+      ],
+      [
+        27,
+        20,
+        28
+      ],
+      [
+        28,
+        0,
+        8
+      ],
+      [
+        2,
+        1,
+        9223372036854775807
+      ],
+      [
+        3,
+        1,
+        4096
+      ],
+      [
+        1,
+        140735340867584,
+        140737488355328
+      ]
+    ],
+    "cong": [
+      [
+        21,
+        2,
+        0
+      ],
+      [
+        23,
+        4,
+        0
+      ],
+      [
+        27,
+        8,
+        4
+      ],
+      [
+        28,
+        8,
+        0
+      ],
+      [
+        1,
+        16,
+        0
+      ]
+    ],
+    "cons": [],
+    "nul": [],
+    "valset": [],
+    "conddef": [],
+    "moddef": [],
+    "next": 64
+  },
+  "full_decoded_precondition": {
+    "regs": [
+      [
+        1,
+        {
+          "const": 0,
+          "terms": [
+            [
+              4,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        2,
+        {
+          "const": -131840,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        3,
+        {
+          "const": 0,
+          "terms": [
+            [
+              18,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        4,
+        {
+          "const": 223152,
+          "terms": []
+        }
+      ],
+      [
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              5,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        9,
+        {
+          "const": 0,
+          "terms": [
+            [
+              6,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        10,
+        {
+          "const": -65628,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        11,
+        {
+          "const": -120,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        12,
+        {
+          "const": 0,
+          "terms": [
+            [
+              21,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        13,
+        {
+          "const": -131788,
+          "terms": [
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        14,
+        {
+          "const": 0,
+          "terms": [
+            [
+              23,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        18,
+        {
+          "const": 0,
+          "terms": [
+            [
+              7,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        19,
+        {
+          "const": 0,
+          "terms": [
+            [
+              8,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        20,
+        {
+          "const": 0,
+          "terms": [
+            [
+              9,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        21,
+        {
+          "const": 0,
+          "terms": [
+            [
+              10,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        22,
+        {
+          "const": 0,
+          "terms": [
+            [
+              11,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        23,
+        {
+          "const": 0,
+          "terms": [
+            [
+              12,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        24,
+        {
+          "const": 0,
+          "terms": [
+            [
+              13,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        25,
+        {
+          "const": 0,
+          "terms": [
+            [
+              14,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        26,
+        {
+          "const": 0,
+          "terms": [
+            [
+              15,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        27,
+        {
+          "const": 0,
+          "terms": [
+            [
+              16,
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "slots": [
+      [
+        -65626,
+        1,
+        {
+          "const": 0,
+          "terms": []
+        }
+      ],
+      [
+        -65625,
+        1,
+        {
+          "const": 0,
+          "terms": [
+            [
+              28,
+              1
+            ]
+          ]
+        }
+      ],
+      [
+        -120,
+        8,
+        {
+          "const": 0,
+          "terms": [
+            [
+              27,
+              1
+            ]
+          ]
+        }
+      ]
+    ],
+    "globs": [],
+    "box": [
+      [
+        21,
+        12,
+        18
+      ],
+      [
+        23,
+        4,
+        8
+      ],
+      [
+        27,
+        20,
+        28
+      ],
+      [
+        28,
+        0,
+        8
+      ],
+      [
+        2,
+        1,
+        9223372036854775807
+      ],
+      [
+        3,
+        1,
+        4096
+      ],
+      [
+        1,
+        140735340867584,
+        140737488355328
+      ]
+    ],
+    "cong": [
+      [
+        21,
+        2,
+        0
+      ],
+      [
+        23,
+        4,
+        0
+      ],
+      [
+        27,
+        8,
+        4
+      ],
+      [
+        28,
+        8,
+        0
+      ],
+      [
+        1,
+        16,
+        0
+      ]
+    ],
+    "cons": [],
+    "nul": [],
+    "valset": [],
+    "conddef": [],
+    "moddef": [],
+    "next": 64
+  },
+  "valuation_satisfying_all_recorded_pure_constraints": {
+    "1": 140735340871680,
+    "2": 4194304,
+    "3": 1,
+    "4": 103156,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0,
+    "13": 0,
+    "14": 0,
+    "15": 0,
+    "16": 0,
+    "17": 223152,
+    "18": 0,
+    "19": 0,
+    "20": 0,
+    "21": 12,
+    "22": 0,
+    "23": 4,
+    "24": 0,
+    "25": 0,
+    "26": 0,
+    "27": 20,
+    "28": 8,
+    "29": 0,
+    "30": 0,
+    "31": 0,
+    "32": 0,
+    "33": 0,
+    "34": 0,
+    "35": 0,
+    "36": 0,
+    "37": 0,
+    "38": 0,
+    "39": 0,
+    "40": 0,
+    "41": 0,
+    "42": 0,
+    "43": 0,
+    "44": 0,
+    "45": 0,
+    "46": 0,
+    "47": 0,
+    "48": 0,
+    "49": 0,
+    "50": 0,
+    "51": 0,
+    "52": 0,
+    "53": 0,
+    "54": 0,
+    "55": 0,
+    "56": 0,
+    "57": 0,
+    "58": 0,
+    "59": 0,
+    "60": 0,
+    "61": 0,
+    "62": 0,
+    "63": 0
+  },
+  "selected_decoded_post_store_slot": [
+    -65629,
+    1,
+    {
+      "const": 0,
+      "terms": [
+        [
+          21,
+          256
+        ]
+      ]
+    }
+  ],
+  "proof_call_chain": [
+    {
+      "caller_vid": 249,
+      "root_input_size_class": [
+        1,
+        1
+      ],
+      "call_pc": "0x14c90",
+      "callee_vid": 170
+    },
+    {
+      "caller_vid": 170,
+      "call_pc": "0x192f0",
+      "callee_vid": 166
+    }
+  ],
+  "locations": {
+    "encoded_certificate": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v#L5",
+    "decode_state": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode.v#L139",
+    "decode_unit": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode.v#L167",
+    "certificate_assembly": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCert_src0.v#L10",
+    "certificate_check": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertCheck_src0.v#L8",
+    "used_in_function_contract": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VFC_src0.v#L9",
+    "memory_access_check": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem.v#L52",
+    "concretization": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma.v#L89",
+    "unit_write_regions": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VDriver.v#L40"
+  },
+  "checks_performed": [
+    "Decoded both complete plain-certificate chunks, checking complete input consumption.",
+    "Checked selected disjunct intervals, congruences, linear constraints, symbol bounds and slot-byte consistency.",
+    "Matched instruction to the release binary after verifying its published SHA256.",
+    "Checked store inclusion in stack and per-unit write ranges.",
+    "Traced unit references from an included root certificate."
+  ],
+  "limits": [
+    "No input reaching this disjunct is supplied or claimed.",
+    "No vulnerability or exploit conclusion is made.",
+    "This is an omission in the maintained plain-proof invariant, not a proof that field safety is false for the harness.",
+    "The target binary was not executed; the complete Rocq development was not independently replayed."
+  ]
+}

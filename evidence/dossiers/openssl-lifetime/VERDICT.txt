@@ -1,0 +1,14 @@
+PASS: focused lifetime-gap construction, against unchanged upstream sources,
+with the complete operation preconditions. New concrete witness reaches an
+expired temporary from ls_init and changes its sign after frame end.
+
+PASS: published abstract-client fuzz_one_wp / fuzz_one_rc and focused bignum
+liveness comparison. 28 upstream modules + 4 audit modules freshly compiled;
+all 23 assumptions queries closed; coqchk passed. Local Rocq 9.0.0.
+
+INCOMPLETE / NOT REPLAYED: full ASan/UBSan binary agreement certificates.
+No demonstrated invalid access by the published bndiv client, no theorem
+falsification, and no claim that every OpenSSL proof lacks liveness.
+
+Supported wording: these local bndiv contracts alone do not enforce the
+API-defined temporary lifetime. See REPORT.txt for exact scope and commands.

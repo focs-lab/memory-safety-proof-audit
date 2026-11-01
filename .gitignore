@@ -1,0 +1,28 @@
+# Generated files and document build intermediates
+/build/
+.DS_Store
+__pycache__/
+*.pyc
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+# Reproduction products; retained evidence logs are intentional
+/evidence/dossiers/coturn-field-bounds/reproduction/_build/
+/evidence/dossiers/coturn-field-bounds/reproduction/.cache/
+
+# The editable blog and website tools are maintained outside the release.
+/blog/
+/site/
+/scripts/build_site.py
+/scripts/preview_site.py
+
+# This audit repository distributes PDFs and audit inputs.
+*.tex
+*.bib
+*.html
+*.htm

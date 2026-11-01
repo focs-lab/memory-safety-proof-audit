@@ -1,0 +1,8 @@
+; example/core: our project's statements, laid out as oft generate lays out projects/pupnp/FuzzHttp/dune
+; (package name reused from pupnp so that dune-project needs no change in this local working copy).
+(rocq.theory
+ (name OssFuzzTheorems.example.core)
+ (package rocq-oss-fuzz-theorems-pupnp)
+ (theories Stdlib stdpp ReadFile Flocq LinuxProcessSemantics OssFuzzTheorems.Core))
+
+(include_subdirs qualified)

@@ -1,0 +1,28 @@
+ARCHIVE VERIFICATION: PASS
+Verified at: 2026-11-01T12:28:58.255856+00:00
+
+Original downloaded Git repository: git fsck --full --strict passed (exit 0).
+Packaged Git repository extracted into a separate directory.
+Restored repository: git -c protocol.allow=never fsck --full --strict passed (exit 0).
+Offline local clone, with HTTPS disabled and no shared hardlinks: passed (exit 0).
+Restored commit: 98e995d4daced70a0a4aa2c810854b88720735f1
+Restored tree: b5159cfa8466a731305873c56fda351a275db401
+Shallow boundary is the preserved commit; earlier history is intentionally absent.
+
+Archive and metadata SHA-256 checksums: PASS
+{
+  "status": "PASS",
+  "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+  "tree": "b5159cfa8466a731305873c56fda351a275db401",
+  "tracked_files": 145602,
+  "file_bytes": 8464291253,
+  "table_2_files_verified": [
+    "proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Steps.v",
+    "proofs/simdjson/fuzz_dump/lib/Sj/SjTapeTile.v",
+    "proofs/openssl/bndiv/lib/Spec/BnInv.v",
+    "proofs/pupnp/FuzzHttp/lib/A0/AW/H_freelist.v"
+  ],
+  "git_lfs_pointers": []
+}
+
+This report records preservation checks, not a replay of the proofs.

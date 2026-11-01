@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "date_utc": "2026-11-01T05:28:37.954993+00:00",
+  "source_integrity": {
+    "status": "PASS",
+    "literal_C_excerpts": 5,
+    "vendor_sources": 75,
+    "audit_sources": 11,
+    "original_and_packaged_Rocq_sources_identical": true,
+    "literal_Rocq_statements": 2,
+    "bzip2_fields": 115,
+    "bzip2_inline_arrays": 24
+  },
+  "pdf": {
+    "coturn-field-bound-findings.pdf": {
+      "pages": 13,
+      "all_pages_visually_reviewed": true,
+      "text_within_page_bounds": true,
+      "sha256": "225258ad7a354cbdb8ac658fc8bdcc9fddce9f14f8aedcbafa97139b0d1efc56"
+    },
+    "coturn-field-layout.pdf": {
+      "pages": 1,
+      "all_pages_visually_reviewed": true,
+      "text_within_page_bounds": true,
+      "sha256": "34ee80e2fb0e1482d966b3aefe7ab298780d5324026723d91d1793549e247beb"
+    }
+  },
+  "latex": {
+    "full_editable_report_compiles": true,
+    "all_paper_fragments_compile_with_current_paper_preamble": true,
+    "overfull_boxes": 0,
+    "pinned_source_and_certificate_hyperlinks_checked": true
+  },
+  "rocq_packaged_rebuild": {
+    "status": "PASS",
+    "checked_sources": 88,
+    "elapsed_seconds": 165.97,
+    "finished_utc": "2026-11-01T05:22:57.699420+00:00",
+    "all_assumptions_in_upstream_allowlist": true
+  },
+  "scope": "Documentation and local invariant countermodels; no input reachability or vulnerability conclusion."
+}

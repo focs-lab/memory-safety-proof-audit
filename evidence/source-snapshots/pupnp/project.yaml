@@ -1,0 +1,50 @@
+schema: oss-fuzz-theorems/project/1
+project: pupnp
+homepage: https://pupnp.github.io/pupnp
+language: c
+oss_fuzz:
+  path: projects/pupnp
+  commit: bd2ce21991a94a362b92fb1bf25f86d5a1a60842
+status: available
+library:
+  name: pupnp
+  repository: https://github.com/pupnp/pupnp
+  commit: b46bc77ac9ae2ff1351d0f4ce544d97283b6e149
+  licence: BSD-3-Clause
+harnesses:
+- name: FuzzHttp
+  status: included
+  origin: upstream
+- name: FuzzIxml
+  status: included
+  origin: upstream
+- name: FuzzIxmlDom
+  status: not-included
+  reason: not-attempted
+- name: FuzzServiceTable
+  status: not-included
+  reason: not-attempted
+- name: api-driver
+  status: not-included
+  origin: this-repository
+  reason: held
+build:
+  system: cmake
+  clang: 20.1.8
+  builder: ghcr.io/theorem-labs/oss-fuzz-theorems-toolchain@sha256:6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b
+assets:
+  bin:
+    release: v2026.10.0
+    file: pupnp-bin.tar.zst
+    bytes: 477788
+    sha256: 4526d08dfd2aaffd0834a5f20ef62f6fa3c5603de36410d955e15f16e686075a
+  src:
+    release: v2026.10.0-src
+    file: pupnp-src.tar.zst
+    bytes: 736186
+    sha256: 453c45a22291a30a73772e396c2e64670bef31d6379422709ba55386b01d4a4c
+  src_manifest:
+    release: v2026.10.0-src
+    file: pupnp-src.MANIFEST.tsv
+    bytes: 1385
+    sha256: 1a484dffe4e05dadd58455e244507d359c1fe7aa43583ad4160cbcc63a5e846e

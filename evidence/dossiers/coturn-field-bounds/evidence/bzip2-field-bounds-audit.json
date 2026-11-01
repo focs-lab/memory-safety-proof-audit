@@ -1,0 +1,2398 @@
+{
+  "date": "2026-11-01",
+  "question": "Does the internal bzip2 proof omit bounds for any remaining struct field?",
+  "proof_repository": {
+    "repository": "theorem-labs/oss-verify-proofs",
+    "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+  },
+  "source_pin": "f5dfc96063fef2d9c5446d0733867d899ef9b942",
+  "paper_context": {
+    "repository": "focs-lab/verification-gaps",
+    "commit": "f4c80c639722fdfce3b27608558cae2cdc722c75",
+    "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex"
+  },
+  "scope": "Completed bzip2_compress_target proof and its internal compression/decompression components, primarily plain-binary bounded-access reasoning. The harness decompresses its own compressor output.",
+  "finding": "No concrete omitted field-bound obligation identified in this source review. All 24 inline arrays in the core structs have exact-size representations and bounded-access proof families. This is not a newly checked universal source-subobject safety theorem.",
+  "verification": {
+    "core_field_count": 115,
+    "inline_array_count": 24,
+    "array_offsets_lengths_and_widths_match_RV64_C_layout": true,
+    "rocq_replay_performed": false,
+    "vulnerability_or_exploit_search_performed": false,
+    "method_limits": "Inventoried every core struct field and inspected access reasoning by array family. Did not independently annotate every machine instruction with an intended C subobject or replay all proof variants."
+  },
+  "limitations": [
+    "No universal field/provenance trace property is exposed by the exported agreement theorem.",
+    "The 23 coarsened saved fields lack individual persistent value invariants; fixed return writes do not establish arbitrary streaming-resumption contracts.",
+    "bzFile and file-I/O API histories are outside the completed buffer-to-buffer harness.",
+    "Standalone arbitrary-input bzip2_decompress_target has statements but no completed proof in this repository."
+  ],
+  "structs": {
+    "bz_stream": {
+      "size": 80,
+      "alignment": 8,
+      "fields": [
+        {
+          "name": "next_in",
+          "type": "char *",
+          "offset": 0,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "avail_in",
+          "type": "unsigned int",
+          "offset": 8,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "total_in_lo32",
+          "type": "unsigned int",
+          "offset": 12,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "total_in_hi32",
+          "type": "unsigned int",
+          "offset": 16,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "next_out",
+          "type": "char *",
+          "offset": 24,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "avail_out",
+          "type": "unsigned int",
+          "offset": 32,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "total_out_lo32",
+          "type": "unsigned int",
+          "offset": 36,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "total_out_hi32",
+          "type": "unsigned int",
+          "offset": 40,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "state",
+          "type": "void *",
+          "offset": 48,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "bzalloc",
+          "type": "void *(*)(void *, int, int)",
+          "offset": 56,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "bzfree",
+          "type": "void (*)(void *, void *)",
+          "offset": 64,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        },
+        {
+          "name": "opaque",
+          "type": "void *",
+          "offset": 72,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 117,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L117"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v",
+              "line": 26,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpSessB.v#L26"
+            }
+          ]
+        }
+      ],
+      "layout_checked_against": "RV64 clang record-layout dump"
+    },
+    "EState": {
+      "size": 55768,
+      "alignment": 8,
+      "fields": [
+        {
+          "name": "strm",
+          "type": "bz_stream *",
+          "offset": 0,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "mode",
+          "type": "Int32",
+          "offset": 8,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "state",
+          "type": "Int32",
+          "offset": 12,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "avail_in_expect",
+          "type": "UInt32",
+          "offset": 16,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "arr1",
+          "type": "UInt32 *",
+          "offset": 24,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "arr2",
+          "type": "UInt32 *",
+          "offset": 32,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "ftab",
+          "type": "UInt32 *",
+          "offset": 40,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "origPtr",
+          "type": "Int32",
+          "offset": 48,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "ptr",
+          "type": "UInt32 *",
+          "offset": 56,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "block",
+          "type": "UChar *",
+          "offset": 64,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "mtfv",
+          "type": "UInt16 *",
+          "offset": 72,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "zbits",
+          "type": "UChar *",
+          "offset": 80,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "workFactor",
+          "type": "Int32",
+          "offset": 88,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "state_in_ch",
+          "type": "UInt32",
+          "offset": 92,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "state_in_len",
+          "type": "Int32",
+          "offset": 96,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "rNToGo",
+          "type": "Int32",
+          "offset": 100,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ],
+          "qualification": "Unused compression-state field preserved as an opaque four-byte cell."
+        },
+        {
+          "name": "rTPos",
+          "type": "Int32",
+          "offset": 104,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ],
+          "qualification": "Unused compression-state field preserved as an opaque four-byte cell."
+        },
+        {
+          "name": "nblock",
+          "type": "Int32",
+          "offset": 108,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "nblockMAX",
+          "type": "Int32",
+          "offset": 112,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "numZ",
+          "type": "Int32",
+          "offset": 116,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "state_out_pos",
+          "type": "Int32",
+          "offset": 120,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "nInUse",
+          "type": "Int32",
+          "offset": 124,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L106"
+            }
+          ]
+        },
+        {
+          "name": "inUse",
+          "type": "Bool[256]",
+          "offset": 128,
+          "size": 256,
+          "array_dimensions": [
+            256
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 256 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_ap.v",
+              "line": 176,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_ap.v#L176"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v",
+              "line": 106,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v#L106"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "unseqToSeq",
+          "type": "UChar[256]",
+          "offset": 384,
+          "size": 256,
+          "array_dimensions": [
+            256
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 256 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v#L119"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v",
+              "line": 424,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v#L424"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "bsBuff",
+          "type": "UInt32",
+          "offset": 640,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "bsLive",
+          "type": "Int32",
+          "offset": 644,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "blockCRC",
+          "type": "UInt32",
+          "offset": 648,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "combinedCRC",
+          "type": "UInt32",
+          "offset": 652,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "verbosity",
+          "type": "Int32",
+          "offset": 656,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "blockNo",
+          "type": "Int32",
+          "offset": 660,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "blockSize100k",
+          "type": "Int32",
+          "offset": 664,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "nMTF",
+          "type": "Int32",
+          "offset": 668,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L119"
+            }
+          ]
+        },
+        {
+          "name": "mtfFreq",
+          "type": "Int32[258]",
+          "offset": 672,
+          "size": 1032,
+          "array_dimensions": [
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 258 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v",
+              "line": 229,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v#L229"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v",
+              "line": 232,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_gmA.v#L232"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "selector",
+          "type": "UChar[18002]",
+          "offset": 1704,
+          "size": 18002,
+          "array_dimensions": [
+            18002
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 18002 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBb.v",
+              "line": 318,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBb.v#L318"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBb.v",
+              "line": 350,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBb.v#L350"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "selectorMtf",
+          "type": "UChar[18002]",
+          "offset": 19706,
+          "size": 18002,
+          "array_dimensions": [
+            18002
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 18002 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v",
+              "line": 203,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v#L203"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v",
+              "line": 268,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v#L268"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "len",
+          "type": "UChar[6][258]",
+          "offset": 37708,
+          "size": 1548,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smB.v",
+              "line": 185,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smB.v#L185"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smB.v",
+              "line": 207,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smB.v#L207"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "code",
+          "type": "Int32[6][258]",
+          "offset": 39256,
+          "size": 6192,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v",
+              "line": 351,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v#L351"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v",
+              "line": 397,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smS.v#L397"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "rfreq",
+          "type": "Int32[6][258]",
+          "offset": 45448,
+          "size": 6192,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBz.v",
+              "line": 128,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBz.v#L128"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBb.v",
+              "line": 295,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBb.v#L295"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        },
+        {
+          "name": "len_pack",
+          "type": "UInt32[258][4]",
+          "offset": 51640,
+          "size": 4128,
+          "array_dimensions": [
+            258,
+            4
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 1032 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBz.v",
+              "line": 172,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBz.v#L172"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBz.v",
+              "line": 199,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBz.v#L199"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBf2.v",
+              "line": 96,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0_cmp_smBf2.v#L96"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v",
+              "line": 130,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/CmpCut.v#L130"
+            }
+          ]
+        }
+      ],
+      "layout_checked_against": "RV64 clang record-layout dump"
+    },
+    "DState": {
+      "size": 64144,
+      "alignment": 8,
+      "fields": [
+        {
+          "name": "strm",
+          "type": "bz_stream *",
+          "offset": 0,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "state",
+          "type": "Int32",
+          "offset": 8,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "state_out_ch",
+          "type": "UChar",
+          "offset": 12,
+          "size": 1,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "state_out_len",
+          "type": "Int32",
+          "offset": 16,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "blockRandomised",
+          "type": "Bool",
+          "offset": 20,
+          "size": 1,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "rNToGo",
+          "type": "Int32",
+          "offset": 24,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "rTPos",
+          "type": "Int32",
+          "offset": 28,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "bsBuff",
+          "type": "UInt32",
+          "offset": 32,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "bsLive",
+          "type": "Int32",
+          "offset": 36,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "blockSize100k",
+          "type": "Int32",
+          "offset": 40,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "smallDecompress",
+          "type": "Bool",
+          "offset": 44,
+          "size": 1,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "currBlockNo",
+          "type": "Int32",
+          "offset": 48,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "verbosity",
+          "type": "Int32",
+          "offset": 52,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "origPtr",
+          "type": "Int32",
+          "offset": 56,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "tPos",
+          "type": "UInt32",
+          "offset": 60,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "k0",
+          "type": "Int32",
+          "offset": 64,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 68,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L68"
+            }
+          ]
+        },
+        {
+          "name": "unzftab",
+          "type": "Int32[256]",
+          "offset": 68,
+          "size": 1024,
+          "array_dimensions": [
+            256
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 256 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7D.v",
+              "line": 234,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7D.v#L234"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U9B.v",
+              "line": 156,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U9B.v#L156"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "nblock_used",
+          "type": "Int32",
+          "offset": 1092,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 69,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L69"
+            }
+          ]
+        },
+        {
+          "name": "cftab",
+          "type": "Int32[257]",
+          "offset": 1096,
+          "size": 1028,
+          "array_dimensions": [
+            257
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 257 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U11A.v",
+              "line": 80,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U11A.v#L80"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 140,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L140"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 67,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L67"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCutF.v",
+              "line": 80,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCutF.v#L80"
+            }
+          ]
+        },
+        {
+          "name": "cftabCopy",
+          "type": "Int32[257]",
+          "offset": 2124,
+          "size": 1028,
+          "array_dimensions": [
+            257
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 257 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U12SA.v",
+              "line": 102,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U12SA.v#L102"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U12SB.v",
+              "line": 154,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U12SB.v#L154"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "tt",
+          "type": "UInt32 *",
+          "offset": 3152,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "ll16",
+          "type": "UInt16 *",
+          "offset": 3160,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "ll4",
+          "type": "UChar *",
+          "offset": 3168,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "storedBlockCRC",
+          "type": "UInt32",
+          "offset": 3176,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "storedCombinedCRC",
+          "type": "UInt32",
+          "offset": 3180,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "calculatedBlockCRC",
+          "type": "UInt32",
+          "offset": 3184,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "calculatedCombinedCRC",
+          "type": "UInt32",
+          "offset": 3188,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "nInUse",
+          "type": "Int32",
+          "offset": 3192,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 71,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L71"
+            }
+          ]
+        },
+        {
+          "name": "inUse",
+          "type": "Bool[256]",
+          "offset": 3196,
+          "size": 256,
+          "array_dimensions": [
+            256
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 256 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U4A.v",
+              "line": 143,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U4A.v#L143"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "inUse16",
+          "type": "Bool[16]",
+          "offset": 3452,
+          "size": 16,
+          "array_dimensions": [
+            16
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 16 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U4A.v",
+              "line": 348,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U4A.v#L348"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "seqToUnseq",
+          "type": "UChar[256]",
+          "offset": 3468,
+          "size": 256,
+          "array_dimensions": [
+            256
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 256 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U4C.v",
+              "line": 143,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U4C.v#L143"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10J.v",
+              "line": 131,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10J.v#L131"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "mtfa",
+          "type": "UChar[4096]",
+          "offset": 3724,
+          "size": 4096,
+          "array_dimensions": [
+            4096
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 4096 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v",
+              "line": 119,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v#L119"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v",
+              "line": 150,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v#L150"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "mtfbase",
+          "type": "Int32[16]",
+          "offset": 7820,
+          "size": 64,
+          "array_dimensions": [
+            16
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 16 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v",
+              "line": 129,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v#L129"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v",
+              "line": 150,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U10G.v#L150"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "selector",
+          "type": "UChar[18002]",
+          "offset": 7884,
+          "size": 18002,
+          "array_dimensions": [
+            18002
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 18002 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U5C.v",
+              "line": 266,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U5C.v#L266"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U5C.v",
+              "line": 283,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U5C.v#L283"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "selectorMtf",
+          "type": "UChar[18002]",
+          "offset": 25886,
+          "size": 18002,
+          "array_dimensions": [
+            18002
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 18002 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzDU5.v",
+              "line": 321,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzDU5.v#L321"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U5B.v",
+              "line": 93,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U5B.v#L93"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "len",
+          "type": "UChar[6][258]",
+          "offset": 43888,
+          "size": 1548,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u8arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzDU6.v",
+              "line": 103,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzDU6.v#L103"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U6.v",
+              "line": 169,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U6.v#L169"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "limit",
+          "type": "Int32[6][258]",
+          "offset": 45436,
+          "size": 6192,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 192,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L192"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 234,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L234"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U8S.v",
+              "line": 132,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U8S.v#L132"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "base",
+          "type": "Int32[6][258]",
+          "offset": 51628,
+          "size": 6192,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 194,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L194"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 234,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L234"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U8S.v",
+              "line": 140,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U8S.v#L140"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "perm",
+          "type": "Int32[6][258]",
+          "offset": 57820,
+          "size": 6192,
+          "array_dimensions": [
+            6,
+            258
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 1548 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 196,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L196"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 234,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L234"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U8S.v",
+              "line": 148,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U8S.v#L148"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "minLens",
+          "type": "Int32[6]",
+          "offset": 64012,
+          "size": 24,
+          "array_dimensions": [
+            6
+          ],
+          "review_status": "Exact finite field representation and bounded-access proof family inspected",
+          "representation": "u32arr with 6 elements",
+          "access_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v",
+              "line": 262,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7B.v#L262"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7E.v",
+              "line": 111,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_dec_U7E.v#L111"
+            }
+          ],
+          "representation_evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v",
+              "line": 30,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzContracts.v#L30"
+            }
+          ]
+        },
+        {
+          "name": "save_i",
+          "type": "Int32",
+          "offset": 64036,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_j",
+          "type": "Int32",
+          "offset": 64040,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_t",
+          "type": "Int32",
+          "offset": 64044,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_alphaSize",
+          "type": "Int32",
+          "offset": 64048,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_nGroups",
+          "type": "Int32",
+          "offset": 64052,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_nSelectors",
+          "type": "Int32",
+          "offset": 64056,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_EOB",
+          "type": "Int32",
+          "offset": 64060,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_groupNo",
+          "type": "Int32",
+          "offset": 64064,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_groupPos",
+          "type": "Int32",
+          "offset": 64068,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_nextSym",
+          "type": "Int32",
+          "offset": 64072,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_nblockMAX",
+          "type": "Int32",
+          "offset": 64076,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_nblock",
+          "type": "Int32",
+          "offset": 64080,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Fixed-width scalar or pointer slot in field layout",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v",
+              "line": 72,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/DecCut.v#L72"
+            }
+          ]
+        },
+        {
+          "name": "save_es",
+          "type": "Int32",
+          "offset": 64084,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_N",
+          "type": "Int32",
+          "offset": 64088,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_curr",
+          "type": "Int32",
+          "offset": 64092,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_zt",
+          "type": "Int32",
+          "offset": 64096,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_zn",
+          "type": "Int32",
+          "offset": 64100,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_zvec",
+          "type": "Int32",
+          "offset": 64104,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_zj",
+          "type": "Int32",
+          "offset": 64108,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_gSel",
+          "type": "Int32",
+          "offset": 64112,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_gMinlen",
+          "type": "Int32",
+          "offset": 64116,
+          "size": 4,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_gLimit",
+          "type": "Int32 *",
+          "offset": 64120,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_gBase",
+          "type": "Int32 *",
+          "offset": 64128,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        },
+        {
+          "name": "save_gPerm",
+          "type": "Int32 *",
+          "offset": 64136,
+          "size": 8,
+          "array_dimensions": [],
+          "review_status": "Saved slot coarsened into raw byte region; no separate persistent value invariant",
+          "representation": "First 44 or final 60 bytes of SAVE_CELLS",
+          "evidence": [
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v",
+              "line": 101,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/BzInv.v#L101"
+            },
+            {
+              "path": "proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v",
+              "line": 276,
+              "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/bzip2/bzip2_compress_target/lib/Bz/S0F_decRet.v#L276"
+            }
+          ],
+          "qualification": "Return stores are stepped at fixed offsets. Coarsening values is not evidence of an unbounded access; arbitrary streaming resumption is not covered by this harness."
+        }
+      ],
+      "layout_checked_against": "RV64 clang record-layout dump"
+    }
+  },
+  "excluded_structs": {
+    "bzFile": {
+      "field_names": [
+        "handle",
+        "buf",
+        "bufN",
+        "writing",
+        "strm",
+        "lastErr",
+        "initialisedOk"
+      ],
+      "reason": "File API wrapper outside the completed harness; not counted as a missing internal field-bound obligation."
+    }
+  }
+}

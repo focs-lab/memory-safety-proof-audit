@@ -1,0 +1,101 @@
+Coturn ASan and ASan+UBSan internal field-bound audit
+Proof commit: a6839bb9e433b34c0d0710df5280194528877139
+
+Finding
+Neither internal proof restores the lower bound for the same source access
+in stun_attr_add_str: attr_start=buf+clen; turn_write_u16(attr_start,attr).
+Each selected accepted certificate case admits a store at buf[-1], inside
+the preceding channel[3] field of stun_buffer. Both cases use attribute 18
+(XOR-PEER-ADDRESS), which is within the plain-proof case reviewed earlier.
+
+This is an invariant-strength finding. No assertion is made that any
+harness input reaches either admitted disjunct. No target was executed.
+
+ASan
+Certificate: VCertS_asan_p01.v:5 (dictionary in VCertS_asan_p00.v:5).
+Decoded selector: unit vid 752, entry 0x8d0f0;
+cut 0x8d348, state index 1 (zero-based), ctx [].
+buf = sp0 -1326956; struct base = buf-4.
+The admitted store destination is sp0 -1326957 = buf[-1] = channel[3].
+Instruction at 0x8d38c: sb x10, 0(x21), word 0x00aa8023.
+Post-store cut 0x8d3e8, state index 1, records:
+  slot offset -1326957, width 1, value 4608 mod 256.
+The unit write set includes [-1326957,-1326932).
+The stack-shadow fact includes zero at offset -165870
+relative to sp0/8 + 0x7fff8000. Both byte addresses tested before the
+first store map to that same zero shadow byte.
+Certificate reference chain: [{"caller": 914, "call_pc": "0x86ae8", "callee": 754, "target": "0x88dd8"}, {"caller": 754, "call_pc": "0x8e380", "callee": 752, "target": "0x8d0f0"}].
+Binary SHA256: 99443988bd9bcd3087fe619757c7dff2a6b198583ad959307bc34edcd9b44ef8 (matches current build provenance).
+
+ASan+UBSan
+Certificate: VCertS_both_p01.v:5 (dictionary in VCertS_both_p00.v:5).
+Decoded selector: unit vid 845, entry 0x8c638;
+cut 0x8c93c, state index 1 (zero-based), ctx [].
+buf = sp0 -1327020; struct base = buf-4.
+The admitted store destination is sp0 -1327021 = buf[-1] = channel[3].
+Instruction at 0x8c97c: sb x10, 0(x25), word 0x00ac8023.
+Post-store cut 0x8c9e8, state index 1, records:
+  slot offset -1327021, width 1, value 4608 mod 256.
+The unit write set includes [-1327021,-1327008).
+The stack-shadow fact includes zero at offset -165878
+relative to sp0/8 + 0x7fff8000. Both byte addresses tested before the
+first store map to that same zero shadow byte.
+Certificate reference chain: [{"caller": 1034, "call_pc": "0x86610", "callee": 847, "target": "0x88830"}, {"caller": 847, "call_pc": "0x8d6d0", "callee": 845, "target": "0x8c638"}].
+Binary SHA256: 4fd7bfa4d6ebf2583737cfa6cc09ce0f3344066b8f8c92d899ff91843d1d9f69 (matches current build provenance).
+
+Tighter facts and instrumentation
+ASan unit 752 at cut 0x8d348, case 1 fixes x18 (clen) to -1 and x14
+to buf. Instructions 0x8d350-0x8d354 form buf-1. The ASan shadow tests
+at 0x8d36c/0x8d370 and 0x8d380/0x8d384 accept the zero shadow byte;
+the first source-data store is at 0x8d38c.
+
+ASan+UBSan unit 845 at cut 0x8c93c, case 1 already fixes x25 to buf-1.
+Thus this case is downstream of the pointer checks at 0x8c8b4-0x8c8d4.
+For a positive buf, subtracting one produces a nonzero pointer without
+address wraparound; those checks do not impose the C field lower bound.
+The shadow tests at 0x8c958/0x8c95c and 0x8c96c/0x8c970 accept zero;
+the first source-data store is at 0x8c97c.
+
+All recorded intervals, congruences, linear constraints, division
+definitions, nonnegative ranks, explicit scalar/region byte constraints
+and NUL assertions were checked for consistency with the supplied
+valuation. The complete cases and valuations are in the companion JSON.
+The fake-stack frames/flags and borrowed argument regions concern helper
+scratch storage and argument data; they introduce no C-field boundary at
+the real-stack buf pointer. The corresponding real-stack shadow bytes
+are explicitly zero in the certificate.
+
+Proof machinery and exact source locations
+VCertDecode2.v decodes the dictionaries, states and units. VCertT_asan.v:10
+and VCertT_both.v:10 assemble the chunks. VGamma2.v:414-423 specifies the
+complete extended invariant, including region and shadow facts.
+VStepMem2.v:494-504 falls back to the ordinary stack-store checker for
+these SP0-relative stores. VStepMem.v:52-68 checks the stack window and
+per-unit write set. VDriver2.v:43-48 installs that write set.
+VCertCheck_asan.v:12 and VCertCheck_both.v:12 state the certificate checks;
+VFC_asan.v:13-20 and VFC_both.v:13-20 use them for the completed contracts.
+
+Reproduction and limits
+decode_coturn2.py translates the repository decoder and checks complete
+consumption of the dictionary and every encoded chunk. This extraction
+script checks arithmetic, byte consistency, binary hashes, store words,
+shadow coverage and certificate references. It is not a Rocq replay or a
+machine-checked theorem about concrete input reachability.
+
+Rocq follow-up (2026-11-01)
+The complete original gamma2 predicate now has machine-checked countermodels
+for both selected cases, including every region, flag, shadow, runtime-context,
+register and memory condition. The case and rank literals are checked against
+the original compressed certificates by the repository decoder. Both witnesses
+have destination=buf-1, writable memory there, and a zero ASan shadow byte.
+
+Reproducible bundle: rocq/coturn-field-bounds/README.txt
+Theorems: proof/Complete.v, asan_decoded_case_admits_buf_minus_one and
+both_decoded_case_admits_buf_minus_one. The fresh rebuild checked 88 sources;
+all final assumptions are release-allowed Rocq primitives.
+
+Rocq exposed a signed-residue error in the earlier Python decoder. The corrected
+instrumented witness uses sp0=0x7fff80000010 (16 mod 32); the finding is unchanged.
+The decoder, decoded data and published witness were corrected. The preceding
+Python-only limits describe the earlier extraction step, not this Rocq follow-up.
+No input reachability or vulnerability conclusion is made.

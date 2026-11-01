@@ -1,0 +1,577 @@
+# Custom allocator safety in the msgpack proof
+
+Evidence dossier for a blog post
+
+Prepared for Umang Mathur | 25 October 2026 | Version 1
+
+This dossier examines what the public Rocq verification of msgpack-c's unpack_pack_fuzzer establishes about custom allocation. It maps every item in the supplied ASan checklist to the theorem, the verified harness, and the internal proof evidence. It is intended to support later writing, with qualifications kept beside the claims they qualify.
+
+The principal finding is that the published result has a carefully bounded scope, while its internal proof contains substantial allocator reasoning beyond ordinary ASan checks. Several problematic allocator operations are absent from the verified use of msgpack. Other properties, including leak freedom and general source-language lifetime correctness, are not the advertised theorem. A universal property tying every access to its original live suballocation remains unestablished by this review. No reachable custom-allocation violation accepted by the actual proof has been identified.
+
+This is a source audit. The Rocq development was not independently replayed, the published binaries were not independently rebuilt or executed in this review, and no experimental bug result is claimed. Exact versions and published binary fingerprints are recorded below so that further verification can be reproducible.
+
+## 1 How to interpret the findings
+
+Four questions must be kept separate. First, what errors can the configured sanitizer detect? Second, what proposition is exported by the proof? Third, what stronger facts are established by intermediate invariants? Fourth, what operations and API usages can actually occur in the verified program? A limitation at one level does not automatically establish a limitation at every other level.
+
+For example, ordinary ASan may not distinguish two objects inside a backing chunk. Nevertheless, a proof of the instrumented program can use exact object bounds and prove that those objects do not overlap. Conversely, a theorem that the checks never fail does not by itself advertise every stronger property used along the way. Recovering such a property requires identifying its precise statement and establishing its applicability throughout the execution.
+
+This dossier uses four verdicts. Evidence means a specific inspected definition, lemma, source path, or build setting supports the claim. Outside harness means the relevant API scenario is not part of this verified workload. Not claimed means the public theorem is not a theorem of the indicated property. Unresolved means this audit has not established the stronger proposition, but has not shown that it is false or unprovable from the development.
+
+These verdicts should not be collapsed into a binary covered or missing column without explanation. In particular, a harness that never internally frees an object before its final use can avoid a class of stale-pointer histories without maintaining an explicit generation counter. Such a design can be safe; it is not a proof of arbitrary clients of the allocator.
+
+## 2 Exact subject of the audit
+
+The proof repository is theorem-labs/oss-verify-proofs at commit 98e995d4daced70a0a4aa2c810854b88720735f1. The entry point is projects/msgpack-c/unpack_pack_fuzzer, with the corresponding development under proofs/msgpack-c/unpack_pack_fuzzer. The upstream source is msgpack/msgpack-c at a5250ecbcae1d34346c7445345774b0abbd651bc, identified by the project as msgpack-c 8.0.0. [S01, S02, S03]
+
+The inspected allocator is the C++ zone implementation used by this harness. The repository name msgpack-c should not be taken to mean that this audit covers only a C API, or that every C and C++ API provided by msgpack is included. It concerns one compiled C++ workload.
+
+The public provenance records an unmodified upstream fuzz harness, no library patches, clang 20.1.8, and static riscv64 Linux binaries targeting RV64G. There are four builds: plain, ASan, UBSan, and ASan plus UBSan. The static ASan implementation is itself pinned in the provenance. These facts fix the artifact being discussed; they do not establish portability to a different compiler, architecture, upstream revision, or application. [S03]
+
+The project inventory publishes one harness with four builds and marks three of fifteen statements proved. It also records that an API-driver was withheld from this release. No claim about that unavailable driver is made here. [S31]
+
+The publication includes ports to release binaries. Theorem source comments attribute the proofs to Anthropic and identify changes by Theorem Labs. This dossier concerns the pinned public release, not an independently reconstructed earlier internal submission. The release's current dependency pin takes precedence over historical commit mentions in source comments. [S04, S23]
+
+### 2.1 Harness behavior
+
+On each invocation, the harness attempts to unpack the supplied bytes with all six unpack_limit fields set to 1000. Those fields bound array, map, string, binary, extension, and nesting depth. It then packs the resulting object into an sbuffer. Exceptions are caught. The output bytes are not compared with the input and are not unpacked again. [S01, S05]
+
+The driver may invoke the harness one to four times. Each invocation attempts unpacking with a fresh owning zone. Successful unpacking returns its owning handle; local objects are cleaned up on ordinary return or exception unwinding. There is no application variable retaining an arena pointer from one invocation for use in the next. This excludes the specific stale-pointer-across-arena-reuse scenario raised in the conversation; it does not imply that physical addresses cannot be reused by the underlying allocator. [S02, S05, S25]
+
+The file-input wrapper has its own input format and admission checks. The public statement describes a configuration prefix, an allocation-mask field ignored by this harness binary, and the payload. Files of 64 MiB or more are rejected before invoking the harness. This does not mean that the proof considers only a finite set of sampled test files: it quantifies over all valid process inputs, including those the driver rejects before invoking the harness, under the model and theorem premises. [S02]
+
+There is no functional specification here that unpacking implements the MessagePack standard, that the packed representation is canonical, or that packing preserves every input byte. Even a meaningful serialization round-trip theorem would usually compare semantic values rather than raw bytes, because different encodings can denote the same value. No such theorem is supplied by this harness's absent comparison.
+
+### 2.2 The three proved statements
+
+| Published result | Plain-build budget premise | Compared build | Status in the pinned release |
+| --- | --- | --- | --- |
+| asan_agrees | No budget refusal at 2 GiB | ASan | Proved |
+| ubsan_agrees | No budget refusal at 16 GiB | UBSan | Proved |
+| asan_ubsan_agrees | No budget refusal at 2 GiB | ASan and UBSan | Proved |
+
+The target-side budget is 512 GiB. The budget premise is on the plain run. It is not a claim that every input requires less than the source budget, nor a claim that an instrumented process has the same memory footprint as the plain process. The environment configuration disallows arbitrary memory-allocation refusal but permits the model's other families of environmental failure. Forced failures, including absence of a suitable address range, remain relevant. [S02, S06]
+
+Theorems.v exports strong_universal_error_free_unpack_pack_fuzzer_asan, strong_universal_error_free_unpack_pack_fuzzer_ubsan, and strong_universal_error_free_unpack_pack_fuzzer_both. Each instantiates strong_universal_error_free_T_scfg_budgets_abort with the corresponding images and budgets. The statement combines error freedom for both runs and equivalence of their modeled observable traces. It is stronger than simply asserting that both binaries return the same answer. [S04, S06]
+
+An informal reading is: for every valid process input and pair of valid entry states satisfying the plain-build budget premise, no execution of either build reaches a modeled error or is killed by a modeled signal, and the two builds have the same set of observable behaviors. A sanitizer report or trap is forbidden under this reading. The observations are process observations; they are not a MessagePack specification. [S02, S06]
+
+The public table marks the halting statements as open. Do not infer termination from the existence of these agreement proofs. In particular, the harness description's broad wording about not hanging exceeds what can be concluded from the proved-status table alone. Infinite error-free execution and finite successful termination are different proof obligations. [S01, S02]
+
+### 2.3 Why comparing two binaries is not automatically enough
+
+Let P be a plain binary and S(P) its instrumented version. Equal observable behavior alone is compatible with both binaries performing the same unchecked invalid access. It can even be compatible with both failing in the same way. The actual public result also requires modeled error freedom, which addresses the latter issue. It still needs a connection between the intended safety property and the model or instrumentation to address the former.
+
+Suppose a pool grants two adjacent regions A and B inside one malloc allocation. An access computed from A could land inside B, which ASan regards as accessible. If both binaries perform that access and it produces no modeled fault, plain-versus-ASan agreement alone does not explain why the access violates A's allocation contract. An additional object-level invariant can exclude it. The msgpack proof contains such stronger local reasoning, as detailed below; that evidence must be examined rather than inferred solely from the theorem's name.
+
+## 3 The custom allocator and the intended contracts
+
+### 3.1 Backing allocations and zone suballocations
+
+The zone obtains backing chunks using standard allocation and hands out smaller regions by advancing a pointer. The model records a chunk list, a current pointer, and remaining space. Its default chunk size is 8192 data bytes, with an 8-byte chunk header in the modeled layout. When the current chunk cannot accommodate a request, an expansion path allocates another chunk. [S09, S10, S24]
+
+Arrays use 24 bytes per modeled msgpack object. Map entries use 48 bytes, accounting for a key and a value. String and binary payloads use their byte lengths; extension storage also accommodates the type byte. These are concrete layout facts of the audited build, not platform-independent C++ size claims. [S09, S12, S13]
+
+The allocation contract matters independently of the outer malloc block. If an API grants 24 bytes, bytes beyond those 24 are not automatically usable merely because a larger accessible chunk contains them. Alignment padding, a next object, metadata, and unused tail space can all be physically present without being part of the client's region. This is the contract distinction motivating the supplied checklist.
+
+### 3.2 Clearing and destruction are different operations
+
+The upstream zone has a clear operation. Its chunk-list clear path frees other chunks, retains one chunk, and resets the pointer and remaining capacity. Thus a clear can end the useful lifetime of old allocations while keeping some storage allocated. The source also has finalizer machinery, generic allocate<T> construction, and a private undo_allocate rollback on a construction failure. [S24]
+
+The inspected unpack path uses raw zone allocation for its object representation. It does not exercise arbitrary allocate<T> clients and their destructor callbacks. The proof's zone_at representation fixes the finalizer bookkeeping pointers to zero. This is concrete evidence that the verified state is specialized, rather than a theorem about arbitrary registered finalizers. [S14, S24, S26]
+
+Normal zone destruction eventually releases backing chunks. That is a standard-allocation lifetime event and differs from clear while retaining storage. A conclusion about safe chunk destruction cannot automatically be generalized to stale pointers across clear, and the absence of clear in the harness cannot be generalized to the whole msgpack API.
+
+### 3.3 Standard reallocation in the output buffer
+
+The sbuffer expansion path invokes standard ::realloc. Its allocation behavior should not be conflated with a custom allocator that shrinks an internal slot or moves it while retaining the former slot inside a pool. The proof also has standard allocation/free/reallocation contracts instantiated in its source proof assembly. This makes it incorrect to claim that the workload has no reallocation, or that reallocation is simply ignored. [S21, S27]
+
+The narrower finding is that the custom zone shrink and custom zone move scenarios from checklist items 5 and 6 are absent from the verified zone usage. The correctness of standard realloc handling is a separate obligation. This audit identifies its presence but does not claim an independent complete audit of every standard allocator implementation path.
+
+## 4 Detailed coverage matrix
+
+The numbering below preserves the supplied 17-item checklist. Items 18 to 20 label its three additional, originally unnumbered categories. Evidence refers to the pinned sources listed in the source register.
+
+| Item | Subject | Verdict for this audit |
+| --- | --- | --- |
+| 1 | Suballocation overflow and underflow | Strong local bounds evidence; universal original-allocation property unresolved |
+| 2 | Use after internal free | Outside verified per-object free usage |
+| 3 | Custom double free | Outside verified per-object free usage |
+| 4 | Use after arena clear or reset | Clear exists in the library; outside this harness |
+| 5 | Access beyond a custom shrink | Outside verified zone operations |
+| 6 | Use after moving custom reallocation | Outside verified zone operations; standard realloc is separate |
+| 7 | Stale pointer after address reuse | Relevant reuse history outside harness; no general provenance theorem identified |
+| 8 | Stale free releases a newer object | Outside verified per-object free usage |
+| 9 | Invalid custom free or wrong owner | Outside verified custom-free API usage |
+| 10 | Other bulk lifetime invalidation | Outside verified zone lifecycle |
+| 11 | Allocator implementation defects | Fit, alignment, freshness and bookkeeping explicitly addressed; not every allocator contract |
+| 12 | Logical leaks and LSan limitations | No exported leak-freedom guarantee |
+| 13 | Access jumps over a redzone | Local region checks help; universal origin-sensitive claim unresolved |
+| 14 | Overflow between fields | Specific tag, offset and width checks; no general C++ subobject theorem |
+| 15 | Beyond logical length within capacity | Several logical-length invariants explicitly checked |
+| 16 | Object lifetime ends before storage | No general source-level C++ lifetime guarantee |
+| 17 | Uninstrumented accesses | Real instrumentation boundary; not automatically omitted from binary proof |
+| 18 | Uninitialized or residual contents | No general initialization or confidentiality guarantee |
+| 19 | Alignment and size arithmetic | Explicit local proofs and enabled UBSan checks; no blanket arithmetic guarantee |
+| 20 | Data races | Outside single-threaded model |
+
+### 4.1 Suballocation overflow and underflow
+
+The generic ASan concern is an access outside a requested region whose target address remains inside the backing pool. The relevant destinations include a neighboring live object, a freed slot, allocator metadata, padding, and unused capacity. Reads and writes can both violate the contract.
+
+The msgpack proof does more than show membership in a chunk. Allocation lemmas relate the requested size to the bump-pointer update and available capacity. Freshness lemmas establish separation of newly allocated ranges from previously allocated ranges. The construction checker creates a region with the actual requested extent. For payloads, the checker relates the object's stored length to that allocation size. [S10, S11, S12]
+
+Array and map construction also uses element counts and per-element layout sizes. The exact region bounds can reject an access even where ASan would find the entire backing chunk accessible. Thus it would be false to report that internal boundaries are uniformly ignored.
+
+The qualification is that these facts occur in different phases and abstractions. Some completed-tree predicates later use chunk membership and readability. This audit has not extracted an end-to-end theorem saying that every client access stays within the original requested suballocation throughout its lifetime. The correct verdict is strong evidence on inspected paths, with a remaining global specification question. Section 5 explains the distinction precisely.
+
+### 4.2 Use after an internal free
+
+An internal pool_free can invalidate an object by changing only custom metadata. Ordinary ASan does not automatically learn that lifetime event. The verified msgpack workload does not have a per-object free cycle for zone suballocations before packing them. The zone remains the owner until cleanup. [S05, S24, S25]
+
+This case is therefore outside the verified API usage. The result should not be described as proving safety for arbitrary calls to pool_free. Equally, a hypothetical pool_free history is not a counterexample to a program that cannot perform it. Final backing-chunk deallocation is a separate, present operation.
+
+### 4.3 Custom double free
+
+Two custom deallocation calls can modify accessible metadata twice without either being a standard free visible to ASan. There is no corresponding per-object zone-free sequence in the harness. The public verification therefore does not provide a general custom double-free detection theorem. [S05, S24]
+
+Do not extend this statement to ordinary free in teardown. Those standard calls occur in the verified binary and have proof contracts. Proving that chunk ownership is relinquished correctly is different from proving arbitrary double-free misuse of a public pool API impossible. [S21, S28]
+
+### 4.4 Use after arena clear or reset
+
+This is a real capability of the library's allocator, rather than a generic operation invented for the checklist. The retained chunk after clear creates exactly the physical-storage-versus-logical-lifetime distinction under discussion. An application retaining old pointers could violate the clear contract without leaving that malloc allocation. [S24]
+
+The harness does not clear and then continue using the same zone. It constructs the parsed result, packs it, and destroys the local state. Consequently, the theorem does not establish a rule for all clients retaining pointers across zone::clear. It also does not demonstrate that such a misuse occurs in unpack_pack_fuzzer. [S05, S25]
+
+### 4.5 Access after shrinking a custom allocation
+
+Shrinking a suballocation can invalidate the tail while leaving every byte physically accessible. Enforcement requires an updated contract boundary, not just the original backing allocation. No custom zone shrinking operation appears in the verified usage. Its status is outside scope for that workload.
+
+A proof-file name containing shrink is not sufficient evidence of a custom realloc operation. Such names may refer to logical proof transformations or vector capacity reasoning. The actual call path and contract must establish the intended operation before assigning this checklist item to it.
+
+### 4.6 Access after moving a custom allocation
+
+A custom resize can allocate a new slot, copy contents, and make the old slot logically invalid while retaining both slots' backing storage. This combines a data-preservation obligation with a lifetime obligation. The zone usage here does not implement that operation. The sbuffer's standard ::realloc is a different mechanism. [S27]
+
+The review therefore does not infer correctness or incorrectness of custom resize failure behavior, preservation of the old object after failure, or copy lengths for a custom zone realloc. Those operations would require an expanded harness or a separately stated allocator theorem.
+
+### 4.7 Stale pointer after reuse at the same address
+
+This was the user's central concern. For the user's hypothetical API, assume that releasing allocation A invalidates its handles, even if allocation B later occupies exactly the same bytes. The validity of a particular C++ storage-reuse example still depends on the applicable lifetime and reconstruction rules. An address-accessibility test cannot distinguish a stale A pointer from a valid B pointer when they contain the same address. Poisoning at free helps during the interval before reuse; unpoisoning for B removes that distinction. The original ASan paper describes reuse-related false negatives. [E02]
+
+For this msgpack workload, there is no internal free/reset/reallocate sequence that retains an old zone pointer for later use. Multiple driver invocations do not themselves create that history: a later invocation would need some way to recover and use an old logical reference. The reviewed harness preserves no such reference. [S02, S05, S25]
+
+There is no identified generic allocation-generation theorem for arbitrary clients. However, it would be invalid to infer a hole solely because zoneg contains no generation field. A proof can exclude stale use by ownership, monotone allocation, and control flow. Explicit generations are one possible specification device, not a necessary implementation of every lifetime proof.
+
+### 4.8 Stale free deallocates a newer allocation
+
+If A is freed, B reuses its address, and an old handle to A is freed again, a current-state-only allocator may release B. This differs from two consecutive frees without reuse. The contract violation depends on which logical allocation the handle designates.
+
+The per-object custom-free and reuse history is outside this harness. The proof should not be credited with a general stale-free guarantee. The example also does not establish a defect in msgpack's bulk-owned zone design, which does not expose the presumed per-object release operation on this path.
+
+### 4.9 Invalid frees and ownership violations
+
+The supplied checklist includes interior-pointer frees, freeing never-allocated pool space, freeing through the wrong pool, mixing incompatible allocation families, and supplying the wrong size or alignment. Each requires a precise API contract. Some APIs permit operations others forbid, so the operation's name alone is insufficient to classify an error.
+
+These custom deallocation patterns are absent from the verified use of the zone. The proof has ownership information for concrete heap blocks and standard deallocation, but that does not make it a universal theorem about invalid arguments to every allocator API. Relevant future specifications would track the permitted owner, base address, release operation, and, where applicable, allocation parameters. [S21, S24, S28]
+
+### 4.10 Other bulk invalidation operations
+
+Checkpoint rewind, transaction end, request end, cache return, and slab recycling are extensions of the same lifetime issue. They should be stated conditionally on an API actually invalidating objects. For example, rewind might invalidate only allocations after a checkpoint.
+
+No such lifecycle is part of this verified workload. The result does not cover arbitrary caches or transaction allocators merely because they also use chunks. Conversely, no bug follows from the absence of their contracts in a proof of a different workload.
+
+### 4.11 Bugs in the allocator itself
+
+This category has mixed coverage and needs subdivision. Returning overlapping live regions, returning insufficient space, or miscomputing a bump pointer are directly relevant to this allocator and receive explicit proof attention. These lemmas explicitly establish internal allocation geometry beyond membership in an outer malloc allocation. [S09, S10, S11]
+
+Wrong-slot release, free-list or bitmap corruption, and custom realloc copy/failure mistakes presuppose mechanisms not used by this zone path. This audit does not establish them for an arbitrary allocator. The useful finding is narrower and positive: several core implementation obligations for this bump allocator are present.
+
+CMASan should not be used as an automatic benchmark of everything a proof must establish. Its paper's discussion places allocator-internal bugs outside its principal scope, in connection with false-positive suppression. A formal proof of allocator invariants can therefore establish properties beyond both ordinary ASan and that detector's main advertised target. [E03]
+
+### 4.12 Logical leaks and reachability
+
+There is no exported leak-freedom theorem. Leak checks are disabled in the recorded build configuration. Cleanup code and chunk teardown proofs provide useful evidence about actual deallocation, but they are not a general claim that all logically dead subobjects are promptly reclaimed or that retained space is minimal. [S07, S28]
+
+An arena designed to release objects together does not leak merely because it lacks individual releases. To allege a logical leak, first state the intended lifetime, release policy, and liveness condition. A claim about eventual reclamation may also depend on termination, which is not among the proved statements here.
+
+The additional checklist observation about stale pointer-shaped bytes affecting LSan reachability is a generic detector limitation. It is not evidence of a specific msgpack leak. A future reclamation theorem would need to identify what memory is allowed to remain retained at each phase and at exit.
+
+### 4.13 Jumping over a redzone
+
+The relevant error is an access derived from one object that lands directly in another accessible object. Enlarging redzones makes some such mistakes easier to detect, but address-only checking is not the same as checking the pointer's originating allocation. This limitation also occurs with standard allocation. [E02]
+
+The proof's nonabsolute region access rules compare an access against the selected region's lower and upper bounds and exclude wrapping. This can reject an access even if its destination is accessible elsewhere. To turn that into a universal provenance guarantee, one must also show that selecting the region preserves the intended object's identity through pointer arithmetic and all abstraction transitions. That last global theorem has not been established by this review. [S19]
+
+### 4.14 Overflow between fields within an object
+
+Being inside a 24-byte object is not sufficient to satisfy every C++ subobject rule. An array field and a neighboring field can occupy the same enclosing allocation. The inspected packer rules nevertheless enforce more than the enclosing object's extent: they select legal offsets and access widths using the object's tag. [S17]
+
+Examples include 4-byte length loads at offset 8 for relevant payload or aggregate tags and 8-byte pointer loads at offset 16. The soundness and instantiation trail connects those rules to the proof client. This is evidence about specific field accesses, not a generic theorem of all source-language subobject semantics. [S17, S21]
+
+### 4.15 Beyond logical length but within capacity
+
+The proof distinguishes vector size from capacity and constrains size to be within capacity. Its element-selection reasoning uses the actual child list and a valid element index. These facts address cases that cannot be settled by knowing the malloc capacity alone. [S09, S10, S16]
+
+This is a positive coverage finding on inspected operations. It does not justify claiming that every logical data-structure invariant of msgpack is proved. Nor does valid length establish that payload contents match the original input. Bounds, initialization, and functional contents are different propositions.
+
+### 4.16 Object destruction while storage remains
+
+The public theorem is over compiled process behavior, not a full formal C++ abstract machine. No general theorem of C++ object lifetime, reconstruction, dynamic type, or all permitted uses of storage after destruction has been identified. The finalizer-empty invariant further limits the relevant zone usage. [S08, S14]
+
+A particular destroyed-object use may still be excluded by the actual program's control flow or by a local invariant. Lack of a general source-language theorem is not evidence that all such accesses are allowed. MemorySanitizer's distinct use-after-destruction facility is useful background, but the availability of that facility elsewhere is not evidence that this build enables it. [E04]
+
+### 4.17 Accesses without sanitizer instrumentation
+
+The build records list uninstrumented runtime components, including libc and C++ runtime code. The driver is also described as uninstrumented in the build documentation. These boundaries limit which runtime accesses receive sanitizer checks. [S01, S07]
+
+However, an uninstrumented instruction can still be part of the binary semantics being verified, and a library operation can have a proved contract. The inspected assembly of the proof includes allocation, memcpy, and related contracts. It is therefore inaccurate to say that all uninstrumented code is outside the proof. The appropriate question is what its semantic model and contracts guarantee, and whether those guarantees express the property under discussion. [S08, S21]
+
+A documentation discrepancy deserves care: some statement prose includes the driver when informally describing instrumented code, whereas the build documentation explicitly excludes it. The dossier uses the more precise build account and flags the inconsistency rather than resolving it by assumption.
+
+### 4.18 Uninitialized data and residual contents
+
+No general initialized-before-use or confidential-data-clearing theorem has been identified. The byte-memory abstraction's readability predicate means that a byte sequence is available in the memory model. It does not by itself record that the current application object initialized those bytes, or that they no longer contain a previous occupant's data. [S14]
+
+Likewise, the payload model retains pointer and size information without a complete specification equating every payload byte to a decoded input value. A theorem about preserving secrets or clearing storage would need an explicit data or information-flow property. Neither in-bounds access nor trace agreement between two builds of the same computation supplies that automatically.
+
+This does not assert that msgpack actually reads uninitialized bytes or discloses old contents. The claim is about the absent general guarantee. Some individual loads can be constrained by stores and known-value invariants, so it would also be wrong to claim the proof uniformly permits uninitialized use.
+
+### 4.19 Alignment and arithmetic
+
+The development contains concrete alignment facts and arithmetic lemmas for size calculations. In particular, the bounded element counts support reasoning about 24 times the array count and 48 times the map count. Enabled UBSan checks add relevant alignment and signed-overflow checks in instrumented code. [S09, S10, S13, S07]
+
+Unsigned overflow checking is not included in the recorded sanitizer configuration. That does not imply that relevant unsigned arithmetic is unchecked by the formal proof: a direct range argument can prove it safe. Nor is every unsigned wrap a language-level error. The correct question is whether each allocation size and pointer calculation satisfies the intended range and non-wrap obligation. Evidence is positive for inspected calculations, not universal for every arithmetic operation in the library.
+
+### 4.20 Data races
+
+The process model has one thread and no shared-memory interleaving scheduler. This proof therefore supplies no data-race or concurrent allocator correctness theorem. A race-free single-threaded workload does not establish thread safety of arbitrary clients. [S08]
+
+ThreadSanitizer targets a different class of properties. Adding it to a build would not by itself supply a formal concurrency model, ownership transfer rules, or a proof of all interleavings. [E06]
+
+## 5 The spatial evidence in more detail
+
+### 5.1 What the zone model remembers
+
+The zoneg record remembers the zone address, a list of chunks, the current bump pointer, and free capacity. A chunk range begins after its header and ends after its data size. The in_zone predicate states that the accessed interval fits in one chunk. The in_alloc predicate is stronger for the current chunk: its interval must end no later than the current bump pointer. For older chunks, the predicate uses their chunk extent. [S09]
+
+Neither predicate is, by itself, a map from a pointer to the exact allocation request that produced it. A prefix of allocated storage can contain multiple distinct suballocations. Membership in that prefix does not identify which one an access is permitted to use. For older chunks, the abstraction can also include tail capacity not consumed by the last request.
+
+This observation identifies the information represented by these predicates. It does not characterize every fact available at every proof point. The proof also has local requested-size regions, separation facts, object layouts, list lengths, and phase-specific invariants.
+
+### 5.2 Allocation fit and freshness
+
+The zalloc8_fits_ok and zalloc1_fits_ok lemmas connect successful allocation to the remaining capacity and updated zone state. The fresh-chunk variants address expansion. Freshness lemmas establish that the new region is disjoint from preexisting nonnegative ranges satisfying the relevant allocated-region predicate. [S10]
+
+These are substantive allocator correctness facts. They exclude the simple defect in which a bump allocator returns an overlapping region while keeping all accesses within the outer malloc block. The property is local to the defined allocation transitions and their premises; it should not be extended to arbitrary unmodeled allocator APIs.
+
+The G4 checker introduces a requested-size region and transfers the relevant permissions away from a larger window. Its soundness result and the source-proof instantiation provide a link to the actual proof path. Merely finding a lemma somewhere in the repository would not be enough; the instantiation matters. [S11, S21]
+
+### 5.3 Payload lengths are connected at construction
+
+The G2B construction checker uses size_cell to relate a string or binary's stored length to the allocated size. Extension storage uses an additional type byte, so the relationship is adjusted by one. It checks the allocation region's extent and pointer before forming the completed object. [S12]
+
+This is why the statement that only backing-chunk bounds are ever enforced is too strong. A bad object with a falsely large stored payload length is not simply accepted at its construction point because the whole chunk is readable.
+
+During unpacking, completed_ok additionally retains body ranges admitted by in_alloc and their separation from unfinished object slots. G3 bounds each next 24-byte slot within its container allocation. These are additional reasons not to treat tree_wf as the full invariant at every phase. [S20, S30]
+
+The later representation may discard information that was sufficient to justify the construction. Dropping information in an abstraction is common and can be sound for the exported property. Whether it still suffices for a stronger history-sensitive safety theorem is a separate question.
+
+### 5.4 A precise example of the weaker completed-tree predicate
+
+For strings and binary payloads, tree_wf includes a bounded length, a null-pointer condition, and, for a nonzero pointer, in_zone plus readability for that length. It does not require the corresponding original allocation request or an allocation generation. [S15]
+
+Consider a mathematical state with a single chunk containing 8192 data bytes, whose data area starts at nonzero address b, and a bump pointer b + 16. Assume 32 bytes starting at b are readable. The object OStr(b, 32) satisfies the relevant chunk-membership and readability conditions even though the bump pointer is only 16 bytes past b. The length is also below the bound of 1000. Thus tree_wf for that object does not entail that its 32 bytes fit in the current allocated prefix.
+
+This is an analytical counterexample to a proposed implication between predicates. It is not a Rocq-checked countermodel supplied with this dossier, not a complete satisfying state of every combined invariant, and not a reachable execution of the verified unpacker. In particular, the stronger construction checks just described may prevent such a state from arising from valid entry states.
+
+The sound conclusion is that tree_wf alone cannot be cited as the desired original-suballocation theorem. The unsound conclusion would be that this example demonstrates a memory bug or an unsound proof. A reachable counterexample would require a valid input and evidence that the violating state is reachable under all relevant premises.
+
+### 5.5 Packing and abstraction boundaries
+
+The packing client carries a completed tree, a vector representation, and a zone. Its mem_pk predicate combines tree_wf, concrete object layout information, chunk links, vector contents, and in_zone_cells. Its pure component includes structural and size invariants. The exact completed representation does not retain a general history of all allocation requests. [S16]
+
+Element traversal is more precise than mere pool membership: levels_ok and the relevant element lemma connect the current index and address to an actual child in a list. Field loads likewise use the tag-specific offsets and widths. These facts can recover meaningful local bounds even where the aggregate representation is coarser. [S10, S16, S17]
+
+Payload copying connects the source to the current object's pointer and recorded length, and checks destination room. The remaining concern is the full historical connection between that recorded length and the originating allocation across phase changes. This dossier records the construction evidence and the later abstraction accurately without declaring that the missing global theorem has been disproved. [S18, S29]
+
+### 5.6 What would settle the remaining question
+
+One route is to define an auxiliary allocation history whose entries contain a base, requested extent, owner, and lifetime interval. A client access would then be associated with a particular live entry, and its full byte interval would fit that entry. An invalidation event would end the relevant lifetime, even if the physical bytes remain mapped. A new allocation at the same address would obtain a different logical identity.
+
+This is a proposed specification, not a description of a theorem already present. For the monotone zone path, a simpler theorem may suffice: allocations remain disjoint, every object range matches its construction allocation, no invalidation occurs before its last use, and cleanup happens after those uses. Such a proof may require no dynamic generation tag.
+
+To establish the property, trace it through allocation, payload and aggregate construction, transition to the completed tree, every packer read or copy, and teardown. For pointer-origin claims, show how the abstract region selected for an access is linked to the intended object. For API lifetime claims, state the invalidation semantics rather than inferring them from machine addresses.
+
+## 6 Temporal safety and the role of programmer intent
+
+Two distinct problems can arise when a programmer expects a free. A client may use a pointer after an API operation that contractually invalidates it. Alternatively, an allocator implementation may fail to perform the release or reclamation promised by its API. The former is a client lifetime violation; the latter can be an allocator functional or resource-management violation. Both need a contract that goes beyond whether an address is currently accessible.
+
+For example, suppose release(handleA) must invalidate handleA. If the implementation merely changes an irrelevant counter, a subsequent access could remain within mapped storage and pass ASan. A proof of binary agreement could also tolerate the behavior unless an additional invariant or specification expresses the release obligation. This is an illustrative argument about specifications, not an allegation about the msgpack implementation.
+
+There is also a legitimate arena policy in which individual objects are never freed and all storage is reclaimed at zone destruction. Under that policy, retaining space until the end is correct. One cannot diagnose a missing free by importing the contract of a recycling pool into a bulk-lifetime arena.
+
+The user's same-address example is most cleanly formalized with an allocation event identity. An address can be equal while the logical permission differs. But the proof does not necessarily need pointer tags if it proves that the invalid history never occurs. In this workload, the absence of internal clear/free/reuse with retained pointers is therefore relevant positive structural evidence, not simply an excuse for a missing check.
+
+The appropriate blog question is consequently: which contract is being verified for which workload, and how does the proof connect concrete accesses to that contract? Asking only whether ASan has a check for an operation misses the role of auxiliary invariants. Asking only whether a proof exists misses the role of its statement and scope.
+
+### 6.1 Illustrative allocation identity example
+
+The following is hypothetical pseudocode under an API that invalidates handles on pool_free. It is not a trace from the verified harness.
+
+```text
+p = pool_alloc(50)       // allocation A
+pool_free(p)             // invalidates references to A
+q = pool_alloc(50)       // allocation B may reuse the address
+write_byte(p, 0, 7)      // prohibited stale use under this API
+```
+
+Immediately before reuse, poisoning could distinguish released storage from live storage. After reuse, an address-only check sees the current accessibility of B. A stale free at the last line instead of a write would present a related identity problem. The proof obligation is to exclude the stale operation or recognize its invalid logical identity; merely knowing that some allocation is live at that address is insufficient for this hypothetical contract.
+
+### 6.2 A candidate stronger property
+
+A specification can associate each logical allocation with an identity i, base b, granted size n, owner o, and live interval. For an access attributed to i at address a with width w, a candidate obligation is:
+
+```text
+live(i) and permitted_owner(i, caller)
+and w >= 0 and b <= a and a + w <= b + n
+and the machine address calculation does not wrap
+```
+
+Allocation establishes a fresh identity and separation from other simultaneously live grants. Release ends the specified lifetime. Resize updates the grant and defines which old references remain valid. Bulk reset ends exactly the lifetimes specified by its API. These are proposed logical obligations, not extracted statements from the msgpack proof. The connection between an access and identity i is essential; existentially choosing any live object containing the destination would reproduce the address-only weakness.
+
+## 7 Broader semantic and build limitations
+
+### 7.1 Binary semantics and source-language claims
+
+The proof is about fixed loaded program images in Linux process semantics. It is not a proof that the compiler preserves every C++ source behavior, nor a full verification of the language's provenance, strict-aliasing, object-lifetime, and dynamic-type rules. A source operation optimized away does not leave a machine instruction to check. This distinction matters when translating a binary theorem into a public claim about C++ undefined behavior. [S04, S23]
+
+It also matters in the other direction: direct machine reasoning can establish facts not expressed by a sanitizer check. The presence or absence of instrumentation is not the sole determinant of what a proof invariant can know.
+
+### 7.2 Sanitizer configuration
+
+The recorded UBSan flags include undefined-behavior checks in trap mode and explicitly disable function-type checking. The configuration includes checks relevant to alignment and signed arithmetic; it does not enable every sanitizer group. Leak detection is disabled. The driver and selected runtime components are compiled without sanitizer instrumentation. [S03, S07]
+
+These are configuration facts. They do not show that every omitted property is violated or that no local proof lemma addresses it. Equally, enabling a check would still leave its instrumentation coverage, semantic model, and theorem premises to be examined.
+
+For precise reproduction, the flags recorded for UBSan are:
+
+```text
+-fsanitize=undefined -fno-sanitize-recover=all
+-fsanitize-trap=all -fno-sanitize=function
+```
+
+The build documentation lists alignment, array-bounds, bool, builtin, enum, float-cast-overflow, integer-divide-by-zero, nonnull-attribute, null, object-size, pointer-overflow, return, returns-nonnull-attribute, shift-base, shift-exponent, signed-integer-overflow, unreachable, and vla-bound among the enabled checks. It lists function, vptr, unsigned-integer-overflow, implicit-conversion, local-bounds, float-divide-by-zero, and nullability outside this configuration. A check group being enabled does not mean every imaginable source violation of that kind is dynamically detected. [S07]
+
+The ASan runtime configuration is sealed for these artifacts rather than accepting arbitrary ASAN_OPTIONS changes. Reports abort silently; allocation failure can return null; leak detection is disabled. Replacing this runtime or changing its configuration changes the program image to which the theorem applies. [S03, S07]
+
+### 7.3 Environment and process model
+
+The release pins LPS at f1006fe8178338a499b5e5c41be83006c4edd058. Its scope document identifies Linux v6.18.46 and QEMU user mode on riscv64 as supported systems, with RV64GC instruction semantics. Restrictions include one thread, no execution of signal handlers, an 8 MiB stack limit, Sv48 address space, restricted path arguments, and a simplified file model. It assumes that outside agents do not mutate the process or modeled files. The model's specification of a system call is not itself a proof that Linux implements that specification. [S08]
+
+The scope document separately records precision gaps: some environment choices are overapproximated, including address placement and choices associated with different supported systems. It warns that equality of behavior sets in the model need not imply equality on each concrete real system. This is distinct from a sanitizer blind spot and should be reported as a model-fidelity qualification, without suggesting that a custom allocator bug has thereby been found.
+
+For safety, a sound overapproximation can be useful: excluding an error from a larger set of executions excludes it from a smaller concrete set, provided the correspondence and error interpretation are valid. Exact equivalence is more delicate. If two modeled sets are equal, separately restricting each to real-system behaviors need not preserve equality. The dossier does not independently establish the required concrete-to-model correspondence.
+
+### 7.4 Proof checking and trust
+
+The publication provides commands and a checker image for checking the proof. Its recorded provenance reports reproducible binary rebuilds. Those are published records; they are not experiments performed for this dossier. No new claim is made here about independent kernel acceptance, the axiom inventory of the final theorem, or local binary hash verification. [S03, S22]
+
+The documented checker builds images, compiles the proof, checks the exported statement, and audits Print Assumptions against an allowlist. The documentation identifies Rocq 9.2.0 and describes rocqchk as an optional additional pass, rather than the default verdict. These are descriptions of the published checking procedure, not a newly completed check. [S22]
+
+An independent follow-up should use the release's pinned dependencies and checker, retain the exact commands and logs, inspect the accepted assumptions, and verify the binary identities. Replaying a proof confirms its derivability under the checker and assumptions. Assessing whether that theorem matches the intended memory-safety claim still requires the specification audit carried out here.
+
+## 8 Claims suitable for the blog
+
+The following formulations retain the distinctions established by this audit. They are research conclusions, not a claim that the actual harness contains an exploitable bug.
+
+- The public msgpack result proves modeled error freedom and agreement between fixed plain and sanitizer builds of one unpack-and-pack harness, under explicit input, environment, and memory-budget premises.
+- Ordinary ASan does not automatically know the boundaries and lifetimes of objects suballocated within a pool. The msgpack proof nevertheless contains explicit reasoning about requested sizes, allocation fit, freshness, object layouts, and logical indices.
+- The library provides arena clearing, but the verified harness does not exercise clear followed by continued use of the same zone. The result therefore does not establish safety for arbitrary applications retaining pointers across that operation.
+- No general leak-freedom, initialized-before-use, confidentiality-clearing, full C++ lifetime, or concurrent safety theorem is established by the published statement inspected here.
+- Some completed-object invariants retain only chunk membership and readability. Those predicates alone do not express original-suballocation bounds. This is a limitation of the cited predicates, not evidence that a violating state is reachable through the stronger construction proof.
+- The review has not identified a reachable custom-allocation violation accepted by the actual proof, and has not independently replayed the Rocq development.
+
+### 8.1 Claims that should be avoided
+
+| Overstatement | What the evidence supports instead |
+| --- | --- |
+| They only checked the outer malloc bounds | Several internal allocation and access facts are explicitly proved |
+| ASan misses it so the proof misses it | Inspect the auxiliary invariants and the theorem separately |
+| The proof establishes all custom allocator memory safety | The exported statement and verified API usage are narrower |
+| The proof permits a 32-byte read from a 16-byte object | One predicate admits a toy state; reachability through the full proof was not shown |
+| No generation field means use after reuse is unchecked | Control flow and ownership can exclude the history without such a field |
+| msgpack has no reset or rollback operations | The library has clear and construction rollback; this workload does not exercise those scenarios |
+| Reallocation is absent | Standard sbuffer realloc is present; custom zone resize is absent |
+| Uninstrumented code is unverified code | It may still be modeled and proved through instruction reasoning or contracts |
+| The verified parser cannot hang | The public halting statements remain open |
+| They proved the MessagePack round trip correct | The harness does not compare the packed result with input or a semantic oracle |
+| Retaining unused arena bytes is necessarily a leak | Reclamation policy must be part of the contract |
+
+### 8.2 Corrections to earlier shorthand in this discussion
+
+An early focus on in_alloc alone underrepresented the stronger requested-size regions and allocation lemmas. The complete account must include both. Likewise, observing no generation counter did not establish a temporal proof gap: the relevant internal lifetime-ending histories are not in the harness. Finally, the weak completed-tree example must remain explicitly predicate-level. It is not a confirmed violating execution.
+
+The broader phrase custom allocator memory safety also needs decomposition. Exact spatial bounds, allocation identity, ownership, deallocation validity, logical length, allocator implementation correctness, and source-language lifetime are different properties. Evidence for several of them does not automatically establish all of them.
+
+## 9 Remaining research questions
+
+The most useful remaining question is whether an origin-sensitive spatial invariant can be extracted as a corollary of the existing proof, without altering the binary or strengthening assumptions. A positive answer would turn the present local evidence into a precise stronger theorem. A negative answer would require demonstrating a genuine insufficiency of the necessary abstractions or a counterexample to the proposed property, not just noting that the exported theorem has a different name.
+
+A second question is whether the proof can be extended to a harness that deliberately exercises zone::clear, valid reuse after clear, and invalid retained handles according to an explicit client contract. This would test a broader API guarantee. It would be a different verified workload, not retroactive evidence that the existing one is unsafe.
+
+A third question concerns payload initialization and functional correctness. A richer relation could connect decoded bytes to input bytes and packed output to a semantic MessagePack value. This would separate safe accessibility, initialized data, and correct serialization. It would also make some confidentiality claims precise, if confidentiality is an intended goal.
+
+A fourth question concerns resource reclamation. One could specify permitted retained capacity, reclamation at scope exit, and memory bounds. Such a theorem should account for the arena's intended bulk policy and should state any progress assumptions needed for eventual release.
+
+A fifth question concerns validation of the release. An independent replay, axiom audit, and rebuild would increase confidence in the artifact's mechanical correctness and provenance. None would replace checking that the theorem expresses the desired application contract.
+
+## 10 Reproducibility and evidence register
+
+All proof-source references below use the pinned public repository revision. All upstream msgpack references use its pinned upstream revision. Line ranges are navigation aids within those exact revisions. Generic sanitizer documentation is background material retrieved on 25 October 2026; it is not evidence of which instrumentation was enabled in the published build.
+
+The source audit consisted of rereading the supplied checklist, fetching the fixed theorem and harness sources, checking the upstream allocator call path, examining the key predicates and soundness/instantiation links, and reviewing the sanitizer background literature. It did not enumerate every instruction contract. The remaining global property should therefore remain classified as unresolved rather than absent from every part of the development.
+
+A minimal follow-up starts by checking out the proof revision, reading release.yaml and docs/checking.md, and using the published checker workflow. The harness README gives the fetch and check commands. Those commands have not been executed for this dossier. Preserve their logs and all artifact hashes if they are run later.
+
+### 10.1 Published binary fingerprints
+
+The following are the fingerprints recorded in the release provenance. They were transcribed from that source, not recomputed from downloaded executables in this audit. [S03]
+
+plain | 278176 bytes
+39eb444705613eec7157d8538b94388808e1c49815b394ae3a183400855c4605
+
+ubsan | 284328 bytes
+1d3021dd12abeb78f6ce16f6066d8747e8380908c6b38fa6d37ae024b9f789c2
+
+asan | 801416 bytes
+132b8f1051e58880fcc02b0043e4183d30e77bf60799d6d6b0940a2e8453b26b
+
+asan-ubsan | 810088 bytes
+65343a2c6dcb3a0423b4ced9643966d0d6de8b8ba873cb593299fb481a3ddbd4
+
+### 10.2 Primary source references
+
+[S01] Harness status and build summary. Harness behavior; proved and open statements; uninstrumented runtime list.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/msgpack-c/unpack_pack_fuzzer/README.md#L4-L56
+
+[S02] Public statement definitions. Input wrapper at 10 to 19; agreement statements at 87 to 121.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/msgpack-c/unpack_pack_fuzzer/Statements.v#L3-L121
+
+[S03] Published build provenance. Upstream, compiler, static ASan pin, binary hashes, and reported rebuilds.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/provenance/PROVENANCE.md#L1
+
+[S04] Exported proof theorems. Three strong_universal_error_free theorem instances.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Theorems.v#L17-L48
+
+[S05] Verified harness source. Unpack limits, local ownership, pack call, catch-all handler.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/msgpack-c/unpack_pack_fuzzer/source/unpack_pack_fuzzer.cpp#L7-L27
+
+[S06] Readable theorem shape and budgets. Budgets at 54 to 70; environment at 72 to 94; agrees_in_abort_modelled at 189 to 204.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/theories/Shapes.v#L54-L204
+
+[S07] Sanitizer and runtime build configuration. Driver instrumentation, UBSan groups, leak setting, runtime exclusions.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/docs/building.md#L71-L179
+
+[S08] Semantic model scope. Supported systems, scope restrictions, unchecked assumptions, precision gaps.
+https://github.com/theorem-labs/rocq-linux-process-semantics/blob/f1006fe8178338a499b5e5c41be83006c4edd058/SCOPE.md#L9-L82
+
+[S09] Object and zone model. Layout constants; vector validity 100 to 103; zone predicates 105 to 136; object and sbuffer representations.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Model.v#L9-L249
+
+[S10] Allocation and traversal lemmas. Fit 150 to 188; freshness 208 to 244; zone_grows 402 to 413; pelem_tree 1025 to 1033.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Steps.v#L135-L244
+
+[S11] Requested size region construction. new_region and g4_apply; g4_sound at 821 to 831.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G4.v#L136-L183
+
+[S12] Payload construction size checks. size_cell 33 to 36; soundness 192 to 209; allocation/readability construction 478 to 519.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G2B.v#L29-L155
+
+[S13] Array and map size arithmetic. size_mul, g1_size, size_mul_den.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G1.v#L81-L106
+
+[S14] Concrete object layout and readability. readable at 38; object layout 74 to 90; zone_at and zero finalizer pointers 281 to 288.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Layout.v#L1-L90
+
+[S15] Tree and active container invariants. tree_wf; also levels_alloc at 111 to 114.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Inv.v#L13-L27
+
+[S16] Packing client invariant. pure_pk; ownership; in_zone_cells; mem_pk; full pk_client.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/PkOps.v#L129-L190
+
+[S17] Type specific field access. pkload_apply width/offset checks; pkload_sound at 657.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/PkPeek.v#L111-L145
+
+[S18] Packing copy contract. body_src_ok relates source to object; pkmemcpy_apply checks destination and source conditions.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/PkBody.v#L36-L121
+
+[S19] Instruction level region checks. can_read and can_write, including absolute and nonabsolute cases.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/FX/Step.v#L914-L938
+
+[S20] Completed body invariants during unpacking. range_ok, bodies_ok, completed_ok strengthen completed_wf.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Tree.v#L20-L49
+
+[S21] Instantiation of source contracts. Standard free/realloc; G2B at 402 to 407; G4/G1 at 419 to 430; memcpy at 442; field checks at 471 to 488.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Glue/TopHypsSrc.v#L291-L488
+
+[S22] Published proof checking workflow. Build and assumption checks; optional rocqchk pass; not run for this dossier.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/docs/checking.md#L10-L101
+
+[S23] Release dependency pins. Release and semantic dependency identity.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/release.yaml#L1-L20
+
+[S24] Upstream zone implementation. Chunk malloc/free; clear 133 to 149 and 308 to 312; raw allocation; generic construction rollback 331 to 355.
+https://github.com/msgpack/msgpack-c/blob/a5250ecbcae1d34346c7445345774b0abbd651bc/include/msgpack/v1/detail/cpp11_zone.hpp#L111-L355
+
+[S25] Fresh zone unpack overload. Fresh zone allocation and transfer into returned object_handle.
+https://github.com/msgpack/msgpack-c/blob/a5250ecbcae1d34346c7445345774b0abbd651bc/include/msgpack/v3/unpack.hpp#L23-L71
+
+[S26] Raw object visitor allocations. Payload memcpy and length fields; array and map allocations.
+https://github.com/msgpack/msgpack-c/blob/a5250ecbcae1d34346c7445345774b0abbd651bc/include/msgpack/v2/create_object_visitor.hpp#L109-L235
+
+[S27] Output buffer and standard realloc. Initial malloc and free; write; unused clear/release APIs; expansion with ::realloc.
+https://github.com/msgpack/msgpack-c/blob/a5250ecbcae1d34346c7445345774b0abbd651bc/include/msgpack/v1/sbuffer.hpp#L27-L135
+
+[S28] Zone teardown proof. znext traversal contract and beginning of znext_sound_main.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/Td.v#L24-L106
+
+[S29] Source validity for packing copies. body_of_focus uses tree_wf for readability and chunk containment.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/PkA/PkBodySrc.v#L29-L68
+
+[S30] New object slot bounds. NEWSLOT bounds the next 24-byte slot within its container allocation.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/msgpack-c/unpack_pack_fuzzer/lib/Unp/G3.v#L315-L340
+
+[S31] Msgpack release inventory. Published harness and withheld API-driver scope.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/msgpack-c/README.md#L1-L20
+
+[S32] Process semantics overview. Fixed binary interpretation, reached unmodeled operations, and scope linkage.
+https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/docs/semantics.md#L3-L77
+
+### 10.3 Background references and attribution
+
+[E01] Google Sanitizers project, AddressSanitizerAlgorithm. The address-accessibility and shadow-memory explanation used as background for the checklist. https://github.com/google/sanitizers/wiki/AddressSanitizerAlgorithm
+
+[E02] Serebryany, Bruening, Potapenko and Vyukov, AddressSanitizer A Fast Address Sanity Checker, USENIX ATC 2012, section 3.5, PDF page 5. Documents redzone-jumping and reuse-related false negatives. https://www.usenix.org/system/files/conference/atc12/atc12-final39.pdf
+
+[E03] Hong and colleagues, CMASan Custom Memory Allocator-aware Address Sanitizer, sections 2.2, 2.3, 3.2.3 and 6. Background on allocator-specific errors and the detector's allocator-internal scope limitation. The checklist's additional deductions should not all be attributed to this paper. https://yonghwi-kwon.github.io/data/cmasan_sp25.pdf
+
+[E04] Clang MemorySanitizer documentation, introduction and use-after-destruction detection. Distinguishes initialized-memory and destruction checks from ordinary address accessibility. https://clang.llvm.org/docs/MemorySanitizer.html
+
+[E05] Clang UndefinedBehaviorSanitizer documentation, available checks. Background only; the published build settings determine this proof's sanitizer coverage. https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+
+[E06] Clang ThreadSanitizer documentation. Background on data-race instrumentation. https://clang.llvm.org/docs/ThreadSanitizer.html
+
+[E07] Google Sanitizers project, AddressSanitizerContainerOverflow. Background on logical length, spare capacity, annotations, and leak reachability. https://github.com/google/sanitizers/wiki/AddressSanitizerContainerOverflow
+
+[E08] Clang AddressSanitizer documentation. General instrumentation and feature background. https://clang.llvm.org/docs/AddressSanitizer.html
+
+The supplied checklist was Pasted text(20261024-032553).txt. Its numbered categories are preserved in Section 4, with the three additional categories numbered for reference. The checklist is treated as a set of questions to investigate, rather than evidence that any listed error occurs in msgpack. Illustrative examples and proposed stronger specifications in this dossier are analytical explanations, not extracted msgpack tests.
+
+## 11 Instructions for using this dossier with another writing assistant
+
+Use this dossier as a claim-and-evidence source. Preserve the pinned revision and the distinction between the exported theorem, intermediate invariants, and harness scope. Keep evidence, inference, excluded scenarios, and unresolved questions separate. Do not convert an unresolved property into a discovered bug, or a local lemma into a universal library guarantee.
+
+For each technical claim in the blog, retain the corresponding source identifier and follow the linked definition when more detail is needed. Explain the same-address reuse concern as a contract-sensitive example. Explain why the monotone zone lifecycle in this harness limits its applicability. Describe the positive allocator invariants as well as the unclaimed properties.
+
+If the blog wants to assert a confirmed proof hole, a reachable memory error, a universal origin-sensitive guarantee, or an independently checked artifact, obtain new evidence for that claim. None of those four conclusions is supplied by this dossier.

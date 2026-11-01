@@ -1,0 +1,4 @@
+# Preserve exact evidence and font bytes used by SHA-256 manifests.
+* -text
+evidence/** -whitespace
+blog/assets/fonts/** -whitespace

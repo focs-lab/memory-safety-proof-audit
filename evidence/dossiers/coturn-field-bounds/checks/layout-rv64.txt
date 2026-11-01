@@ -1,0 +1,17 @@
+
+*** Dumping AST Record Layout
+         0 | struct __NSConstantString_tag
+         0 |   const int * isa
+         8 |   int flags
+        16 |   const char * str
+        24 |   long length
+           | [sizeof=32, align=8]
+
+*** Dumping AST Record Layout
+         0 | struct _stun_buffer
+         0 |   uint8_t[4] channel
+         4 |   uint8_t[65507] buf
+     65512 |   size_t len
+     65520 |   uint16_t offset
+     65522 |   uint8_t coffset
+           | [sizeof=65528, align=8]

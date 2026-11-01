@@ -1,0 +1,45 @@
+schema: oss-fuzz-theorems/project/1
+project: boost-json
+language: c++
+oss_fuzz:
+  path: projects/boost-json
+  commit: bd2ce21991a94a362b92fb1bf25f86d5a1a60842
+status: available
+library:
+  name: boost
+  repository: https://github.com/boostorg/boost
+  commit: 4daa5786d7c5dad39df0429cb078165b3134a06f
+  licence: BSL-1.0
+harnesses:
+- name: fuzz_basic_parser
+  status: not-included
+  reason: not-attempted
+- name: fuzz_direct_parse
+  status: not-included
+  reason: not-attempted
+- name: fuzz_parse
+  status: included
+  origin: upstream
+- name: fuzz_parser
+  status: not-included
+  reason: not-attempted
+build:
+  system: cmake
+  clang: 20.1.8
+  builder: ghcr.io/theorem-labs/oss-fuzz-theorems-toolchain@sha256:6a6b4816865c7ec61801ae0fcab6d9c81a599ffcb20616576a9c668abd8b0a7b
+assets:
+  bin:
+    release: v2026.10.0
+    file: boost-json-bin.tar.zst
+    bytes: 1118340
+    sha256: 57fa2bfe5c9a1627594fcf887bfc7f13ac19ecc1114e91b3a794340b62c82b99
+  src:
+    release: v2026.10.0-src
+    file: boost-json-src.tar.zst
+    bytes: 119650478
+    sha256: ca85a7784c4470e15ba160fdebe8b5993c23dd9fd8b5a5cecf4d4d9d6fb72fe6
+  src_manifest:
+    release: v2026.10.0-src
+    file: boost-json-src.MANIFEST.tsv
+    bytes: 93626
+    sha256: 90b6163e455f97f8b464340b47ac6b1c103938414dc0d8fd3c4b98ce8d1c4268

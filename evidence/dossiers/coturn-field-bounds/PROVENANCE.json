@@ -1,0 +1,420 @@
+{
+  "date": "2026-11-01",
+  "scope": "This bzip2/coturn investigation, not a replacement for earlier unrelated project dossiers.",
+  "proof_repository": {
+    "url": "https://github.com/theorem-labs/oss-verify-proofs",
+    "commit": "a6839bb9e433b34c0d0710df5280194528877139"
+  },
+  "coturn_source": {
+    "url": "https://github.com/coturn/coturn",
+    "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c"
+  },
+  "paper": {
+    "url": "https://github.com/focs-lab/verification-gaps",
+    "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd",
+    "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+    "committed_snapshot_sha256": "069a37e529d4eb4f8f077c160039afc9609b12fea08aabc122e370bade0faf98",
+    "working_copy_sha256": "85e4720b9219c6cf1ecdf94e8ffc5faa57219760e1b0fa12041e951bf4857595",
+    "working_copy_note": "Concurrent local manuscript edits present; citations use the committed snapshot."
+  },
+  "lps_commit": "f1006fe8178338a499b5e5c41be83006c4edd058",
+  "original_rocq_result": {
+    "status": "PASS",
+    "proof_commit": "a6839bb9e433b34c0d0710df5280194528877139",
+    "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+    "rocq_version": "The Rocq Prover, version 9.2\ncompiled with OCaml 4.14.3",
+    "binary_sha256": {
+      "FuzzStunClient.asan": "99443988bd9bcd3087fe619757c7dff2a6b198583ad959307bc34edcd9b44ef8",
+      "FuzzStunClient.asan-ubsan": "4fd7bfa4d6ebf2583737cfa6cc09ce0f3344066b8f8c92d899ff91843d1d9f69"
+    },
+    "checked_sources": 88,
+    "elapsed_seconds": 166.78,
+    "finished_utc": "2026-11-01T04:11:52.345782+00:00",
+    "theorems": [
+      "CoturnFieldAudit.Complete.asan_decoded_case_admits_buf_minus_one",
+      "CoturnFieldAudit.Complete.both_decoded_case_admits_buf_minus_one"
+    ],
+    "audit_source_sha256": {
+      "WitnessData": "875b2a596d482d786a3480ccef2e06258dfbed3843afd787a79c500f656e348a",
+      "Certificate": "cd2a2a2b6cac42b05f6815e14ac5ffa382a835067c738e0a06d69b3e7cbf03fd",
+      "Rank": "28d367e3a44e045f2edfbdb0436db80a8b4a755df0b07a72ab5578e433c3e1b6",
+      "Support": "18a45396cb0242c1d8e11d5be717566f8d1bd4536c55cdd360e45b41ae41a952",
+      "Model": "2ac6ed2fb5cd43fa9f9036df0864e8c6a655680d29e01429397fe96d1c4cc7d9",
+      "Pure": "0c85949a3943b1938f6e3c4963015cff5e3adc17fbdfe06194d8782f498eee6b",
+      "Regions": "deb2943bd86b102c7de10611809d5764405c0fdfb561b69daef9f6fbcec0f884",
+      "Ambient": "d247fe245964689dc3b6ca08dcc7246b2824885e46092a9f93df716f8f3ba9af",
+      "Structural": "ff77ef2f67083f7c33194db2e1ebd173058648885bb80ab780a133f9507e7262",
+      "Flags": "9fe8a25f6a84a44099c9d0f69ab5d2938b6b2b64a607b2e132e95ea86b91137b",
+      "Complete": "254920bd9bd4e6d04587843b30e2d7e43c9b1085fd5bde962343a037746ed200"
+    },
+    "assumptions": [
+      "Corelib.Array.PrimArray.array",
+      "Corelib.Array.PrimArray.get",
+      "Corelib.Array.PrimArray.make",
+      "Corelib.Array.PrimArray.set",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.add",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.mul",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
+      "Corelib.Strings.PrimString.cat",
+      "Corelib.Strings.PrimString.get",
+      "Corelib.Strings.PrimString.length",
+      "Corelib.Strings.PrimString.make",
+      "Corelib.Strings.PrimString.string",
+      "Corelib.Strings.PrimString.sub"
+    ],
+    "all_assumptions_in_upstream_allowlist": true,
+    "scope": "Complete original gamma2 invariant witnesses; no input reachability or vulnerability claim."
+  },
+  "source_files": [
+    {
+      "path": "upstream/coturn/src/apps/common/stun_buffer.h",
+      "sha256": "8ae2dfde898a012012cab3831bf3d399d45c4988183e1cf9b30831b411fc4ba5",
+      "origin": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.h"
+    },
+    {
+      "path": "upstream/coturn/src/ns_turn_defs.h",
+      "sha256": "3c47661b0c1ccbc34461919dc001489207924cb25fa835f8697e995dc811778d",
+      "origin": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h"
+    },
+    {
+      "path": "upstream/coturn/src/client/ns_turn_msg_defs.h",
+      "sha256": "1f71fc6e5daf48d53345fb3f437d124bae2184f16fb87d224953f8de87807711",
+      "origin": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg_defs.h"
+    },
+    {
+      "path": "upstream/coturn/src/apps/common/stun_buffer.c",
+      "sha256": "a72df7d30ebd5216cd115ba385c1c8a321560c4f73ee45a0305c17cc3df59d3f",
+      "origin": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.c"
+    },
+    {
+      "path": "upstream/coturn/src/client/ns_turn_msg.c",
+      "sha256": "7a0fbc52f677862314ab3f68ddba7920174653e39481c77f1bcf081f0e8f4f34",
+      "origin": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c"
+    },
+    {
+      "path": "upstream/coturn/README.md",
+      "sha256": "376359ad49b419f9792a6000c25373f6440d7964950d3c88b318a7cf1a4c2da3",
+      "origin": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/README.md"
+    }
+  ],
+  "references": {
+    "C1": {
+      "id": "C1",
+      "title": "stun_buffer declaration",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/apps/common/stun_buffer.h",
+      "first_line": 45,
+      "last_line": 51,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.h#L45-L51"
+    },
+    "C2": {
+      "id": "C2",
+      "title": "Message/array capacity constants",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/ns_turn_defs.h",
+      "first_line": 221,
+      "last_line": 222,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h#L221-L222"
+    },
+    "C3": {
+      "id": "C3",
+      "title": "STUN header and channel-header constants",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg_defs.h",
+      "first_line": 46,
+      "last_line": 47,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg_defs.h#L46-L47"
+    },
+    "C4": {
+      "id": "C4",
+      "title": "Struct wrapper passes its buf field",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/apps/common/stun_buffer.c",
+      "first_line": 181,
+      "last_line": 184,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/apps/common/stun_buffer.c#L181-L184"
+    },
+    "C5": {
+      "id": "C5",
+      "title": "Channel-bind request builder",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1300,
+      "last_line": 1327,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1300-L1327"
+    },
+    "C6": {
+      "id": "C6",
+      "title": "Address attribute builder calls stun_attr_add_str",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1705,
+      "last_line": 1733,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1705-L1733"
+    },
+    "C7": {
+      "id": "C7",
+      "title": "Signed message-length result and -1 failure",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 523,
+      "last_line": 535,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L523-L535"
+    },
+    "C8": {
+      "id": "C8",
+      "title": "Complete stun_attr_add_str body",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/client/ns_turn_msg.c",
+      "first_line": 1666,
+      "last_line": 1703,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/client/ns_turn_msg.c#L1666-L1703"
+    },
+    "C9": {
+      "id": "C9",
+      "title": "Two-byte write helper",
+      "repository": "coturn/coturn",
+      "commit": "70ca74e0bd8300e22a179e9a7beead862763ca5c",
+      "path": "src/ns_turn_defs.h",
+      "first_line": 145,
+      "last_line": 148,
+      "url": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/src/ns_turn_defs.h#L145-L148"
+    },
+    "P1": {
+      "id": "P1",
+      "title": "Plain compressed certificate",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_src0_p01.v#L5-L5"
+    },
+    "P2": {
+      "id": "P2",
+      "title": "ASan compressed certificate (dictionary: p00)",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_asan_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_asan_p01.v#L5-L5"
+    },
+    "P3": {
+      "id": "P3",
+      "title": "ASan+UBSan compressed certificate (dictionary: p00)",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertS_both_p01.v",
+      "first_line": 5,
+      "last_line": 5,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertS_both_p01.v#L5-L5"
+    },
+    "P4": {
+      "id": "P4",
+      "title": "Complete extended concretization predicate gamma2",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VGamma2.v",
+      "first_line": 414,
+      "last_line": 423,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma2.v#L414-L423"
+    },
+    "P5": {
+      "id": "P5",
+      "title": "Base concretization predicate gamma",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VGamma.v",
+      "first_line": 89,
+      "last_line": 93,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VGamma.v#L89-L93"
+    },
+    "P6": {
+      "id": "P6",
+      "title": "Ordinary stack-window and write-set checks",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VStepMem.v",
+      "first_line": 52,
+      "last_line": 68,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem.v#L52-L68"
+    },
+    "P7": {
+      "id": "P7",
+      "title": "Extended store falls back to ordinary store checker",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VStepMem2.v",
+      "first_line": 494,
+      "last_line": 504,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VStepMem2.v#L494-L504"
+    },
+    "P8": {
+      "id": "P8",
+      "title": "Construction of per-unit parameters",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VDriver2.v",
+      "first_line": 43,
+      "last_line": 48,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VDriver2.v#L43-L48"
+    },
+    "P9": {
+      "id": "P9",
+      "title": "Congruence residue uses signed parser",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertDecode.v",
+      "first_line": 125,
+      "last_line": 126,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode.v#L125-L126"
+    },
+    "P10": {
+      "id": "P10",
+      "title": "Dictionary-backed extended state decoder",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "a6839bb9e433b34c0d0710df5280194528877139",
+      "path": "proofs/coturn/FuzzStunClient/lib/VCertDecode2.v",
+      "first_line": 132,
+      "last_line": 150,
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/a6839bb9e433b34c0d0710df5280194528877139/proofs/coturn/FuzzStunClient/lib/VCertDecode2.v#L132-L150"
+    },
+    "M1": {
+      "id": "M1",
+      "title": "Section 4 interpreter example",
+      "repository": "focs-lab/verification-gaps",
+      "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd",
+      "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+      "first_line": 193,
+      "last_line": 222,
+      "url": "https://github.com/focs-lab/verification-gaps/blob/1c1b1e742b1b80fa975a976f6e94ff7844ea07dd/blog/what-did-they-actually-prove/evidence/paper/main.tex#L193-L222"
+    },
+    "M2": {
+      "id": "M2",
+      "title": "Section 4: mapped storage, ASan, UBSan and agreement",
+      "repository": "focs-lab/verification-gaps",
+      "commit": "1c1b1e742b1b80fa975a976f6e94ff7844ea07dd",
+      "path": "blog/what-did-they-actually-prove/evidence/paper/main.tex",
+      "first_line": 277,
+      "last_line": 306,
+      "url": "https://github.com/focs-lab/verification-gaps/blob/1c1b1e742b1b80fa975a976f6e94ff7844ea07dd/blog/what-did-they-actually-prove/evidence/paper/main.tex#L277-L306"
+    }
+  },
+  "code_excerpts": [
+    {
+      "file": "code/01-stun-buffer.c",
+      "source": "C1",
+      "body_verbatim": true,
+      "body_sha256": "bb40414d57a89f3b493419ade2c24ef8c473ab5c42832c0409e190851dcf1630",
+      "sha256": "66d6d380f673bc2bc47dc743ca553f5533ce469b175e3a3339aa404c114cf5cc"
+    },
+    {
+      "file": "code/02-wrapper.c",
+      "source": "C4",
+      "body_verbatim": true,
+      "body_sha256": "591e40eaa5371c8d4ba3bfe129bb9ed5fbfed93e95942d38309c2308cb924979",
+      "sha256": "ca03ee6b8b998855685cf42df18f04dd6de18d0ff740548a97f79b4dfdb19319"
+    },
+    {
+      "file": "code/03-length-helper.c",
+      "source": "C7",
+      "body_verbatim": true,
+      "body_sha256": "b07a203d249d1815289bbd506d3cb02904bb7c8b7f48e6c3035e78dfaea18f35",
+      "sha256": "305a0162608e3afb4692f65668901b1bb2ce94af711996e66795a37c79f6db97"
+    },
+    {
+      "file": "code/04-stun-attr-add-str.c",
+      "source": "C8",
+      "body_verbatim": true,
+      "body_sha256": "4adae9165d03b84e211625fd84b71ad76353a6a1f1797a226b2b7a3e3a925b92",
+      "sha256": "e27325eb06918b01d1f1ef219c0c3be8397c45a202e1b5662eab68c9dcc57a7b"
+    },
+    {
+      "file": "code/05-write-u16.c",
+      "source": "C9",
+      "body_verbatim": true,
+      "body_sha256": "454b229f7cd028bddff93f47c3963bc6cfd2a1eb84b20980fbf3c7ee5087b392",
+      "sha256": "cc54e5f0a4d334e050ddf5cb53fc373b6399d999efad6047a1f8ccafc4a6d1c6"
+    }
+  ],
+  "evidence_levels": {
+    "instrumented_coturn": "full original gamma2 existence theorems in Rocq",
+    "plain_coturn": "Python/source/binary certificate analysis only",
+    "bzip2": "manual source/proof and layout audit; no omitted field-bound case identified"
+  },
+  "reachability_established": false,
+  "vulnerability_search_performed": false,
+  "packaged_rocq_result": {
+    "status": "PASS",
+    "proof_commit": "a6839bb9e433b34c0d0710df5280194528877139",
+    "checker_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-checker@sha256:cc9ae43a9f4b0dd59d7c8d30727d36e039bfe72a2a9f9c4a99c68e413037e902",
+    "rocq_version": "The Rocq Prover, version 9.2\ncompiled with OCaml 4.14.3",
+    "binary_sha256": {
+      "FuzzStunClient.asan": "99443988bd9bcd3087fe619757c7dff2a6b198583ad959307bc34edcd9b44ef8",
+      "FuzzStunClient.asan-ubsan": "4fd7bfa4d6ebf2583737cfa6cc09ce0f3344066b8f8c92d899ff91843d1d9f69"
+    },
+    "checked_sources": 88,
+    "elapsed_seconds": 165.97,
+    "finished_utc": "2026-11-01T05:22:57.699420+00:00",
+    "theorems": [
+      "CoturnFieldAudit.Complete.asan_decoded_case_admits_buf_minus_one",
+      "CoturnFieldAudit.Complete.both_decoded_case_admits_buf_minus_one"
+    ],
+    "audit_source_sha256": {
+      "WitnessData": "875b2a596d482d786a3480ccef2e06258dfbed3843afd787a79c500f656e348a",
+      "Certificate": "cd2a2a2b6cac42b05f6815e14ac5ffa382a835067c738e0a06d69b3e7cbf03fd",
+      "Rank": "28d367e3a44e045f2edfbdb0436db80a8b4a755df0b07a72ab5578e433c3e1b6",
+      "Support": "18a45396cb0242c1d8e11d5be717566f8d1bd4536c55cdd360e45b41ae41a952",
+      "Model": "2ac6ed2fb5cd43fa9f9036df0864e8c6a655680d29e01429397fe96d1c4cc7d9",
+      "Pure": "0c85949a3943b1938f6e3c4963015cff5e3adc17fbdfe06194d8782f498eee6b",
+      "Regions": "deb2943bd86b102c7de10611809d5764405c0fdfb561b69daef9f6fbcec0f884",
+      "Ambient": "d247fe245964689dc3b6ca08dcc7246b2824885e46092a9f93df716f8f3ba9af",
+      "Structural": "ff77ef2f67083f7c33194db2e1ebd173058648885bb80ab780a133f9507e7262",
+      "Flags": "9fe8a25f6a84a44099c9d0f69ab5d2938b6b2b64a607b2e132e95ea86b91137b",
+      "Complete": "254920bd9bd4e6d04587843b30e2d7e43c9b1085fd5bde962343a037746ed200"
+    },
+    "assumptions": [
+      "Corelib.Array.PrimArray.array",
+      "Corelib.Array.PrimArray.get",
+      "Corelib.Array.PrimArray.make",
+      "Corelib.Array.PrimArray.set",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.add",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.int",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.land",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.leb",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.lor",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.lsr",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.mul",
+      "Corelib.Numbers.Cyclic.Int63.PrimInt63.sub",
+      "Corelib.Strings.PrimString.cat",
+      "Corelib.Strings.PrimString.get",
+      "Corelib.Strings.PrimString.length",
+      "Corelib.Strings.PrimString.make",
+      "Corelib.Strings.PrimString.string",
+      "Corelib.Strings.PrimString.sub"
+    ],
+    "all_assumptions_in_upstream_allowlist": true,
+    "scope": "Complete original gamma2 invariant witnesses; no input reachability or vulnerability claim."
+  },
+  "project_description_source": "https://github.com/coturn/coturn/blob/70ca74e0bd8300e22a179e9a7beead862763ca5c/README.md#L10-L13"
+}

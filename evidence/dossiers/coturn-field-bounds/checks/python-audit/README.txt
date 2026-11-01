@@ -1,0 +1,1 @@
+Preserved audit helpers, not dependencies of the Rocq check. Some paths refer to the original workspace; adapt them to rerun the Python-only extraction. The authoritative instrumented result uses the original Rocq decoder in reproduction/.

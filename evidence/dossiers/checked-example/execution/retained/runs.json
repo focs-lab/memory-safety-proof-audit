@@ -1,0 +1,182 @@
+[
+  {
+    "build": "plain",
+    "case": "benign",
+    "mode": "syscalls",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-strace",
+      "/artifact/replay/example/out/core.plain",
+      "/artifact/replay/example/inputs/core-benign.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.061491,
+    "binary_sha256": "57c21dc430543c1883e143679e10ca9f36b90b8acbf49d94cc7d35996acf34bd",
+    "input_sha256": "0ef511c64f6e5a9ad75bdf43fbb73d5c4c1579b95795c2233869c59bfcaa1dfe",
+    "output_sha256": {
+      "plain-benign-syscalls.stderr": "d017582435c017b984ed4017a5d4b18abea71076c182cb326a668640b461bef3",
+      "plain-benign-syscalls.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  {
+    "build": "plain",
+    "case": "benign",
+    "mode": "instructions",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-one-insn-per-tb",
+      "-d",
+      "in_asm,exec,cpu,nochain",
+      "-dfilter",
+      "0x12a80..0x12b37",
+      "-D",
+      "/output/plain-benign-instructions.trace",
+      "/artifact/replay/example/out/core.plain",
+      "/artifact/replay/example/inputs/core-benign.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.095765,
+    "binary_sha256": "57c21dc430543c1883e143679e10ca9f36b90b8acbf49d94cc7d35996acf34bd",
+    "input_sha256": "0ef511c64f6e5a9ad75bdf43fbb73d5c4c1579b95795c2233869c59bfcaa1dfe",
+    "output_sha256": {
+      "plain-benign-instructions.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "plain-benign-instructions.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "plain-benign-instructions.trace": "8f7b5a713913cdb2e46e8d11ea82fcf0d80579a5820ec59cc0824a3fc0d403c0"
+    }
+  },
+  {
+    "build": "plain",
+    "case": "exploit",
+    "mode": "syscalls",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-strace",
+      "/artifact/replay/example/out/core.plain",
+      "/artifact/replay/example/inputs/core-exploit.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.058831,
+    "binary_sha256": "57c21dc430543c1883e143679e10ca9f36b90b8acbf49d94cc7d35996acf34bd",
+    "input_sha256": "2ecba9458c978262efdfc8addb2162f474f42bd93a1f782ec5aaf67f8372e5b4",
+    "output_sha256": {
+      "plain-exploit-syscalls.stderr": "5d5d150454a878fa505acc73516b29acd0ffca40376d91e301b18a1334781bfc",
+      "plain-exploit-syscalls.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  {
+    "build": "plain",
+    "case": "exploit",
+    "mode": "instructions",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-one-insn-per-tb",
+      "-d",
+      "in_asm,exec,cpu,nochain",
+      "-dfilter",
+      "0x12a80..0x12b37",
+      "-D",
+      "/output/plain-exploit-instructions.trace",
+      "/artifact/replay/example/out/core.plain",
+      "/artifact/replay/example/inputs/core-exploit.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.098046,
+    "binary_sha256": "57c21dc430543c1883e143679e10ca9f36b90b8acbf49d94cc7d35996acf34bd",
+    "input_sha256": "2ecba9458c978262efdfc8addb2162f474f42bd93a1f782ec5aaf67f8372e5b4",
+    "output_sha256": {
+      "plain-exploit-instructions.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "plain-exploit-instructions.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "plain-exploit-instructions.trace": "55532456e0da8232d8d898bbcf021549b9f05b9e0c9f161da3900dcb864481d7"
+    }
+  },
+  {
+    "build": "asan",
+    "case": "benign",
+    "mode": "syscalls",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-strace",
+      "/artifact/replay/example/out/core.asan",
+      "/artifact/replay/example/inputs/core-benign.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.135878,
+    "binary_sha256": "fb95471b3be5bc2b2934941cb35cb288de7ed9e241aa5e61aa2a770fc0aa84fd",
+    "input_sha256": "0ef511c64f6e5a9ad75bdf43fbb73d5c4c1579b95795c2233869c59bfcaa1dfe",
+    "output_sha256": {
+      "asan-benign-syscalls.stderr": "4ec7872475655a7e474a78183602955040f673b6a8c557f570a9718f95aad7bf",
+      "asan-benign-syscalls.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  {
+    "build": "asan",
+    "case": "benign",
+    "mode": "instructions",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-one-insn-per-tb",
+      "-d",
+      "in_asm,exec,cpu,nochain",
+      "-dfilter",
+      "0x7e62c..0x7e787",
+      "-D",
+      "/output/asan-benign-instructions.trace",
+      "/artifact/replay/example/out/core.asan",
+      "/artifact/replay/example/inputs/core-benign.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.395814,
+    "binary_sha256": "fb95471b3be5bc2b2934941cb35cb288de7ed9e241aa5e61aa2a770fc0aa84fd",
+    "input_sha256": "0ef511c64f6e5a9ad75bdf43fbb73d5c4c1579b95795c2233869c59bfcaa1dfe",
+    "output_sha256": {
+      "asan-benign-instructions.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "asan-benign-instructions.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "asan-benign-instructions.trace": "d0243cd1094160e740d07bd3fe293236e84ef0177606585908a218514cee44d3"
+    }
+  },
+  {
+    "build": "asan",
+    "case": "exploit",
+    "mode": "syscalls",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-strace",
+      "/artifact/replay/example/out/core.asan",
+      "/artifact/replay/example/inputs/core-exploit.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.130258,
+    "binary_sha256": "fb95471b3be5bc2b2934941cb35cb288de7ed9e241aa5e61aa2a770fc0aa84fd",
+    "input_sha256": "2ecba9458c978262efdfc8addb2162f474f42bd93a1f782ec5aaf67f8372e5b4",
+    "output_sha256": {
+      "asan-exploit-syscalls.stderr": "6cd05afd7227da6d8b1bbe5cfe2155123ac4f39f77303b261490881967708268",
+      "asan-exploit-syscalls.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  },
+  {
+    "build": "asan",
+    "case": "exploit",
+    "mode": "instructions",
+    "argv": [
+      "/usr/bin/qemu-riscv64",
+      "-one-insn-per-tb",
+      "-d",
+      "in_asm,exec,cpu,nochain",
+      "-dfilter",
+      "0x7e62c..0x7e787",
+      "-D",
+      "/output/asan-exploit-instructions.trace",
+      "/artifact/replay/example/out/core.asan",
+      "/artifact/replay/example/inputs/core-exploit.bin"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 0.39581,
+    "binary_sha256": "fb95471b3be5bc2b2934941cb35cb288de7ed9e241aa5e61aa2a770fc0aa84fd",
+    "input_sha256": "2ecba9458c978262efdfc8addb2162f474f42bd93a1f782ec5aaf67f8372e5b4",
+    "output_sha256": {
+      "asan-exploit-instructions.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "asan-exploit-instructions.stdout": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "asan-exploit-instructions.trace": "9639b51a833155cb08be555445415f7ba9b6a15326ce3fef80434e71e9b3ef30"
+    }
+  }
+]

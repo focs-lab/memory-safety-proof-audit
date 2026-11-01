@@ -1,0 +1,22 @@
+{
+  "started_at": "2026-11-01T13:27:31.216688+00:00",
+  "runner_image": "ghcr.io/theorem-labs/oss-fuzz-theorems-runner@sha256:d197498c0e20de006e61fbe7c3d70ebdd81ad3928468ac45d643b72c716e7af2",
+  "qemu_sha256": "44076c56382fea0cca26fb4ec1ab688fcc59573d87de1094d664f37915ac8d72",
+  "qemu_version": "qemu-riscv64 version 10.0.11 (Debian 1:10.0.11+ds-0+deb13u1)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers",
+  "container_platform": "Linux-6.10.14-linuxkit-x86_64-with-glibc2.41",
+  "python_version": "3.13.5",
+  "guest_environment": {},
+  "pins": {
+    "out/core.plain": "57c21dc430543c1883e143679e10ca9f36b90b8acbf49d94cc7d35996acf34bd",
+    "out/core.asan": "fb95471b3be5bc2b2934941cb35cb288de7ed9e241aa5e61aa2a770fc0aa84fd",
+    "out/core.plain.dbg": "d2ef908842d374220b433c9cbd16ebd651838ea9c99dbdda99362c6320349588",
+    "out/core.asan.dbg": "de9e71b6672abc73949e8afd8a80e5144b02cc38e9ae3b23f39b6d55617689b9",
+    "inputs/core-exploit.bin": "2ecba9458c978262efdfc8addb2162f474f42bd93a1f782ec5aaf67f8372e5b4",
+    "inputs/core-benign.bin": "0ef511c64f6e5a9ad75bdf43fbb73d5c4c1579b95795c2233869c59bfcaa1dfe"
+  },
+  "script_sha256": {
+    "check_trace.py": "69ad7266b3d41e78a6454b63d9c3ab79a421516e4328dc34c1c9335c0b1e26f6",
+    "run.sh": "d8c417b0ca5ae1f8045a228c9c615c507e4cff112ccd24f14effc6658e02f77c",
+    "replay.py": "940b13a69770f04f9285583890e0a85c3bf5c78b21f39ca67953b1b61adf9f23"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "capture_date": "2026-10-29",
+  "method": "Already-fetched GitHub connector UTF-8 source; no fresh research fetch for handoff",
+  "files": [
+    {
+      "project": "pupnp",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/pupnp/FuzzHttp/lib/A0/AW/H_freelist.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/pupnp/FuzzHttp/lib/A0/AW/H_freelist.v",
+      "sha256": "ab28030c151b255fdf50e16e944407fb96e29b802bf53dc2794f53b0caae4768",
+      "bytes": 47410,
+      "snapshot_path": "proof/A0/AW/H_freelist.v"
+    },
+    {
+      "project": "pupnp",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/pupnp/FuzzHttp/lib/A0/AW/HObjA.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/pupnp/FuzzHttp/lib/A0/AW/HObjA.v",
+      "sha256": "fade1ae966fc59334e0a689e3302f8a81d661dea176e1b47b46446f1d443b1ba",
+      "bytes": 19294,
+      "snapshot_path": "proof/A0/AW/HObjA.v"
+    },
+    {
+      "project": "pupnp",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/pupnp/FuzzHttp/lib/B0/AW/H_freelist.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/pupnp/FuzzHttp/lib/B0/AW/H_freelist.v",
+      "sha256": "33f6ada862ab3350cdd3654147fec324f7cf36bfc25e2c4bbc2e8c2fd4503a9e",
+      "bytes": 47674,
+      "snapshot_path": "proof/B0/AW/H_freelist.v"
+    },
+    {
+      "project": "pupnp",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "proofs/pupnp/FuzzHttp/lib/P0/H_freelist.v",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/proofs/pupnp/FuzzHttp/lib/P0/H_freelist.v",
+      "sha256": "ff63a8671016d9bc5f058833a22428c450d8ff8ae4248b70140d0cae4fab4392",
+      "bytes": 36750,
+      "snapshot_path": "proof/P0/H_freelist.v"
+    },
+    {
+      "project": "pupnp",
+      "repository": "pupnp/pupnp",
+      "commit": "b46bc77ac9ae2ff1351d0f4ce544d97283b6e149",
+      "repository_path": "upnp/src/threadutil/FreeList.c",
+      "url": "https://github.com/pupnp/pupnp/blob/b46bc77ac9ae2ff1351d0f4ce544d97283b6e149/upnp/src/threadutil/FreeList.c",
+      "sha256": "20d95208668922420fb193c863afb74568bb9c626ec44f4956694e7d2385126b",
+      "bytes": 3160,
+      "snapshot_path": "upstream/upnp/src/threadutil/FreeList.c"
+    },
+    {
+      "project": "pupnp",
+      "repository": "pupnp/pupnp",
+      "commit": "b46bc77ac9ae2ff1351d0f4ce544d97283b6e149",
+      "repository_path": "fuzzer/FuzzHttp.c",
+      "url": "https://github.com/pupnp/pupnp/blob/b46bc77ac9ae2ff1351d0f4ce544d97283b6e149/fuzzer/FuzzHttp.c",
+      "sha256": "627c2139ed4586b7477dfa9219484a4e1670c9ef84438bedb9fb214b6a3d4bc2",
+      "bytes": 535,
+      "snapshot_path": "upstream/fuzzer/FuzzHttp.c"
+    },
+    {
+      "project": "pupnp",
+      "repository": "theorem-labs/oss-verify-proofs",
+      "commit": "98e995d4daced70a0a4aa2c810854b88720735f1",
+      "repository_path": "projects/pupnp/project.yaml",
+      "url": "https://github.com/theorem-labs/oss-verify-proofs/blob/98e995d4daced70a0a4aa2c810854b88720735f1/projects/pupnp/project.yaml",
+      "sha256": "102e7781d76b3818f6c04c344a9fcbb4a6130a96df2d9ad5a812f92c05ae7f00",
+      "bytes": 1352,
+      "snapshot_path": "project.yaml"
+    }
+  ]
+}
